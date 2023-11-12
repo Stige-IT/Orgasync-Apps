@@ -1,0 +1,9 @@
+{
+  "app_name" : "Orgasync",
+  "welcometo": "SELAMAT DATANG DI @.upper:app_name",
+  "description_app": "Orgasync adalah alat untuk menyinkronkan data organisasi Anda",
+  "choose_role" : "Pilih peran Anda",
+  "company": "Perusahaan",
+  "employee": "Karyawan"
+
+}

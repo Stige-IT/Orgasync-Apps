@@ -9,6 +9,7 @@ class AppRoute{
     /// AUTHENTICATION PAGES
     "/login" : (_) => const LoginScreen(),
     "/register" : (_) => const RegisterScreen(),
+    "/role" : (_) => const RoleScreen(),
 
     /// HOME PAGES
     "/" : (_)=> const HomeScreen(),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:orgasync/src/config/routes.dart';
 import 'package:orgasync/src/config/theme/theme.dart';
@@ -15,6 +16,9 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: AppTheme.themeData,
       darkTheme: AppTheme.darkThemeData,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
     );
   }
 }

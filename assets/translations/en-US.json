@@ -1,0 +1,8 @@
+{
+  "app_name": "Orgasync",
+  "welcometo": "WELCOME TO @.upper:app_name",
+  "description_app": "Orgasync is a tool to synchronize your organization's data",
+  "choose_role": "choose your role",
+  "company": "Company",
+  "employee": "Employee"
+}
