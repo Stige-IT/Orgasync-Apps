@@ -1,9 +1,23 @@
 {
-  "app_name" : "Orgasync",
+  "app_name": "Orgasync",
   "welcometo": "SELAMAT DATANG DI @.upper:app_name",
   "description_app": "Orgasync adalah alat untuk menyinkronkan data organisasi Anda",
-  "choose_role" : "Pilih peran Anda",
+  "choose_role": "Pilih peran Anda",
   "company": "Perusahaan",
-  "employee": "Karyawan"
-
+  "employee": "Karyawan",
+  "login": "Masuk",
+  "logout": "Keluar",
+  "email": "Email",
+  "password": "Password",
+  "password_confirmation": "Password Konfirmasi",
+  "remember_me": "Ingat saya",
+  "forgot_password": "Lupa password?",
+  "reset_password": "Reset password",
+  "register": "Daftar",
+  "to_continue": "Untuk melanjutkan",
+  "login_your_account": "Masuk ke akun Anda @:to_continue",
+  "input_email": "Masukkan email Anda",
+  "input_password": "Masukkan password Anda",
+  "or_login_with": "Atau masuk dengan",
+  "dont_have_account": "Belum punya akun?"
 }

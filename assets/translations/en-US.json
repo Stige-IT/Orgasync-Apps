@@ -4,5 +4,20 @@
   "description_app": "Orgasync is a tool to synchronize your organization's data",
   "choose_role": "choose your role",
   "company": "Company",
-  "employee": "Employee"
+  "employee": "Employee",
+  "login": "Login",
+  "logout": "Logout",
+  "email": "Email",
+  "password": "Password",
+  "password_confirmation": "Password confirmation",
+  "remember_me": "Remember me",
+  "forgot_password": "Forgot password?",
+  "reset_password": "Reset password",
+  "register": "Register",
+  "to_continue": "to continue",
+  "login_your_account": "Login your account @:to_continue",
+  "input_email": "Input your email",
+  "input_password": "Input your password",
+  "or_login_with": "or login with",
+  "dont_have_account": "Don't have an account?"
 }
