@@ -66,7 +66,6 @@ class FieldInput extends StatelessWidget {
                 ? null
                 : maxLines ?? 1,
             obscureText: obsecureText,
-            style: const TextStyle(color: Colors.black),
             controller: controllers,
             keyboardType: keyboardType,
             onChanged: onChanged,
@@ -81,47 +80,18 @@ class FieldInput extends StatelessWidget {
             onSaved: (String? val) {
               controllers.text = val!;
             },
-            cursorColor: Theme.of(context).primaryColor,
             decoration: InputDecoration(
               prefixText: prefixText,
-              prefixStyle: const TextStyle(color: Colors.black),
               contentPadding: const EdgeInsets.all(20),
               suffixIcon: suffixIcon,
-              suffixIconColor: Theme.of(context).primaryColor,
-              errorBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.red),
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   isRounded! ? 50 : 5,
                 ),
               ),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(
-                    isRounded! ? 50 : 5,
-                  )),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(
-                  isRounded! ? 50 : 5,
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.red),
-                  borderRadius: BorderRadius.circular(
-                    isRounded! ? 50 : 5,
-                  )),
               hintText: hintText,
-              hintStyle: const TextStyle(
-                color: Colors.black,
-              ),
-              disabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(
-                    isRounded! ? 50 : 5,
-                  )),
               enabled: enable ?? true,
               prefixIcon: prefixIcons,
-              prefixIconColor: Colors.grey,
               suffixText: suffixText,
             ),
             onTap: onTap,

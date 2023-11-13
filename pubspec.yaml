@@ -49,6 +49,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   easy_localization: ^3.0.3
+  window_manager: ^0.3.7
 
 dev_dependencies:
   flutter_test:

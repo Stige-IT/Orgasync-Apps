@@ -1,10 +1,15 @@
 part of '../../auth.dart';
 
-class RoleScreen extends ConsumerWidget {
+class RoleScreen extends ConsumerStatefulWidget {
   const RoleScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _RoleScreenState();
+}
+
+class _RoleScreenState extends ConsumerState<RoleScreen> {
+  @override
+  Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -44,21 +49,13 @@ class RoleScreen extends ConsumerWidget {
                 ),
                 Text(
                   "choose_role".tr(),
-                  style:
-                      const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                    onPressed: () {
-                      context.setLocale(const Locale("id"));
-                    },
-                    child: Text("company".tr())),
+                FilledButton(onPressed: () {}, child: Text("company".tr())),
                 const SizedBox(height: 5),
-                ElevatedButton(
-                    onPressed: () {
-                      context.setLocale(const Locale("en", "US"));
-                    },
-                    child: Text("employee".tr())),
+                FilledButton(onPressed: () {}, child: Text("employee".tr())),
                 SizedBox(height: size.height * 0.1),
               ],
             ),
