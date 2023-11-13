@@ -16,8 +16,15 @@
   "register": "Daftar",
   "to_continue": "Untuk melanjutkan",
   "login_your_account": "Masuk ke akun Anda @:to_continue",
+  "register_your_account": "Daftarkan akun Anda di @:app_name",
   "input_email": "Masukkan email Anda",
   "input_password": "Masukkan password Anda",
   "or_login_with": "Atau masuk dengan",
-  "dont_have_account": "Belum punya akun?"
+  "or_register_with": "Atau daftar dengan",
+  "dont_have_account": "Belum punya akun?",
+  "have_account": "Sudah punya akun?",
+  "register_success" : "Pendaftaran berhasil",
+  "already_registered" : "email sudah terdaftar",
+  "not_active" : "Akunmu tidak aktif. Silakan hubungi kontak.",
+  "not_verified" : "Akun Anda belum terverifikasi. Harap verifikasi akun Anda."
 }

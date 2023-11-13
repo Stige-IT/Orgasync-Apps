@@ -8,3 +8,9 @@ final loginNotifier =
   final authApi = ref.watch(authProvider);
   return LoginNotifier(authApi);
 });
+
+final registerEmployeeNotifier =
+    StateNotifierProvider.autoDispose<RegisterEmployeeNotifier, States>((ref) {
+  final authApi = ref.watch(authProvider);
+  return RegisterEmployeeNotifier(authApi);
+});

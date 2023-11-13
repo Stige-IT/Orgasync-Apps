@@ -21,8 +21,10 @@ import 'package:dartz/dartz.dart';
 import '../../utils/helper/http_provider/http_provider.dart';
 
 part "data/auth_api.dart";
+part "enum/type_user.dart";
 part "provider/auth_notifier.dart";
 part 'ui/register/role_screen.dart';
 part 'ui/login/login_screen.dart';
 part 'ui/register/register_screen.dart';
+part 'ui/register/register_employee_screen.dart';
 part 'provider/auth_provider.dart';

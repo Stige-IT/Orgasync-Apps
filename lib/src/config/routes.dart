@@ -8,7 +8,10 @@ class AppRoute{
     "/splash" : (_)=> const SplashScreen(),
     /// AUTHENTICATION PAGES
     "/login" : (_) => const LoginScreen(),
-    "/register" : (_) => const RegisterScreen(),
+    "/register" : (context){
+      final type = ModalRoute.of(context)?.settings.arguments as TypeUser;
+      return RegisterScreen(type);
+    },
     "/role" : (_) => const RoleScreen(),
 
     /// HOME PAGES
