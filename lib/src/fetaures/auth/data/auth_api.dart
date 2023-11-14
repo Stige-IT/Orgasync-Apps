@@ -21,38 +21,56 @@ abstract class AuthApi {
 }
 
 final authProvider = Provider<AuthApiImpl>((ref) {
-  return AuthApiImpl(ref.watch(httpProvider));
+  return AuthApiImpl(ref.watch(httpProvider), ref.watch(storageProvider));
 });
 
 class AuthApiImpl implements AuthApi {
   final Client client;
+  final SecureStorage storage;
 
-  AuthApiImpl(this.client);
+  AuthApiImpl(this.client, this.storage);
 
   @override
   Future<Either<ErrorAccountResponse, TypeAccount>> login(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     Uri url = Uri.parse("${ConstantUrl.BASE_URL}/auth/login");
     final response = await client.post(url,
         body: jsonEncode({"email": email, "password": password}),
         headers: {"Content-Type": "application/json"});
-    if (response.statusCode == 200) {
-      return const Right(TypeAccount.verified);
-    } else if (response.statusCode == 400) {
-      final message = jsonDecode(response.body)["detail"];
-      if (message["email"] == "not_active") {
-        return Left(ErrorAccountResponse(TypeAccount.notActive,
-            message: "not_active".tr()));
-      } else if (message['email'] == "not_verified") {
-        return Left(ErrorAccountResponse(TypeAccount.notVerified,
-            message: "not_verified".tr()));
-      }
-    } else if (response.statusCode == 404) {
-      return Left(ErrorAccountResponse(TypeAccount.notFound,
-          message: "not_found".tr()));
+
+    switch (response.statusCode) {
+      case 200:
+        final data = jsonDecode(response.body);
+        final token = data["access_token"];
+        await storage.write("token", token);
+        return const Right(TypeAccount.verified);
+      case 400:
+        final message = jsonDecode(response.body)["detail"];
+        switch (message) {
+          case "not_active":
+            return Left(
+              ErrorAccountResponse(TypeAccount.notActive,
+                  message: "not_active".tr()),
+            );
+          case "not_verified":
+            return Left(
+              ErrorAccountResponse(TypeAccount.notVerified,
+                  message: "not_verified".tr()),
+            );
+          default:
+            return Left(ErrorAccountResponse(TypeAccount.error,
+                message: "Gagal masuk, coba kembali"));
+        }
+      case 404:
+        return Left(
+          ErrorAccountResponse(TypeAccount.notFound, message: "not_found".tr()),
+        );
+      default:
+        return Left(ErrorAccountResponse(TypeAccount.error,
+            message: "Gagal masuk, coba kembali"));
     }
-    return Left(ErrorAccountResponse(TypeAccount.error,
-        message: "Gagal masuk, coba kembali"));
   }
 
   @override
