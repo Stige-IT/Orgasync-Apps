@@ -48,8 +48,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           children: [
             Expanded(
               child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+                margin: const EdgeInsets.symmetric(
+                    horizontal: 30.0, vertical: 10.0),
                 child: Form(
                   key: formKey,
                   child: SingleChildScrollView(
@@ -58,7 +58,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       children: [
                         const CircleAvatar(
                           radius: 25,
-                          backgroundImage: AssetImage("assets/images/app_logo.png"),
+                          backgroundImage:
+                              AssetImage("assets/images/app_logo.png"),
                         ),
                         Text("login".tr(),
                             style: Theme.of(context).textTheme.displayMedium),
@@ -85,7 +86,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   !isObsecure;
                             },
                             icon: Icon(
-                              !isObsecure ? Icons.visibility : Icons.visibility_off,
+                              !isObsecure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                               color: Colors.grey,
                             ),
                           ),
@@ -157,13 +160,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _passwordCtrl.text,
           )
           .then(
-        (success) {
-          if (success) {
-            showSnackbar(context, "Berhasil login", type: SnackBarType.success);
-            nextPageRemoveAll(context, "/");
-          } else {
-            final errMessage = ref.watch(loginNotifier).error;
-            showSnackbar(context, errMessage!, type: SnackBarType.error);
+        (user) {
+          switch (user) {
+            case TypeAccount.verified:
+              nextPageRemoveAll(context, "/");
+              break;
+            case TypeAccount.notVerified:
+              ref.read(resendCodeNotifier.notifier).resendCode(_emailCtrl.text);
+              final errMessage = ref.watch(loginNotifier).error;
+              showSnackbar(context, errMessage!);
+              nextPage(context, "/verification", argument: {
+                "email": _emailCtrl.text,
+                "type": TypeVerification.verifyEmail,
+              });
+              break;
+            default:
+              final errMessage = ref.watch(loginNotifier).error;
+              showSnackbar(context, errMessage!, type: SnackBarType.error);
+              break;
           }
         },
       );

@@ -19,6 +19,10 @@ void showSnackbar(BuildContext context, String title, {SnackBarType? type}) {
   }
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       behavior: SnackBarBehavior.floating,
       backgroundColor: color,
       content: Text(title),

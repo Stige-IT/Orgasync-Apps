@@ -12,6 +12,10 @@ class AppRoute{
       final type = ModalRoute.of(context)?.settings.arguments as TypeUser;
       return RegisterScreen(type);
     },
+    "/verification" : (context){
+      final arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+      return VerificationScreen(arguments["email"], arguments["type"]);
+    },
     "/role" : (_) => const RoleScreen(),
 
     /// HOME PAGES

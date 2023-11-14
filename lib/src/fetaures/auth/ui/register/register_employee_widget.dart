@@ -56,10 +56,10 @@ class _RegisterEmployeeWidgetState
                 title: "password".tr(),
                 hintText: "Masukkan password",
                 controllers: _passwordCtrl,
-                obsecureText: !isObsecure,
+                obsecureText: isObsecure,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    isObsecure ? Icons.visibility : Icons.visibility_off,
+                    isObsecure ? Icons.visibility_off : Icons.visibility,
                   ),
                   onPressed: () {
                     ref.read(isObsecureProvider.notifier).state = !isObsecure;
@@ -116,9 +116,10 @@ class _RegisterEmployeeWidgetState
           )
           .then((success) {
         if (success) {
-          showSnackbar(context, "register_success".tr(),
-              type: SnackBarType.success);
-          nextPageRemoveAll(context, "/login");
+          nextPage(context, "/verification", argument: {
+            "email": _emailCtrl.text,
+            "type": TypeVerification.verifyEmail
+          });
         } else {
           final error = ref.watch(registerEmployeeNotifier).error;
           showSnackbar(context, error!, type: SnackBarType.error);

@@ -40,7 +40,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 "register_your_account".tr(),
                 style: const TextStyle(fontSize: 18),
               ),
-              const RegisterEmployeeWidget(),
+              if(widget.typeUser == TypeUser.employee)
+              const RegisterEmployeeWidget()
+              else
+              const RegisterCompanyWidget(),
             ],
           ),
         ),

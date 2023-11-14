@@ -5,23 +5,23 @@ class LoginNotifier extends StateNotifier<States> {
 
   LoginNotifier(this._authApi) : super(States.noState());
 
-  Future<bool> login(String email, String password) async {
+  Future<TypeAccount> login(String email, String password) async {
     state = States.loading();
     try {
       final result = await _authApi.login(email, password);
       return result.fold(
         (error) {
-          state = States.error(error);
-          return false;
+          state = States.error(error.message);
+          return error.typeAccount;
         },
         (success) {
           state = States.noState();
-          return true;
+          return success;
         },
       );
     } catch (exception) {
       state = States.error(exceptionTomessage(exception));
-      return false;
+      return TypeAccount.error;
     }
   }
 }
@@ -40,6 +40,94 @@ class RegisterEmployeeNotifier extends StateNotifier<States> {
     try {
       final result =
           await _authApi.register(name: name, email: email, password: password);
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (success) {
+          state = States.noState();
+          return true;
+        },
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
+// register user company
+class RegisterCompanyNotifier extends StateNotifier<States> {
+  final AuthApi _authApi;
+
+  RegisterCompanyNotifier(this._authApi) : super(States.noState());
+
+  Future<bool> register(CompanyRequest companyRequest) async {
+    state = States.loading();
+    try {
+      final result = await _authApi.companyRegister(companyRequest);
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (success) {
+          state = States.noState();
+          return true;
+        },
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
+// verification user
+class VerificationNotifier extends StateNotifier<States> {
+  final AuthApi _authApi;
+
+  VerificationNotifier(this._authApi) : super(States.noState());
+
+  Future<bool> verification(
+      {required String email,
+      required String code,
+      required TypeVerification type}) async {
+    state = States.loading();
+    try {
+      final result = await _authApi.verification(
+        email: email,
+        code: code,
+        type: type,
+      );
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (success) {
+          state = States.noState();
+          return true;
+        },
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
+// resend code
+class ResendCodeNotifier extends StateNotifier<States> {
+  final AuthApi _authApi;
+
+  ResendCodeNotifier(this._authApi) : super(States.noState());
+
+  Future<bool> resendCode(String email) async {
+    state = States.loading();
+    try {
+      final result = await _authApi.resendCode(email);
       return result.fold(
         (error) {
           state = States.error(error);
