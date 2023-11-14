@@ -18,6 +18,7 @@
   "to_continue": "Untuk melanjutkan",
   "login_your_account": "Masuk ke akun Anda @:to_continue",
   "register_your_account": "Daftarkan akun Anda di @:app_name",
+  "required" : "Wajib diisi",
   "input_name": "Masukkan nama Anda",
   "input_email": "Masukkan email Anda",
   "input_password": "Masukkan password Anda",

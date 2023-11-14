@@ -15,18 +15,20 @@ void main() async {
     // ignore: avoid_print
     log("Running in debug mode", name: "Debug Mode");
   }
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    // ignore: avoid_print
-    log("Running in desktop mode", name: "Desktop Mode");
-    windowManager.waitUntilReadyToShow().then((value) async {
-      windowManager.setTitle("Orgasync");
-      await windowManager.setTitleBarStyle(TitleBarStyle.normal);
-      await windowManager.setBackgroundColor(Colors.transparent);
-      await windowManager.setSize(const Size(1920, 1080));
-      await windowManager.setMinimumSize(const Size(600, 545));
-      await windowManager.show();
-      await windowManager.setSkipTaskbar(false);
-    });
+  if(!kIsWeb){
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      // ignore: avoid_print
+      log("Running in desktop mode", name: "Desktop Mode");
+      windowManager.waitUntilReadyToShow().then((value) async {
+        windowManager.setTitle("Orgasync");
+        await windowManager.setTitleBarStyle(TitleBarStyle.normal);
+        await windowManager.setBackgroundColor(Colors.transparent);
+        await windowManager.setSize(const Size(1920, 1080));
+        await windowManager.setMinimumSize(const Size(600, 545));
+        await windowManager.show();
+        await windowManager.setSkipTaskbar(false);
+      });
+    }
   }
 
   await EasyLocalization.ensureInitialized();

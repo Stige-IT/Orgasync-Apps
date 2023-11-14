@@ -23,5 +23,10 @@ class AppTheme {
     colorScheme: AppColors.schemeDark,
     useMaterial3: true,
     fontFamily: "Poppins",
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+      )
   );
 }

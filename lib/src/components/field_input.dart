@@ -73,7 +73,7 @@ class FieldInput extends StatelessWidget {
             validator: validator ??
                     (String? value) {
                   if (value!.isEmpty || value == "0") {
-                    return "Harap isi terlebih dahulu";
+                    return ;
                   }
                   return null;
                 },

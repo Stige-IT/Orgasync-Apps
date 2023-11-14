@@ -18,6 +18,7 @@
   "to_continue": "to continue",
   "login_your_account": "Login your account @:to_continue",
   "register_your_account": "Register your account in @:app_name",
+  "required" : "Required",
   "input_name" : "Input your name",
   "input_email": "Input your email",
   "input_password": "Input your password",

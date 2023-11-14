@@ -29,6 +29,12 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(verificationNotifier).isLoading;
+
+    ref.listen(resendCodeNotifier, (previous, next) {
+      if(next.isLoading){
+        showSnackbar(context, "Loading...");
+      }
+    });
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -37,53 +43,63 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
         backgroundColor: Colors.transparent,
         title: Text("verification".tr()),
       ),
-      body: Form(
-        key: formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Spacer(),
-              Text(
-                "verification".tr(),
-                style: Theme.of(context).textTheme.displaySmall,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "verification_message".tr(namedArgs: {"email": widget.email}),
-                textAlign: TextAlign.justify,
-              ),
-              const SizedBox(height: 50),
-              FieldInput(
-                textAlign: TextAlign.center,
-                hintText: "input_code".tr(),
-                controllers: _codeCtrl,
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 10),
-              FilledButton(
-                onPressed: _handleVerification,
-                child: isLoading
-                    ? const CircularLoading()
-                    : Text("verification".tr()),
-              ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("not_receive_code".tr()),
-                  TextButton(
-                    onPressed: _handleResendCode,
-                    child: Text("resend".tr()),
+      body: Row(
+        children: [
+          Flexible(
+            child: Center(
+              child: SizedBox(
+                width: context.isDesktop ? 600 : null,
+                child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(30.0),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "verification".tr(),
+                          style: Theme.of(context).textTheme.displaySmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "verification_message".tr(namedArgs: {"email": widget.email}),
+                          textAlign: TextAlign.justify,
+                        ),
+                        const SizedBox(height: 50),
+                        FieldInput(
+                          textAlign: TextAlign.center,
+                          hintText: "input_code".tr(),
+                          controllers: _codeCtrl,
+                          keyboardType: TextInputType.number,
+                        ),
+                        const SizedBox(height: 10),
+                        FilledButton(
+                          onPressed: _handleVerification,
+                          child: isLoading
+                              ? const CircularLoading()
+                              : Text("verification".tr()),
+                        ),
+                        const SizedBox(height: 50),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("not_receive_code".tr()),
+                            TextButton(
+                              onPressed: _handleResendCode,
+                              child: Text("resend".tr()),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ],
-              )
-            ],
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

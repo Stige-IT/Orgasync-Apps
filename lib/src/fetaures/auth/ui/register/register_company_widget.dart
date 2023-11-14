@@ -107,17 +107,6 @@ class _RegisterCompanyWidgetState extends ConsumerState<RegisterCompanyWidget> {
                           Image.asset("assets/images/google.png", height: 30),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("have_account".tr()),
-                      TextButton(
-                        onPressed: () => nextPage(context, "/role"),
-                        child: Text("login".tr()),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),

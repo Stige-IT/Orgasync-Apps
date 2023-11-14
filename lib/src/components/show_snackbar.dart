@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 enum SnackBarType { success, warning, error }
 
 void showSnackbar(BuildContext context, String title, {SnackBarType? type}) {
-  Color color = Colors.black;
+  Color color = Theme.of(context).colorScheme.primary;
   switch (type) {
     case SnackBarType.success:
       color = Colors.green;
@@ -15,7 +15,7 @@ void showSnackbar(BuildContext context, String title, {SnackBarType? type}) {
       color = Colors.red;
       break;
     default:
-      color = Colors.black;
+      color = Theme.of(context).colorScheme.primary;
   }
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
