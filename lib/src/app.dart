@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // debugShowCheckedModeBanner: false, // uncomment this line to hide for release
+      debugShowCheckedModeBanner: false, // uncomment this line to hide for release
       title: "Orgasync",
       routes: AppRoute.routes,
       initialRoute: "/splash",
