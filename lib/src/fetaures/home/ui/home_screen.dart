@@ -52,10 +52,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             IconButton(
                 onPressed: () {}, icon: const Icon(Icons.notifications_none)),
-            CircleAvatar(
-              radius: 25,
-              backgroundImage: const AssetImage("assets/images/profile.png"),
-              backgroundColor: context.theme.colorScheme.background,
+            InkWell(
+              onTap: () => nextPage(context, "/profile"),
+              child: CircleAvatar(
+                radius: 25,
+                backgroundImage: const AssetImage("assets/images/profile.png"),
+                backgroundColor: context.theme.colorScheme.background,
+              ),
             ),
             const SizedBox(width: 20),
           ],

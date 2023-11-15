@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:orgasync/src/fetaures/auth/auth.dart';
 import 'package:orgasync/src/fetaures/home/home.dart';
 import '../fetaures/splash/ui/splash_screen.dart';
+import '../fetaures/user/user.dart';
 
 class AppRoute{
   static Map<String, Widget Function(BuildContext)> routes ={
@@ -21,5 +22,7 @@ class AppRoute{
     /// HOME PAGES
     "/" : (_)=> const HomeScreen(),
 
+    /// USER PAGES
+    "/profile" : (_) => const ProfileScreen(),
   };
 }
