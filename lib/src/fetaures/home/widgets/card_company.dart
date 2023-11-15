@@ -11,7 +11,7 @@ class CardCompany extends StatelessWidget {
       children: [
         Card(
           shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.grey.withOpacity(0.2), width: 1),
+            side: BorderSide(color: context.theme.colorScheme.inverseSurface.withOpacity(0.5), width: 1),
             borderRadius: BorderRadius.circular(20),
           ),
           margin: const EdgeInsets.only(bottom: 40, top: 10),
@@ -37,10 +37,16 @@ class CardCompany extends StatelessWidget {
         Positioned(
           bottom: 10,
           left: 20,
-          child: CircleAvatar(
-            radius: 40,
-            backgroundImage: NetworkImage(company.company?.logo ??
-                "https://blog.hubspot.com/hubfs/image8-2.jpg"),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color:context.theme.colorScheme.inverseSurface.withOpacity(0.5), width: 2),
+            ),
+            child: CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(company.company?.logo ??
+                  "https://blog.hubspot.com/hubfs/image8-2.jpg"),
+            ),
           ),
         ),
       ],
