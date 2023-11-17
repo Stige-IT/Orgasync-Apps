@@ -12,6 +12,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _getData() {
     ref.read(roleNotifier.notifier).getRole();
+    ref.read(userNotifier.notifier).get();
   }
 
   @override
@@ -29,6 +30,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userNotifier).data;
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -54,11 +56,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onPressed: () {}, icon: const Icon(Icons.notifications_none)),
             InkWell(
               onTap: () => nextPage(context, "/profile"),
-              child: CircleAvatar(
-                radius: 25,
-                backgroundImage: const AssetImage("assets/images/profile.png"),
-                backgroundColor: context.theme.colorScheme.background,
-              ),
+              child: CircleAvatarNetwork(user?.image, size: 40),
             ),
             const SizedBox(width: 20),
           ],

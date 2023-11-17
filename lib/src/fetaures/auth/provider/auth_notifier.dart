@@ -144,3 +144,22 @@ class ResendCodeNotifier extends StateNotifier<States> {
     }
   }
 }
+
+// refresh token
+class RefreshTokenNotifier extends StateNotifier<States> {
+  final AuthApiImpl authApiImpl;
+
+  RefreshTokenNotifier(this.authApiImpl) : super(States.noState());
+
+  void refresh() async {
+    try {
+      final result = await authApiImpl.refreshToken();
+      result.fold(
+        (error) => state = States.error(error),
+        (success) => state = States.noState(),
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+    }
+  }
+}

@@ -10,7 +10,7 @@ class CompaniesWidget extends ConsumerStatefulWidget {
 class _CompaniesWidgetState extends ConsumerState<CompaniesWidget> {
   late ScrollController scrollController;
 
-  void _getData(){
+  void _getData() {
     ref.read(companyNotifier.notifier).getCompany(makeLoading: true);
   }
 
@@ -34,23 +34,20 @@ class _CompaniesWidgetState extends ConsumerState<CompaniesWidget> {
       controller: scrollController,
       trackVisibility: true,
       thumbVisibility: true,
-      child: Builder(
-        builder: (_) {
-          if(state.isLoading){
-            return const CircularLoading();
-          }else if(state.error != null){
-            return  ErrorButtonWidget(state.error!, () => _getData());
-          }else if(state.data == null || state.data!.isEmpty){
-            return Center(child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("assets/images/empty.png", width: 200),
-                const SizedBox(height: 20),
-                Text("empty".tr(), style: context.theme.textTheme.bodyLarge)
-              ],
-            ));
-          }else{
-            final data = state.data;
+      child: Builder(builder: (_) {
+        if (state.isLoading) {
+          return const CircularLoading();
+        } else if (state.error != null) {
+          return ErrorButtonWidget(state.error!, () => _getData());
+        } else if (state.data == null || state.data!.isEmpty) {
+          return const EmptyWidget();
+        } else {
+          final data = state.data;
+          if (context.isDesktop) {
+            return Wrap(
+              children: (data ?? []).map((e) => CardCompany(e)).toList(),
+            );
+          } else {
             return ListView.builder(
               controller: scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
@@ -59,9 +56,8 @@ class _CompaniesWidgetState extends ConsumerState<CompaniesWidget> {
               itemCount: (data ?? []).length,
             );
           }
-
         }
-      ),
+      }),
     );
   }
 }

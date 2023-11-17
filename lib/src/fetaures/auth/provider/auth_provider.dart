@@ -35,3 +35,8 @@ final resendCodeNotifier =
   final authApi = ref.watch(authProvider);
   return ResendCodeNotifier(authApi);
 });
+
+final refreshNotifier = StateNotifierProvider<RefreshTokenNotifier, States>((ref) {
+  return RefreshTokenNotifier(ref.watch(authProvider));
+});
+

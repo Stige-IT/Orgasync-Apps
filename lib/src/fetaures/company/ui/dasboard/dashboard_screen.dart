@@ -15,6 +15,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         elevation: 0,
         backgroundColor: context.theme.colorScheme.primary,
         foregroundColor: context.theme.colorScheme.onPrimary,
+        centerTitle: true,
         title: Text(
           "dashboard".tr(),
           style: context.theme.textTheme.headlineSmall!.copyWith(
@@ -22,7 +23,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             color: context.theme.colorScheme.onPrimary,
           ),
         ),
-        centerTitle: true,
       ),
       body: ListView(
         children: [

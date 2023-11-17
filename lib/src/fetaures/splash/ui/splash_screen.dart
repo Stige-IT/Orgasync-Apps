@@ -1,7 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:orgasync/src/fetaures/auth/auth.dart';
 import 'package:orgasync/src/utils/extensions/page_function.dart';
 import 'package:orgasync/src/utils/helper/local_storage/secure_storage_client.dart';
 
@@ -17,8 +17,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void initState() {
     Future.delayed(const Duration(seconds: 2), () {
       ref.read(storageProvider).read("token").then((value) {
-        log(value);
+        // log(value);
         if (value != null) {
+          ref.read(refreshNotifier.notifier).refresh();
           nextPageRemoveAll(context, "/");
         } else {
           nextPageRemoveAll(context, "/login");
