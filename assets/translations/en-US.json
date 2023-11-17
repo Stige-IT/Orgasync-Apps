@@ -43,5 +43,6 @@
   "code_invalid" : "Invalid verification code. Please try again.",
   "verification_success" : "Verification success, please login",
   "resend_code_success" : "Resend code success",
-  "not_found" : "not found"
+  "not_found" : "not found",
+  "empty" : "Data not found"
 }

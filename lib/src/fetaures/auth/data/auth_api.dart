@@ -4,6 +4,8 @@ abstract class AuthApi {
   Future<Either<ErrorAccountResponse, TypeAccount>> login(
       String email, String password);
 
+  Future<Either<String, bool>> refreshToken();
+
   Future<Either<String, bool>> register(
       {required String name, required String email, required String password});
 
@@ -154,5 +156,19 @@ class AuthApiImpl implements AuthApi {
   Future logout() {
     // TODO: implement logout
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<String, bool>> refreshToken() async {
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/auth/refresh");
+    final token = await storage.read("token");
+    final response = await client.post(url, headers: {"refresh-token": token});
+    if (response.statusCode == 200) {
+      final token = jsonDecode(response.body)['access_token'];
+      await storage.write("token", token);
+      return const Right(true);
+    } else {
+      return const Left("Gagal memuat token");
+    }
   }
 }

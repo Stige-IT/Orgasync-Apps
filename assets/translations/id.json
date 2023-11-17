@@ -44,5 +44,6 @@
   "code_invalid" : "Kode verifikasi tidak valid. Silakan coba lagi.",
   "verification_success" : "Verifikasi berhasil, silahkan masuk",
   "resend_code_success" : "Kode verifikasi berhasil dikirim ulang",
-  "not_found" : "Tidak ditemukan"
+  "not_found" : "Tidak ditemukan",
+  "empty" : "Data tidak ditemukan"
 }

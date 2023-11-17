@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:orgasync/src/fetaures/auth/auth.dart';
+import 'package:orgasync/src/fetaures/company/company.dart';
 import 'package:orgasync/src/fetaures/home/home.dart';
 import '../fetaures/splash/ui/splash_screen.dart';
+import '../fetaures/user/user.dart';
 
 class AppRoute{
   static Map<String, Widget Function(BuildContext)> routes ={
@@ -21,5 +23,11 @@ class AppRoute{
     /// HOME PAGES
     "/" : (_)=> const HomeScreen(),
 
+    /// COMPANY PAGE
+    "/company/dashboard" : (_) => const DashboardScreen(),
+
+    /// USER PAGES
+    "/profile" : (_) => const ProfileScreen(),
+    "/profile/form" : (_)=> const FormProfileScreen(),
   };
 }

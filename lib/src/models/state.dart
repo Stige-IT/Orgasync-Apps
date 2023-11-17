@@ -1,3 +1,21 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part "state.freezed.dart";
+
+@freezed
+class BaseState<T> with _$BaseState<T> {
+  const factory BaseState({
+    @Default(false) isLoading,
+    @Default(false) isLoadingMore,
+    String? error,
+    T? data,
+    @Default(1) int page,
+    @Default(1) int lastPage,
+    @Default(0) int total,
+  }) = _BaseState;
+}
+
+
 class States<T> {
   final T? data;
   final int? total;
