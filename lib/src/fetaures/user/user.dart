@@ -1,15 +1,25 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:orgasync/src/components/circle_avatar_network.dart';
 import 'package:orgasync/src/components/empty_widget.dart';
 import 'package:orgasync/src/components/error_button.dart';
+import 'package:orgasync/src/components/field_input.dart';
+import 'package:orgasync/src/components/profile_with_name.dart';
+import 'package:orgasync/src/components/show_snackbar.dart';
 import 'package:orgasync/src/fetaures/auth/auth.dart';
+import 'package:orgasync/src/fetaures/company/company.dart';
+import 'package:orgasync/src/models/address.dart';
 import 'package:orgasync/src/models/state.dart';
+import 'package:orgasync/src/utils/extensions/formatted_address.dart';
+import 'package:orgasync/src/utils/extensions/formatted_locale.dart';
 import 'package:orgasync/src/utils/helper/exception_to_message.dart';
 import 'package:orgasync/src/utils/helper/layout/media_query_context.dart';
 import 'package:orgasync/src/utils/helper/layout/minheight_context.dart';
@@ -21,6 +31,7 @@ import '../../utils/extensions/page_function.dart';
 import '../../utils/helper/http_provider/http_provider.dart';
 import '../../utils/helper/local_storage/secure_storage.dart';
 import '../../utils/helper/local_storage/secure_storage_client.dart';
+import '../theme/provider/theme_provider.dart';
 
 part "models/user_data.dart";
 part "data/user_api.dart";

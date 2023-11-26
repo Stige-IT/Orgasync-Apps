@@ -45,5 +45,12 @@
   "verification_success" : "Verifikasi berhasil, silahkan masuk",
   "resend_code_success" : "Kode verifikasi berhasil dikirim ulang",
   "not_found" : "Tidak ditemukan",
-  "empty" : "Data tidak ditemukan"
+  "empty" : "Data tidak ditemukan",
+  "error" : "Harap coba kembali",
+  "language" : "Bahasa",
+  "theme" : "Tema",
+  "dark" : "Gelap",
+  "light": "Terang",
+  "save": "Simpan",
+  "profile": "Profil"
 }

@@ -69,7 +69,7 @@ class _RegisterEmployeeWidgetState
             FilledButton(
               onPressed: _handleRegister,
               child:
-                  isLoading ? const CircularLoading() : Text("register".tr()),
+                  isLoading ? const LoadingWidget() : Text("register".tr()),
             ),
             Center(
               child: Column(

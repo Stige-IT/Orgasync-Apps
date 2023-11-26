@@ -44,5 +44,12 @@
   "verification_success" : "Verification success, please login",
   "resend_code_success" : "Resend code success",
   "not_found" : "not found",
-  "empty" : "Data not found"
+  "empty" : "Data not found",
+  "error" : "Try again",
+  "language" : "Language",
+  "theme": "Theme",
+  "dark" : "Dark",
+  "light" : "Light",
+  "save" : "Save",
+  "profile" : "Profile"
 }
