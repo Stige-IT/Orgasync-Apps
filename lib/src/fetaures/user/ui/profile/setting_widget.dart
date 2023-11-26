@@ -1,23 +1,63 @@
 part of "../../user.dart";
 
-class SettingWidget extends ConsumerWidget {
+class SettingWidget extends ConsumerStatefulWidget {
   const SettingWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _SettingWidgetState();
+}
+
+class _SettingWidgetState extends ConsumerState<SettingWidget> {
+  @override
+  Widget build(BuildContext context) {
+    Locale locale = context.locale;
+    final theme = ref.watch(themeProvider);
     return Column(
       children: [
         ListTile(
           leading: const Icon(Icons.settings),
           title: Text("Settings", style: context.theme.textTheme.bodyLarge!),
         ),
-        const ListTile(
-          title: Text("Language"),
-          trailing: Text("English"),
+        ListTile(
+          onTap: () {
+            if (locale == const Locale("en", "US")) {
+              context.setLocale(const Locale("id"));
+            } else {
+              context.setLocale(const Locale("en", "US"));
+            }
+          },
+          title: Text("language".tr()),
+          trailing: Text(locale.formattedLocale),
         ),
-        const ListTile(
-          title: Text("Theme"),
-          trailing: Text("Dark"),
+        ListTile(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text("theme".tr()),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      onTap: () => _changeTheme(ThemeMode.light),
+                      shape: theme == ThemeMode.light ? _active() : null,
+                      title: const Text("Light"),
+                      trailing: const Icon(Icons.lightbulb_outline),
+                    ),
+                    ListTile(
+                      onTap: () => _changeTheme(ThemeMode.dark),
+                      shape: theme == ThemeMode.dark ? _active() : null,
+                      title: const Text("Dark"),
+                      trailing: const Icon(Icons.dark_mode_outlined),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          title: Text("theme".tr()),
+          trailing:
+              theme == ThemeMode.dark ? Text("dark".tr()) : Text("light".tr()),
         ),
         ListTile(
           onTap: () {
@@ -28,6 +68,18 @@ class SettingWidget extends ConsumerWidget {
           trailing: const Icon(Icons.logout),
         ),
       ],
+    );
+  }
+
+  void _changeTheme(ThemeMode theme) {
+    ref.read(themeProvider.notifier).setTheme(theme);
+    Navigator.of(context).pop();
+  }
+
+  RoundedRectangleBorder _active() {
+    return RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+      side: const BorderSide(color: Colors.grey),
     );
   }
 }

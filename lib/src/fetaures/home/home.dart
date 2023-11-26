@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:orgasync/src/components/circular_loading.dart';
 import 'package:orgasync/src/components/error_button.dart';
 import 'package:orgasync/src/components/field_input.dart';
+import 'package:orgasync/src/components/profile_with_name.dart';
 import 'package:orgasync/src/components/show_snackbar.dart';
 import 'package:orgasync/src/fetaures/company/company.dart';
 import 'package:orgasync/src/fetaures/user/user.dart';

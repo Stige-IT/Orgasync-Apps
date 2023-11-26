@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:orgasync/src/utils/helper/theme_of_context.dart';
 
-class CircularLoading extends StatelessWidget {
-  const CircularLoading({
+class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({
     super.key,
   });
 

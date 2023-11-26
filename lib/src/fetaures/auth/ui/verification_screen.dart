@@ -78,7 +78,7 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                         FilledButton(
                           onPressed: _handleVerification,
                           child: isLoading
-                              ? const CircularLoading()
+                              ? const LoadingWidget()
                               : Text("verification".tr()),
                         ),
                         const SizedBox(height: 50),

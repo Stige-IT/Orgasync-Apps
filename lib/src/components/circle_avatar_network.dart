@@ -16,6 +16,7 @@ class CircleAvatarNetwork extends StatelessWidget {
       alignment: Alignment.center,
       height: size!,
       width: size!,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: context.theme.colorScheme.surfaceVariant,
         shape: BoxShape.circle,
@@ -30,8 +31,8 @@ class CircleAvatarNetwork extends StatelessWidget {
           return const Center(child: Icon(Icons.error));
         },
         fit: BoxFit.cover,
-        width: 170,
-        height: 170,
+        width: size,
+        height: size,
         imageUrl: '${ConstantUrl.BASEIMGURL}/$image',
       ),
     );

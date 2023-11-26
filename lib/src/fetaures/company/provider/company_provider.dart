@@ -4,6 +4,11 @@ final companyNotifier = StateNotifierProvider<CompanyNotifier, BaseState<List<My
   return CompanyNotifier(ref.watch(companyProvider));
 });
 
+final totalMyCompanyNotifier = StateNotifierProvider<TotalMyCompanyNotifier,States >((ref) {
+  return TotalMyCompanyNotifier(ref.watch(companyProvider));
+});
+
+
 final joinCompanyNotifier = StateNotifierProvider<JoinCompanyNotifier, States>((ref) {
   return JoinCompanyNotifier(ref.watch(companyProvider), ref);
 });

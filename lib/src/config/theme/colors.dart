@@ -72,3 +72,16 @@ class AppColors{
     surfaceTint: Color(0xff4e597d),
   );
 }
+
+
+List<Color> colors =[
+  Colors.red[300]!,
+  Colors.blue[300]!,
+  Colors.green[300]!,
+  Colors.purple[300]!,
+  Colors.orange[300]!,
+  Colors.pink[300]!,
+  Colors.teal[300]!,
+  Colors.yellow[300]!,
+  Colors.indigo[300]!,
+];

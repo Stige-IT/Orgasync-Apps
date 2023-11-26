@@ -6,6 +6,7 @@ class ProfileDataWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(userNotifier).data;
+    final totalCompany = ref.watch(totalMyCompanyNotifier).total;
     return Column(
       children: [
         SizedBox(
@@ -22,21 +23,23 @@ class ProfileDataWidget extends ConsumerWidget {
                 child: LayoutBuilder(builder: (_, constraint) {
                   return SizedBox(
                     width: constraint.maxWidth * 0.55,
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TotalJoinWidget(total: 5, title: "Join Company"),
-                        TotalJoinWidget(total: 10, title: "Join Project"),
+                        TotalJoinWidget(
+                            total: totalCompany ?? 0, title: "Join Company"),
+                        const TotalJoinWidget(total: 10, title: "Join Project"),
                       ],
                     ),
                   );
                 }),
               ),
               Positioned(
-                bottom: 0,
-                left: 10,
-                child: CircleAvatarNetwork(data?.image, size: 170),
-              ),
+                  bottom: 0,
+                  left: 10,
+                  child: data?.image != null
+                      ? CircleAvatarNetwork(data?.image, size: 170)
+                      : ProfileWithName(data?.name ?? "  ", size: 170)),
             ],
           ),
         ),
@@ -58,7 +61,7 @@ class ProfileDataWidget extends ConsumerWidget {
           visualDensity: const VisualDensity(vertical: -4),
           leading: const Icon(Icons.location_on_outlined),
           title: Text(
-            "Garut, Indonesia",
+            (data?.address ?? Address()).formattedAddress,
             style: context.theme.textTheme.bodyLarge!,
           ),
         ),

@@ -29,5 +29,6 @@ class AppRoute{
     /// USER PAGES
     "/profile" : (_) => const ProfileScreen(),
     "/profile/form" : (_)=> const FormProfileScreen(),
+    "/profile/my-company" : (_)=> const MyCompanyScreen(),
   };
 }

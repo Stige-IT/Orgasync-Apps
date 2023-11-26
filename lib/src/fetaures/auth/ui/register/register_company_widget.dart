@@ -91,7 +91,7 @@ class _RegisterCompanyWidgetState extends ConsumerState<RegisterCompanyWidget> {
             FilledButton(
               onPressed: _handleRegister,
               child:
-                  isLoading ? const CircularLoading() : Text("register".tr()),
+                  isLoading ? const LoadingWidget() : Text("register".tr()),
             ),
             Center(
               child: Column(
