@@ -8,6 +8,7 @@ class UserData {
   bool? isActive;
   bool? isVerified;
   String? registeredAt;
+  Address? address;
 
   UserData(
       {this.id,
@@ -16,7 +17,9 @@ class UserData {
         this.email,
         this.isActive,
         this.isVerified,
-        this.registeredAt});
+        this.registeredAt,
+        this.address,
+      });
 
   UserData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -26,6 +29,7 @@ class UserData {
     isActive = json['is_active'];
     isVerified = json['is_verified'];
     registeredAt = json['registered_at'];
+    address = json['address'] != null ? Address.fromJson(json['address']) : null;
   }
 
   Map<String, dynamic> toJson() {

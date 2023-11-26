@@ -40,3 +40,35 @@ class UserNotifier extends StateNotifier<States<UserData>> {
     }
   }
 }
+
+// state notifier edit user data
+class EditUserNotifier extends StateNotifier<States<bool>> {
+  final UserApi userApi;
+  final Ref ref;
+
+  EditUserNotifier(this.userApi, this.ref) : super(States.noState());
+
+  Future<bool> edit({
+    String? name,
+    String? email,
+    File? image,
+  }) async {
+    state = States.loading();
+    try {
+      final result = await userApi.editProfile(
+        name: name,
+        email: email,
+        image: image,
+      );
+      return result.fold(
+        (error) {state = States.error(error); return false;},
+        (success) {
+          ref.read(userNotifier.notifier).get();
+          state = States.noState(); return true;},
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}

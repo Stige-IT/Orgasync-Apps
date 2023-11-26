@@ -98,7 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: FilledButton(
                         onPressed: _handleLogin,
                         child: loginProvider.isLoading
-                            ? const CircularLoading()
+                            ? const LoadingWidget()
                             : Text("login".tr()),
                       ),
                     ),
