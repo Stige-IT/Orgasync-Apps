@@ -45,13 +45,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 .copyWith(fontWeight: FontWeight.w600),
           ),
           actions: [
-            IconButton(
-              onPressed: () {
-                ref.read(storageProvider).delete("token");
-                nextPageRemoveAll(context, "/login");
-              },
-              icon: const Icon(Icons.logout),
-            ),
+            // IconButton(
+            //   onPressed: () {
+            //     ref.read(storageProvider).delete("token");
+            //     nextPageRemoveAll(context, "/login");
+            //   },
+            //   icon: const Icon(Icons.logout),
+            // ),
             IconButton(
                 onPressed: () {}, icon: const Icon(Icons.notifications_none)),
             InkWell(
