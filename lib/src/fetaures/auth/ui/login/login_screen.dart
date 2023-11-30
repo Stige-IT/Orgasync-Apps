@@ -57,8 +57,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   children: [
                     const CircleAvatar(
                       radius: 25,
-                      backgroundImage:
-                          AssetImage("assets/images/app_logo.png"),
+                      backgroundImage: AssetImage("assets/images/app_logo.png"),
                     ),
                     Text("login".tr(),
                         style: Theme.of(context).textTheme.displayMedium),
@@ -85,9 +84,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               !isObsecure;
                         },
                         icon: Icon(
-                          !isObsecure
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          !isObsecure ? Icons.visibility : Icons.visibility_off,
                           color: Colors.grey,
                         ),
                       ),
@@ -123,7 +120,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             children: [
                               Text("dont_have_account".tr()),
                               TextButton(
-                                onPressed: () => nextPage(context, "/role"),
+                                onPressed: () => nextPage(context, "/register"),
                                 child: Text("register".tr()),
                               ),
                             ],

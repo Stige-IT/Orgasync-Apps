@@ -1,9 +1,7 @@
 part of '../../auth.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
-  final TypeUser typeUser;
-
-  const RegisterScreen(this.typeUser, {super.key});
+  const RegisterScreen({super.key});
 
   @override
   ConsumerState createState() => _RegisterScreenState();
@@ -45,16 +43,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           "register_your_account".tr(),
                           style: const TextStyle(fontSize: 18),
                         ),
-                        if (widget.typeUser == TypeUser.employee)
-                          const RegisterEmployeeWidget()
-                        else
-                          const RegisterCompanyWidget(),
+                        const RegisterEmployeeWidget(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text("have_account".tr()),
                             TextButton(
-                              onPressed: () => nextPageRemoveAll(context, "/login"),
+                              onPressed: () =>
+                                  nextPageRemoveAll(context, "/login"),
                               child: Text("login".tr()),
                             ),
                           ],
@@ -65,13 +61,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
               ),
             ),
-
             if (context.isDesktop)
               Flexible(
                 child: Container(
                   padding: const EdgeInsets.only(left: 20),
                   width: 600,
-                  child: Image.asset("assets/images/join_person1.png", alignment: Alignment.center, fit: BoxFit.cover,),
+                  child: Image.asset(
+                    "assets/images/join_person1.png",
+                    alignment: Alignment.center,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
           ],
