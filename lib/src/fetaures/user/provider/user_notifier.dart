@@ -105,7 +105,7 @@ class EditAddressNotifier extends StateNotifier<States<bool>> {
 
   EditAddressNotifier(this.userApi, this.ref) : super(States.noState());
 
-  Future<bool> edit(Address address) async {
+  Future<bool> edit(AddressRequest address) async {
     state = States.loading();
     try {
       final result = await userApi.editUserAddress(address);

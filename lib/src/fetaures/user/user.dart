@@ -39,6 +39,7 @@ import '../../utils/helper/local_storage/secure_storage_client.dart';
 import '../theme/provider/theme_provider.dart';
 
 part "models/user_data.dart";
+part 'models/address_request.dart';
 part "data/user_api.dart";
 part "provider/user_provider.dart";
 part 'provider/user_notifier.dart';

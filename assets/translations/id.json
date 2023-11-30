@@ -70,5 +70,13 @@
   "your_password" : "Password Anda",
   "input_new_password" : "Masukkan password baru Anda",
   "input_your_password" : "Masukkan password Anda",
-  "view_password" : "Lihat password"
+  "view_password" : "Lihat password",
+  "change_address" : "Ubah alamat",
+  "province" : "Provinsi",
+  "city": "Kota",
+  "district" : "Kecamatan",
+  "sub_district" : "Kelurahan",
+  "street_address" : "Alamat jalan",
+  "zip_code" : "Kode pos",
+  "input_zip_code" : "Masukkan kode pos Anda"
 } 

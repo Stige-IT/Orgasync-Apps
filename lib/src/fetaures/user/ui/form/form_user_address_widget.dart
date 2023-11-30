@@ -17,6 +17,7 @@ class _FormUserAddressWidgetState extends ConsumerState<FormUserAddressWidget> {
     _addressCtrl = TextEditingController();
     _zipCodeCtrl = TextEditingController();
     Future.microtask(() {
+      ref.read(countryNotifier.notifier).get();
       ref.read(provinceNotifier.notifier).get();
       ref.read(addressNotifier.notifier).get();
       final userdata = ref.watch(addressNotifier).data;
@@ -35,6 +36,8 @@ class _FormUserAddressWidgetState extends ConsumerState<FormUserAddressWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(editAddressNotifier).isLoading;
+    final countries = ref.watch(countryNotifier).data;
     final provincies = ref.watch(provinceNotifier).data;
     final cities = ref.watch(cityNotifier).data;
     final districts = ref.watch(districtNotifier).data;
@@ -48,8 +51,16 @@ class _FormUserAddressWidgetState extends ConsumerState<FormUserAddressWidget> {
         ),
         DropdownContainer(
           title: "country".tr(),
-          items: [],
-          onChanged: (value) {},
+          value: ref.watch(idCountryProvider),
+          items: (countries ?? [])
+              .map((country) => DropdownMenuItem<int>(
+                    value: country.id,
+                    child: Text(country.name ?? ""),
+                  ))
+              .toList(),
+          onChanged: (value) {
+            ref.read(idCountryProvider.notifier).state = value;
+          },
         ),
         DropdownContainer(
           title: "province".tr(),
@@ -141,8 +152,31 @@ class _FormUserAddressWidgetState extends ConsumerState<FormUserAddressWidget> {
           margin: const EdgeInsets.symmetric(vertical: 20.0),
           width: double.infinity,
           child: FilledButton(
-            onPressed: () {},
-            child: Text("save".tr()),
+            onPressed: () {
+              if (isLoading) return;
+              final request = AddressRequest(
+                country: ref.watch(idCountryProvider),
+                province: ref.watch(idProvinceProvider),
+                regency: ref.watch(idCityProvider),
+                district: ref.watch(idDistrictProvider),
+                village: ref.watch(idSubdistrictProvider),
+                street: _addressCtrl.text,
+                zipCode: int.parse(_zipCodeCtrl.text),
+              );
+              ref
+                  .read(editAddressNotifier.notifier)
+                  .edit(request)
+                  .then((success) {
+                if (success) {
+                  showSnackbar(context, "success".tr(),
+                      type: SnackBarType.success);
+                } else {
+                  final errMsg = ref.watch(editAddressNotifier).error!;
+                  showSnackbar(context, errMsg, type: SnackBarType.error);
+                }
+              });
+            },
+            child: isLoading ? const LoadingWidget() : Text("save".tr()),
           ),
         ),
       ],

@@ -2,6 +2,7 @@ part of "../address.dart";
 
 abstract class AddressApi {
   Future<List<AddressDetail>> getAddress({String title = "province", int? id});
+  Future<List<Country>> getCountry();
 }
 
 final addressProvider = Provider<AddressApiImpl>((ref) {
@@ -25,6 +26,20 @@ class AddressApiImpl implements AddressApi {
       case 200:
         List result = jsonDecode(response.body);
         final data = result.map((e) => AddressDetail.fromJson(e)).toList();
+        return data;
+      default:
+        return [];
+    }
+  }
+
+  @override
+  Future<List<Country>> getCountry() async {
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/address/country");
+    final response = await _client.get(url);
+    switch (response.statusCode) {
+      case 200:
+        List result = jsonDecode(response.body);
+        final data = result.map((e) => Country.fromJson(e)).toList();
         return data;
       default:
         return [];

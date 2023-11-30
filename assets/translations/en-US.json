@@ -69,5 +69,14 @@
   "your_password" : "Your password",
   "input_new_password" : "Input new password",
   "input_your_password" : "Input your password",
-  "view_password" : "View password"
+  "view_password" : "View password",
+  "change_address" : "Change address",
+  "country" : "Country",
+  "province" : "Province",
+  "city": "City",
+  "district" : "District",
+  "sub_district" : "Sub district",
+  "street_address" : "Street address",
+  "zip_code" : "Zip code",
+  "input_zip_code" : "Input zip code"
 }

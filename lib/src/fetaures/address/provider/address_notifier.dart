@@ -14,3 +14,19 @@ class AddressNotifier extends StateNotifier<States<List<AddressDetail>>> {
     }
   }
 }
+
+// country
+class CountryNotifier extends StateNotifier<States<List<Country>>> {
+  final AddressApiImpl addressApi;
+  CountryNotifier(this.addressApi) : super(States.noState());
+
+  Future<void> get() async {
+    state = States.loading();
+    try {
+      final result = await addressApi.getCountry();
+      state = States.finished(result);
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+    }
+  }
+}

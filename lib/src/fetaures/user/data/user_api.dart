@@ -10,7 +10,7 @@ abstract class UserApi {
   // get user address
   Future<Either<String, Address>> getUserAddress();
   // edit user address
-  Future<Either<String, bool>> editUserAddress(Address address);
+  Future<Either<String, bool>> editUserAddress(AddressRequest address);
 
   // edit password
   Future<Either<String, bool>> editPassword(
@@ -94,8 +94,8 @@ class UserApiImpl implements UserApi {
   }
 
   @override
-  Future<Either<String, bool>> editUserAddress(Address address) async {
-    Uri url = Uri.parse('${ConstantUrl.BASE_URL}/me/address');
+  Future<Either<String, bool>> editUserAddress(AddressRequest address) async {
+    Uri url = Uri.parse('${ConstantUrl.BASE_URL}/address/me');
     final token = await storage.read("token");
     final headers = {
       "Authorization": "Bearer $token",
