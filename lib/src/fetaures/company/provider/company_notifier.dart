@@ -50,6 +50,25 @@ class CompanyNotifier extends StateNotifier<BaseState<List<MyCompany>>> {
   }
 }
 
+// get detail company
+class DetailCompanyNotifier extends StateNotifier<States<CompanyDetail>> {
+  final CompanyApi _companyApi;
+  DetailCompanyNotifier(this._companyApi) : super(States.noState());
+
+  Future<void> get(String companyId) async {
+    state = States.loading();
+    try {
+      final result = await _companyApi.getDetail(companyId);
+      result.fold(
+        (error) => state = States.error(error),
+        (data) => state = States.finished(data),
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+    }
+  }
+}
+
 // get total my company
 class TotalMyCompanyNotifier extends StateNotifier<States> {
   final CompanyApiImpl _companyApiImpl;

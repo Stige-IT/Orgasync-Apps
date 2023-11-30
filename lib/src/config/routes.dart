@@ -23,7 +23,10 @@ class AppRoute {
     "/": (_) => const HomeScreen(),
 
     /// COMPANY PAGE
-    "/company/dashboard": (_) => const DashboardScreen(),
+    "/company/dashboard": (context) {
+      final companyId = ModalRoute.of(context)!.settings.arguments as String;
+      return DashboardScreen(companyId);
+    },
     "/company/create": (_) => const RegisterCompanyWidget(),
 
     /// USER PAGES

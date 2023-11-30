@@ -11,7 +11,8 @@ class CardCompany extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 10),
       width: context.isDesktop ? context.width * 0.3 : null,
       child: InkWell(
-        onTap: () => nextPage(context, "/company/dashboard"),
+        onTap: () => nextPage(context, "/company/dashboard",
+            argument: company.company!.id),
         child: Stack(
           children: [
             Card(

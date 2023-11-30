@@ -8,6 +8,11 @@ final companyNotifier =
   return CompanyNotifier(ref.watch(companyProvider));
 });
 
+final detailCompanyNotifier =
+    StateNotifierProvider<DetailCompanyNotifier, States<CompanyDetail>>((ref) {
+  return DetailCompanyNotifier(ref.watch(companyProvider));
+});
+
 final totalMyCompanyNotifier =
     StateNotifierProvider<TotalMyCompanyNotifier, States>((ref) {
   return TotalMyCompanyNotifier(ref.watch(companyProvider));
