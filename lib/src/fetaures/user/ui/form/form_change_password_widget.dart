@@ -29,6 +29,8 @@ class _FormChangePasswordWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final isObsecure = ref.watch(obsecureProvider);
+    final isLoading = ref.watch(editPasswordNotifier).isLoading;
     return ListView(
       padding: const EdgeInsets.all(15.0),
       children: [
@@ -41,27 +43,50 @@ class _FormChangePasswordWidgetState
           title: "your_password".tr(),
           hintText: "input_your_password".tr(),
           controllers: _passwordCtrl,
-          obsecureText: true,
+          obsecureText: isObsecure,
         ),
         FieldInput(
           title: "new_password".tr(),
           hintText: "input_new_password".tr(),
           controllers: _newPasswordCtrl,
-          obsecureText: true,
+          obsecureText: isObsecure,
         ),
         Align(
           alignment: Alignment.centerLeft,
           child: TextButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              ref.read(obsecureProvider.notifier).state = !isObsecure;
+            },
             icon: const Icon(Icons.check_box_outline_blank),
-            label: Text(
-              "view_password".tr(),
-            ),
+            label: Text("view_password".tr()),
           ),
         ),
         const SizedBox(height: 20),
-        FilledButton(onPressed: () {}, child: Text("save".tr()))
+        FilledButton(
+          onPressed: _handleChangePassword,
+          child: isLoading ? const LoadingWidget() : Text("save".tr()),
+        )
       ],
     );
+  }
+
+  void _handleChangePassword() {
+    if (ref.watch(editPasswordNotifier).isLoading) return;
+    ref
+        .read(editPasswordNotifier.notifier)
+        .edit(
+          _passwordCtrl.text,
+          _newPasswordCtrl.text,
+        )
+        .then((success) {
+      if (success) {
+        _newPasswordCtrl.clear();
+        _passwordCtrl.clear();
+        showSnackbar(context, "success".tr(), type: SnackBarType.success);
+      } else {
+        final errorMessage = ref.watch(editPasswordNotifier).error!;
+        showSnackbar(context, errorMessage, type: SnackBarType.error);
+      }
+    });
   }
 }

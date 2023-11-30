@@ -64,5 +64,10 @@
   "choice_your_option" : "Choice your option",
   "create_company" : "Create company",
   "create": "Create",
-  "please_select_type_company": "Please select type company"
+  "please_select_type_company": "Please select type company",
+  "new_password" : "New password",
+  "your_password" : "Your password",
+  "input_new_password" : "Input new password",
+  "input_your_password" : "Input your password",
+  "view_password" : "View password"
 }

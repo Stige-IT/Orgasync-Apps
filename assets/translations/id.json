@@ -65,5 +65,10 @@
   "choice_your_option" : "Pilih opsi Anda",
   "create_company" : "Buat perusahaan",
   "create" : "Buat",
-  "please_select_type_company" : "Silakan pilih jenis perusahaan"
+  "please_select_type_company" : "Silakan pilih jenis perusahaan",
+  "new_password" : "Password baru",
+  "your_password" : "Password Anda",
+  "input_new_password" : "Masukkan password baru Anda",
+  "input_your_password" : "Masukkan password Anda",
+  "view_password" : "Lihat password"
 } 

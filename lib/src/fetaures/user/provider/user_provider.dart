@@ -1,5 +1,7 @@
 part of "../user.dart";
 
+final obsecureProvider = StateProvider<bool>((ref) => true);
+
 final imageProvider = StateProvider.autoDispose<File?>((ref) => null);
 
 final roleNotifier = StateNotifierProvider<RoleNotifier, TypeUser?>((ref) {
