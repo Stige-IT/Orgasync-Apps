@@ -57,5 +57,12 @@
   "present" : "Present",
   "user_data" : "User data",
   "address" : "Address",
-  "change_password" : "Change password"
+  "change_password" : "Change password",
+  "create_new_company" : "Create new company",
+  "join_company" : "Join company",
+  "create_your_company" : "Create your company",
+  "choice_your_option" : "Choice your option",
+  "create_company" : "Create company",
+  "create": "Create",
+  "please_select_type_company": "Please select type company"
 }

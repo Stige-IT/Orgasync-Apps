@@ -9,8 +9,6 @@ abstract class AuthApi {
   Future<Either<String, bool>> register(
       {required String name, required String email, required String password});
 
-  Future<Either<String, bool>> companyRegister(CompanyRequest companyRequest);
-
   Future<Either<String, bool>> verification({
     required String email,
     required String code,
@@ -85,26 +83,6 @@ class AuthApiImpl implements AuthApi {
     final response = await client.post(
       url,
       body: jsonEncode(data),
-      headers: {"Content-Type": "application/json"},
-    );
-    if (response.statusCode == 201) {
-      return const Right(true);
-    } else if (response.statusCode == 422) {
-      final message = jsonDecode(response.body)["detail"];
-      if (message["email"] == "registered") {
-        return Left("already_registered".tr());
-      }
-    }
-    return const Left("Gagal Mendaftar, coba kembali");
-  }
-
-  @override
-  Future<Either<String, bool>> companyRegister(
-      CompanyRequest companyRequest) async {
-    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/register");
-    final response = await client.post(
-      url,
-      body: jsonEncode(companyRequest.toJson()),
       headers: {"Content-Type": "application/json"},
     );
     if (response.statusCode == 201) {

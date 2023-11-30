@@ -3,6 +3,7 @@ part of "../company.dart";
 abstract class CompanyApi {
   Future<Either<String, ResponseData<List<MyCompany>>>> getCompany(int page);
   Future<Either<String, bool>> joinCompany(String code);
+  Future<Either<String, bool>> createCompany(CompanyRequest companyRequest);
 }
 
 final companyProvider = Provider<CompanyApiImpl>((ref) {
@@ -43,13 +44,13 @@ class CompanyApiImpl implements CompanyApi {
   }
 
   @override
-  Future<Either<String, bool>> joinCompany(String code)async {
+  Future<Either<String, bool>> joinCompany(String code) async {
     Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/me/join?code=$code");
     final token = await storage.read("token");
     final response = await client.post(url, headers: {
-      "Authorization" : "Bearer $token",
+      "Authorization": "Bearer $token",
     });
-    switch(response.statusCode){
+    switch (response.statusCode) {
       case 201:
         return const Right(true);
       default:
@@ -58,5 +59,28 @@ class CompanyApiImpl implements CompanyApi {
     }
   }
 
+  @override
+  Future<Either<String, bool>> createCompany(
+      CompanyRequest companyRequest) async {
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/me/create");
+    final token = await storage.read("token");
+    final response = await client
+        .post(url, body: jsonEncode(companyRequest.toJson()), headers: {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    });
 
+    switch (response.statusCode) {
+      case 201:
+        return const Right(true);
+      case 422:
+        final message = jsonDecode(response.body)["detail"];
+        if (message["email"] == "registered") {
+          return Left("already_registered".tr());
+        }
+        return Left("failed".tr());
+      default:
+        return Left("failed".tr());
+    }
+  }
 }

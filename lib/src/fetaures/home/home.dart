@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:orgasync/src/components/circular_loading.dart';
 import 'package:orgasync/src/components/error_button.dart';
 import 'package:orgasync/src/components/field_input.dart';

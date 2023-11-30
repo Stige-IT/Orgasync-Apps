@@ -32,49 +32,66 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final user = ref.watch(userNotifier).data;
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          toolbarHeight: context.height * 0.1,
-          backgroundColor: Colors.transparent,
-          // leading: Image.asset("assets/images/app_logo.png"),
-          title: Text(
-            "app_name".tr(),
-            style: Theme.of(context)
-                .textTheme
-                .displaySmall!
-                .copyWith(fontWeight: FontWeight.w600),
+      appBar: AppBar(
+        elevation: 0,
+        toolbarHeight: context.height * 0.1,
+        backgroundColor: Colors.transparent,
+        // leading: Image.asset("assets/images/app_logo.png"),
+        title: Text(
+          "app_name".tr(),
+          style: Theme.of(context)
+              .textTheme
+              .displaySmall!
+              .copyWith(fontWeight: FontWeight.w600),
+        ),
+        actions: [
+          // IconButton(
+          //   onPressed: () {
+          //     ref.read(storageProvider).delete("token");
+          //     nextPageRemoveAll(context, "/login");
+          //   },
+          //   icon: const Icon(Icons.logout),
+          // ),
+          IconButton(
+              onPressed: () {}, icon: const Icon(Icons.notifications_none)),
+          InkWell(
+            onTap: () => nextPage(context, "/profile"),
+            child: user == null || user.image == null
+                ? ProfileWithName(user?.name)
+                : CircleAvatarNetwork(user.image, size: 50),
           ),
-          actions: [
-            // IconButton(
-            //   onPressed: () {
-            //     ref.read(storageProvider).delete("token");
-            //     nextPageRemoveAll(context, "/login");
-            //   },
-            //   icon: const Icon(Icons.logout),
-            // ),
-            IconButton(
-                onPressed: () {}, icon: const Icon(Icons.notifications_none)),
-            InkWell(
-              onTap: () => nextPage(context, "/profile"),
-              child: user == null || user.image == null
-                  ? ProfileWithName(user?.name)
-                  : CircleAvatarNetwork(user.image, size: 50),
-            ),
-            const SizedBox(width: 20),
-          ],
-        ),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            await Future.delayed(const Duration(seconds: 1), () {
-              ref.read(companyNotifier.notifier).refresh();
-            });
-          },
-          child: const CompaniesWidget(),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _handleJoinCompany,
-          child: const Icon(Icons.add),
-        ));
+          const SizedBox(width: 20),
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(const Duration(seconds: 1), () {
+            ref.read(companyNotifier.notifier).refresh();
+          });
+        },
+        child: const CompaniesWidget(),
+      ),
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        spacing: 7,
+        spaceBetweenChildren: 10,
+        childPadding: const EdgeInsets.all(5),
+        buttonSize: const Size(70, 70),
+        children: [
+          SpeedDialChild(
+            child: const Icon(Icons.add),
+            label: "create_new_company".tr(),
+            onTap: () => nextPage(context, "/company/create"),
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.group_add),
+            label: "join_company".tr(),
+            onTap: _handleJoinCompany,
+          ),
+        ],
+      ),
+    );
   }
 
   void _handleJoinCompany() {

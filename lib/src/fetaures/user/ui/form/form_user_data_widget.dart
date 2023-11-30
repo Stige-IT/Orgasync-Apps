@@ -95,6 +95,7 @@ class _FormUserdataWidgetState extends ConsumerState<FormUserdataWidget> {
                 controllers: _nameCtrl,
               ),
               FieldInput(
+                enable: false,
                 title: "email".tr(),
                 hintText: "input_email".tr(),
                 controllers: _emailCtrl,

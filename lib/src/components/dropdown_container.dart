@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class DropdownContainer<T> extends StatelessWidget {
@@ -30,8 +31,9 @@ class DropdownContainer<T> extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).colorScheme.outline),
-              color: Theme.of(context).colorScheme.background,
+                border:
+                    Border.all(color: Theme.of(context).colorScheme.outline),
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
@@ -43,13 +45,13 @@ class DropdownContainer<T> extends StatelessWidget {
                 ]),
             child: DropdownButtonHideUnderline(
                 child: DropdownButton<T?>(
-                  value: value,
-                  hint: Text(hint ?? "Silahkan pilih"),
-                  isExpanded: true,
-                  borderRadius: BorderRadius.circular(15),
-                  items: items,
-                  onChanged: onChanged,
-                )),
+              value: value,
+              hint: Text(hint ?? "choice_your_option".tr()),
+              isExpanded: true,
+              borderRadius: BorderRadius.circular(15),
+              items: items,
+              onChanged: onChanged,
+            )),
           ),
         ],
       ),

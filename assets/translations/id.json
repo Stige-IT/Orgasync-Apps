@@ -58,5 +58,12 @@
   "present": "Sekarang",
   "user_data" : "Data pengguna",
   "address" : "Alamat",
-  "change_password" : "Ganti password"
-}
+  "change_password" : "Ganti password",
+  "create_new_company" : "Buat perusahaan baru",
+  "join_company" : "gabung perusahaan",
+  "create_your_company" : "Buat perusahaan Anda",
+  "choice_your_option" : "Pilih opsi Anda",
+  "create_company" : "Buat perusahaan",
+  "create" : "Buat",
+  "please_select_type_company" : "Silakan pilih jenis perusahaan"
+} 

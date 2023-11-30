@@ -57,33 +57,6 @@ class RegisterEmployeeNotifier extends StateNotifier<States> {
   }
 }
 
-// register user company
-class RegisterCompanyNotifier extends StateNotifier<States> {
-  final AuthApi _authApi;
-
-  RegisterCompanyNotifier(this._authApi) : super(States.noState());
-
-  Future<bool> register(CompanyRequest companyRequest) async {
-    state = States.loading();
-    try {
-      final result = await _authApi.companyRegister(companyRequest);
-      return result.fold(
-        (error) {
-          state = States.error(error);
-          return false;
-        },
-        (success) {
-          state = States.noState();
-          return true;
-        },
-      );
-    } catch (exception) {
-      state = States.error(exceptionTomessage(exception));
-      return false;
-    }
-  }
-}
-
 // verification user
 class VerificationNotifier extends StateNotifier<States> {
   final AuthApi _authApi;

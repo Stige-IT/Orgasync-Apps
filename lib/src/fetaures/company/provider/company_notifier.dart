@@ -95,3 +95,30 @@ class JoinCompanyNotifier extends StateNotifier<States> {
     }
   }
 }
+
+// create new company state notifier
+class CreateCompanyNotifier extends StateNotifier<States> {
+  final CompanyApiImpl _companyApiImpl;
+  final Ref ref;
+
+  CreateCompanyNotifier(this._companyApiImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> createCompany(CompanyRequest companyRequest) async {
+    state = States.loading();
+    try {
+      final result = await _companyApiImpl.createCompany(companyRequest);
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(companyNotifier.notifier).refresh();
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}

@@ -24,6 +24,7 @@ class AppRoute {
 
     /// COMPANY PAGE
     "/company/dashboard": (_) => const DashboardScreen(),
+    "/company/create": (_) => const RegisterCompanyWidget(),
 
     /// USER PAGES
     "/profile": (_) => const ProfileScreen(),

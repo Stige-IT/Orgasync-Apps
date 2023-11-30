@@ -1,9 +1,6 @@
 part of "../auth.dart";
 
 final isObsecureProvider = StateProvider.autoDispose<bool>((ref) => true);
-// type company
-final typeCompanyProvider = StateProvider.autoDispose<String?>((ref) => null);
-
 
 /// state notifier
 final loginNotifier =
@@ -18,12 +15,6 @@ final registerEmployeeNotifier =
   return RegisterEmployeeNotifier(authApi);
 });
 
-final registerCompanyNotifier =
-    StateNotifierProvider.autoDispose<RegisterCompanyNotifier, States>((ref) {
-  final authApi = ref.watch(authProvider);
-  return RegisterCompanyNotifier(authApi);
-});
-
 final verificationNotifier =
     StateNotifierProvider.autoDispose<VerificationNotifier, States>((ref) {
   final authApi = ref.watch(authProvider);
@@ -36,7 +27,7 @@ final resendCodeNotifier =
   return ResendCodeNotifier(authApi);
 });
 
-final refreshNotifier = StateNotifierProvider<RefreshTokenNotifier, States>((ref) {
+final refreshNotifier =
+    StateNotifierProvider<RefreshTokenNotifier, States>((ref) {
   return RefreshTokenNotifier(ref.watch(authProvider));
 });
-
