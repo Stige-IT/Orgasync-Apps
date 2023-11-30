@@ -6,6 +6,15 @@ abstract class UserApi {
   // edit profile
   Future<Either<String, bool>> editProfile(
       {String? name, String? email, File? image});
+
+  // get user address
+  Future<Either<String, Address>> getUserAddress();
+  // edit user address
+  Future<Either<String, bool>> editUserAddress(Address address);
+
+  // edit password
+  Future<Either<String, bool>> editPassword(
+      String password, String newPassword);
 }
 
 final userProvider = StateProvider<UserApiImpl>((ref) {
@@ -52,7 +61,7 @@ class UserApiImpl implements UserApi {
       request.fields["email"] = email;
     }
     if (image != null) {
-      final file = await http.MultipartFile(
+      final file = http.MultipartFile(
         "image",
         image.readAsBytes().asStream(),
         image.lengthSync(),
@@ -66,6 +75,65 @@ class UserApiImpl implements UserApi {
         return const Right(true);
       default:
         return Left("error".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, Address>> getUserAddress() async {
+    Uri url = Uri.parse('${ConstantUrl.BASE_URL}/address/me');
+    final token = await storage.read("token");
+    final response =
+        await client.get(url, headers: {"Authorization": "Bearer $token"});
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final address = Address.fromJson(data);
+      return Right(address);
+    } else {
+      return Left("error".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> editUserAddress(Address address) async {
+    Uri url = Uri.parse('${ConstantUrl.BASE_URL}/me/address');
+    final token = await storage.read("token");
+    final headers = {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    };
+    final response = await client.put(
+      url,
+      headers: headers,
+      body: jsonEncode(address.toJson()),
+    );
+    if (response.statusCode == 200) {
+      return const Right(true);
+    } else {
+      return Left("error".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> editPassword(
+    String password,
+    String newPassword,
+  ) async {
+    Uri url = Uri.parse('${ConstantUrl.BASE_URL}/me/change-password');
+    final token = await storage.read("token");
+    final headers = {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    };
+    final body = {
+      "password": password,
+      "new_password": newPassword,
+    };
+    final response =
+        await client.put(url, headers: headers, body: jsonEncode(body));
+    if (response.statusCode == 200) {
+      return const Right(true);
+    } else {
+      return Left("error".tr());
     }
   }
 }

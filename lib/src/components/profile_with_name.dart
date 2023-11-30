@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:orgasync/src/config/theme/colors.dart';
 import 'package:orgasync/src/utils/helper/theme_of_context.dart';
 
 class ProfileWithName extends StatelessWidget {
@@ -13,7 +16,7 @@ class ProfileWithName extends StatelessWidget {
       height: size,
       width: size,
       decoration: BoxDecoration(
-        color: context.theme.colorScheme.surfaceVariant,
+        color: colors[Random().nextInt(colors.length)],
         shape: BoxShape.circle,
       ),
       child: FittedBox(

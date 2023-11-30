@@ -52,6 +52,11 @@
   "dark" : "Gelap",
   "light": "Terang",
   "save": "Simpan",
+  "success" : "Berhasil",
   "profile": "Profil",
-  "my_company": "Perusahaan saya ikuti"
+  "my_company": "Perusahaan saya ikuti",
+  "present": "Sekarang",
+  "user_data" : "Data pengguna",
+  "address" : "Alamat",
+  "change_password" : "Ganti password"
 }

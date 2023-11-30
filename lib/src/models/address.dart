@@ -1,43 +1,45 @@
-
 class Address {
   String? id;
   String? street;
-  Province? province;
-  Province? regency;
-  Province? district;
-  Province? village;
-  Province? country;
+  AddressDetail? province;
+  AddressDetail? regency;
+  AddressDetail? district;
+  AddressDetail? village;
+  AddressDetail? country;
   int? zipCode;
   String? lat;
   String? lng;
 
   Address(
       {this.id,
-        this.street,
-        this.province,
-        this.regency,
-        this.district,
-        this.village,
-        this.country,
-        this.zipCode,
-        this.lat,
-        this.lng});
+      this.street,
+      this.province,
+      this.regency,
+      this.district,
+      this.village,
+      this.country,
+      this.zipCode,
+      this.lat,
+      this.lng});
 
   Address.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     street = json['street'];
     province = json['province'] != null
-        ? Province.fromJson(json['province'])
+        ? AddressDetail.fromJson(json['province'])
         : null;
-    regency =
-    json['regency'] != null ? Province.fromJson(json['regency']) : null;
+    regency = json['regency'] != null
+        ? AddressDetail.fromJson(json['regency'])
+        : null;
     district = json['district'] != null
-        ? Province.fromJson(json['district'])
+        ? AddressDetail.fromJson(json['district'])
         : null;
-    village =
-    json['village'] != null ? Province.fromJson(json['village']) : null;
-    country =
-    json['country'] != null ? Province.fromJson(json['country']) : null;
+    village = json['village'] != null
+        ? AddressDetail.fromJson(json['village'])
+        : null;
+    country = json['country'] != null
+        ? AddressDetail.fromJson(json['country'])
+        : null;
     zipCode = json['zip_code'];
     lat = json['lat'];
     lng = json['lng'];
@@ -69,13 +71,13 @@ class Address {
   }
 }
 
-class Province {
+class AddressDetail {
   int? id;
   String? name;
 
-  Province({this.id, this.name});
+  AddressDetail({this.id, this.name});
 
-  Province.fromJson(Map<String, dynamic> json) {
+  AddressDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
   }

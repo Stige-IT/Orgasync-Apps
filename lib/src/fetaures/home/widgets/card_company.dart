@@ -16,7 +16,10 @@ class CardCompany extends StatelessWidget {
           children: [
             Card(
               shape: RoundedRectangleBorder(
-                side: BorderSide(color: context.theme.colorScheme.inverseSurface.withOpacity(0.5), width: 1),
+                side: BorderSide(
+                    color: context.theme.colorScheme.inverseSurface
+                        .withOpacity(0.5),
+                    width: 1),
                 borderRadius: BorderRadius.circular(20),
               ),
               margin: const EdgeInsets.only(bottom: 40, top: 10),
@@ -27,13 +30,13 @@ class CardCompany extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: context.theme.textTheme.headlineMedium!
                             .copyWith(fontWeight: FontWeight.w500)),
-                    subtitle: const Text("July 2021 - Present"),
+                    subtitle: Text(company.joinedFormat),
                   ),
                   ListTile(
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     trailing: Text(
-                      "${company.typeEmployee?.name} | ${company.position?.name}",
+                      company.typePositionFormat,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
@@ -43,17 +46,9 @@ class CardCompany extends StatelessWidget {
             Positioned(
               bottom: 10,
               left: 20,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color:context.theme.colorScheme.inverseSurface.withOpacity(0.5), width: 2),
-                ),
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundImage: NetworkImage(company.company?.logo ??
-                      "https://blog.hubspot.com/hubfs/image8-2.jpg"),
-                ),
-              ),
+              child: company.company?.logo == null
+                  ? ProfileWithName(company.company?.name ?? "  ", size: 80)
+                  : CircleAvatarNetwork(company.company?.logo, size: 80),
             ),
           ],
         ),
