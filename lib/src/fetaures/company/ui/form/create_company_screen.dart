@@ -75,7 +75,7 @@ class _RegisterCompanyWidgetState extends ConsumerState<RegisterCompanyWidget> {
               children: [
                 FieldInput(
                   title: "name".tr(),
-                  hintText: "input_name".tr(),
+                  hintText: "input_company_name".tr(),
                   controllers: _nameCtrl,
                 ),
                 FieldInput(

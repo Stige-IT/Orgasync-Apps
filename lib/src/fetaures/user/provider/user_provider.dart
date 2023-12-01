@@ -13,24 +13,25 @@ final userNotifier = StateNotifierProvider<UserNotifier, States<UserData>>(
 );
 
 final editUserNotifier =
-    StateNotifierProvider<EditUserNotifier, States<bool>>((ref) {
+    StateNotifierProvider.autoDispose<EditUserNotifier, States<bool>>((ref) {
   return EditUserNotifier(ref.watch(userProvider), ref);
 });
 
 // address provider
 final addressNotifier =
-    StateNotifierProvider<AddressNotifier, States<Address>>((ref) {
+    StateNotifierProvider.autoDispose<AddressNotifier, States<Address>>((ref) {
   return AddressNotifier(ref.watch(userProvider));
 });
 
 // edit address provider
 final editAddressNotifier =
-    StateNotifierProvider<EditAddressNotifier, States<bool>>((ref) {
+    StateNotifierProvider.autoDispose<EditAddressNotifier, States<bool>>((ref) {
   return EditAddressNotifier(ref.watch(userProvider), ref);
 });
 
 // edit password provider
 final editPasswordNotifier =
-    StateNotifierProvider<EditPasswordNotifier, States<bool>>((ref) {
+    StateNotifierProvider.autoDispose<EditPasswordNotifier, States<bool>>(
+        (ref) {
   return EditPasswordNotifier(ref.watch(userProvider));
 });

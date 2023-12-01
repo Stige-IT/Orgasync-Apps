@@ -46,7 +46,6 @@ class EmployeeImpl implements EmployeeApi {
   Future<Either<String, ResponseData<List<Employee>>>> getEmployeeCompany(
       String companyId,
       {int page = 1}) async {
-    final companyId = await storage.read("id_company");
     Uri url = Uri.parse(
         "${ConstantUrl.BASE_URL}/company/me/employee?id_company=$companyId&page=$page");
     final token = await storage.read("token");

@@ -27,6 +27,7 @@
   "input_code" : "Input code",
   "size_employee" : "Size employee",
   "type_company" : "Type company",
+  "input_company_name" : "Input company name",
   "or_login_with": "or login with",
   "or_register_with": "or register with",
   "dont_have_account": "Don't have an account?",

@@ -45,7 +45,7 @@ class _CompanyProjectScreenState extends ConsumerState<CompanyProjectScreen> {
             return const Center(child: LoadingWidget());
           } else if (project.error != null) {
             return ErrorButtonWidget(project.error!, () => _getData());
-          } else if (project.data == null) {
+          } else if (project.data == null || project.data!.isEmpty) {
             return const EmptyWidget();
           } else {
             return ListView.builder(
