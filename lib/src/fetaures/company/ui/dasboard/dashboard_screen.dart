@@ -29,14 +29,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: context.theme.colorScheme.primary,
-        foregroundColor: context.theme.colorScheme.onPrimary,
+        backgroundColor: context.theme.colorScheme.background.withOpacity(0),
+        foregroundColor: context.theme.colorScheme.onSurfaceVariant,
         centerTitle: true,
         title: Text(
           "dashboard".tr(),
           style: context.theme.textTheme.headlineSmall!.copyWith(
             fontWeight: FontWeight.w600,
-            color: context.theme.colorScheme.onPrimary,
           ),
         ),
       ),
@@ -56,19 +55,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             return ListView(
               children: [
                 SizedBox(
-                  height: 170,
+                  height: 230,
                   width: double.infinity,
                   child: Stack(
                     children: [
                       if (company.data?.cover != null)
                         Container(
-                          height: 130,
+                          height: 200,
                           width: double.infinity,
                           color: context.theme.colorScheme.primary,
                         )
                       else
                         SizedBox(
-                          height: 130,
+                          height: 200,
                           width: double.infinity,
                           child: Image.asset(
                             "assets/images/three_human.png",
@@ -101,8 +100,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   width: double.infinity,
                   child: Text(
                     company.data?.description ?? "",
@@ -114,13 +112,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   children: [
                     Expanded(
                       child: ListTile(
-                        title: const Text("Total Employee"),
+                        onTap: () => nextPage(context, "/company/employee",
+                            argument: widget.companyId),
+                        title: const Text("Employee"),
                         subtitle: StackedWidgets(
                           size: 40,
                           xShift: 10,
                           items: [
-                            for (int i = 0; i < 4; i++)
-                              if (i < employee.data!.length)
+                            for (int i = 0; i < 5; i++)
+                              if (i < (employee.data ?? []).length)
                                 if (employee.data?[i].user?.image != null)
                                   CircleAvatarNetwork(
                                       employee.data?[i].user?.image,
@@ -128,7 +128,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 else
                                   ProfileWithName(employee.data?[i].user?.name,
                                       size: 40),
-                            if (employee.total > 4)
+                            if (employee.total > 5)
                               Container(
                                 alignment: Alignment.center,
                                 width: 25,
@@ -165,11 +165,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       trailing: Icon(Icons.arrow_forward_ios, size: 15),
                     ),
                     const Divider(),
-                    const ListTile(
-                      leading: Icon(Icons.people),
-                      visualDensity: VisualDensity(vertical: -4),
-                      title: Text("Employee"),
-                      trailing: Icon(Icons.arrow_forward_ios, size: 15),
+                    ListTile(
+                      onTap: () => nextPage(context, "/company/employee",
+                          argument: widget.companyId),
+                      leading: const Icon(Icons.people),
+                      visualDensity: const VisualDensity(vertical: -4),
+                      title: const Text("Employee"),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
                     ),
                     const Divider(),
                     ListTile(

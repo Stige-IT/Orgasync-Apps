@@ -3,6 +3,7 @@ import 'package:orgasync/src/fetaures/auth/auth.dart';
 import 'package:orgasync/src/fetaures/company/company.dart';
 import 'package:orgasync/src/fetaures/home/home.dart';
 import 'package:orgasync/src/fetaures/projects/project.dart';
+import '../fetaures/employee/employee.dart';
 import '../fetaures/splash/ui/splash_screen.dart';
 import '../fetaures/user/user.dart';
 
@@ -29,6 +30,10 @@ class AppRoute {
       return DashboardScreen(companyId);
     },
     "/company/create": (_) => const RegisterCompanyWidget(),
+    "/company/employee": (context) {
+      final companyId = ModalRoute.of(context)!.settings.arguments as String;
+      return EmployeeScreen(companyId);
+    },
 
     /// PROJECT PAGE
     "/company/project": (context) {

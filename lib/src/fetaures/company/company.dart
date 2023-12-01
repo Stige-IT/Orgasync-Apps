@@ -27,8 +27,8 @@ import '../../components/field_input.dart';
 import '../../components/show_snackbar.dart';
 import '../../config/contants/base_url.dart';
 import '../../models/address.dart';
-import '../../models/position.dart';
 import '../../models/response_data.dart';
+import '../employee/employee.dart';
 
 part "models/company_request.dart";
 part "models/my_company.dart";

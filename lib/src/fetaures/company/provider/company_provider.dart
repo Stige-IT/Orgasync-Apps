@@ -28,9 +28,3 @@ final createCompanyNotifier =
     StateNotifierProvider<CreateCompanyNotifier, States>((ref) {
   return CreateCompanyNotifier(ref.watch(companyProvider), ref);
 });
-
-// employee company
-final employeeCompanyNotifier = StateNotifierProvider<EmployeeCompanyNotifier,
-    BaseState<List<EmployeeCompany>>>((ref) {
-  return EmployeeCompanyNotifier(ref.watch(companyProvider));
-});
