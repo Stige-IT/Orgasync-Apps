@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import "package:orgasync/main.dart";
 import 'package:orgasync/src/components/circle_avatar_network.dart';
 import 'package:orgasync/src/components/dropdown_container.dart';
 import 'package:orgasync/src/components/empty_widget.dart';
@@ -29,6 +30,7 @@ import 'package:orgasync/src/utils/helper/exception_to_message.dart';
 import 'package:orgasync/src/utils/helper/layout/media_query_context.dart';
 import 'package:orgasync/src/utils/helper/layout/minheight_context.dart';
 import 'package:orgasync/src/utils/helper/theme_of_context.dart';
+import 'package:restart_app/restart_app.dart';
 
 import '../../components/circular_loading.dart';
 import '../../config/contants/base_url.dart';

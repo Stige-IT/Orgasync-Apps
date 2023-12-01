@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:orgasync/src/config/theme/colors.dart';
-import 'package:orgasync/src/utils/helper/theme_of_context.dart';
 
 class ProfileWithName extends StatelessWidget {
   final String? name;

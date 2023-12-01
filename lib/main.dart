@@ -7,8 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:shorebird_code_push/shorebird_code_push.dart';
 
 import 'src/app.dart';
+
+// push flutter code when new patch updated
+final shoreBirdCodePush = ShorebirdCodePush();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +20,7 @@ void main() async {
     // ignore: avoid_print
     log("Running in debug mode", name: "Debug Mode");
   }
-  if(!kIsWeb){
+  if (!kIsWeb) {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       // ignore: avoid_print
       log("Running in desktop mode", name: "Desktop Mode");

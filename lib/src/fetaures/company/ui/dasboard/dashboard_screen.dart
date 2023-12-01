@@ -119,7 +119,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           size: 40,
                           xShift: 10,
                           items: [
-                            for (int i = 0; i < 5; i++)
+                            for (int i = 0; i < 4; i++)
                               if (i < (employee.data ?? []).length)
                                 if (employee.data?[i].user?.image != null)
                                   CircleAvatarNetwork(
@@ -128,7 +128,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 else
                                   ProfileWithName(employee.data?[i].user?.name,
                                       size: 40),
-                            if (employee.total > 5)
+                            if (employee.total > 4)
                               Container(
                                 alignment: Alignment.center,
                                 width: 25,
@@ -136,7 +136,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   shape: BoxShape.circle,
                                   color: Colors.orange,
                                 ),
-                                child: Text('+${employee.total}'),
+                                child: Text('+${employee.total - 4}'),
                               )
                           ],
                         ),

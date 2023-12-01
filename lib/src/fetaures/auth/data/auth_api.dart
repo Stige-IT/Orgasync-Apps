@@ -47,7 +47,7 @@ class AuthApiImpl implements AuthApi {
         await storage.write("token", token);
         return const Right(TypeAccount.verified);
       case 400:
-        final message = jsonDecode(response.body)["detail"];
+        final message = jsonDecode(response.body)["detail"]['email'];
         switch (message) {
           case "not_active":
             return Left(

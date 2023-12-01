@@ -79,5 +79,6 @@
   "sub_district" : "Kelurahan",
   "street_address" : "Alamat jalan",
   "zip_code" : "Kode pos",
-  "input_zip_code" : "Masukkan kode pos Anda"
+  "input_zip_code" : "Masukkan kode pos Anda",
+  "check_update_version" : "Periksa pembaruan versi"
 } 

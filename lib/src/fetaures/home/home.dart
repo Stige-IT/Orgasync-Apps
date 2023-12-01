@@ -17,7 +17,6 @@ import 'package:orgasync/src/utils/helper/theme_of_context.dart';
 import '../../components/circle_avatar_network.dart';
 import '../../components/empty_widget.dart';
 import '../../utils/extensions/page_function.dart';
-import '../../utils/helper/local_storage/secure_storage_client.dart';
 
 part "ui/home_screen.dart";
 part "ui/companies_widget.dart";

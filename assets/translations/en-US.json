@@ -79,5 +79,6 @@
   "sub_district" : "Sub district",
   "street_address" : "Street address",
   "zip_code" : "Zip code",
-  "input_zip_code" : "Input zip code"
+  "input_zip_code" : "Input zip code",
+  "check_update_version" : "Check update version"
 }

@@ -59,14 +59,22 @@ class _SettingWidgetState extends ConsumerState<SettingWidget> {
           trailing:
               theme == ThemeMode.dark ? Text("dark".tr()) : Text("light".tr()),
         ),
+        // check update version
+        ListTile(
+          onTap: _checkForUpdate,
+          title: Text("check_update_version".tr()),
+          trailing: const Icon(Icons.update_outlined),
+        ),
+        const Divider(),
         ListTile(
           onTap: () {
-            ref.read(storageProvider).delete("token");
+            ref.read(storageProvider).deleteAll();
             nextPageRemoveAll(context, "/login");
           },
           title: const Text("Logout"),
-          trailing: const Icon(Icons.logout),
+          trailing: const Icon(Icons.logout, color: Colors.red),
         ),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -80,6 +88,81 @@ class _SettingWidgetState extends ConsumerState<SettingWidget> {
     return RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
       side: const BorderSide(color: Colors.grey),
+    );
+  }
+
+  void _checkForUpdate() async {
+    final isUpdateAvailable =
+        await shoreBirdCodePush.isNewPatchAvailableForDownload();
+    if (isUpdateAvailable) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("already_update".tr()),
+          content: Text("update_available_please_download".tr()),
+          actions: [
+            TextButton(
+              onPressed: Navigator.of(context).pop,
+              child: Text("cancel".tr()),
+            ),
+            ElevatedButton(
+              onPressed: _downloadUpdate,
+              child: Text("download".tr()),
+            ),
+          ],
+        ),
+      );
+    } else {
+      if (!mounted) return;
+      showSnackbar(context, "Tidak ada update tersedia");
+    }
+  }
+
+  Future<void> _downloadUpdate() async {
+    Navigator.of(context).pop();
+    _showDownloadingBanner();
+
+    await Future.wait([
+      shoreBirdCodePush.downloadUpdateIfAvailable(),
+      Future<void>.delayed(const Duration(milliseconds: 250)),
+    ]);
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+    _showRestartBanner();
+  }
+
+  _showRestartBanner() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) => const AlertDialog(
+        title: Text("Update berhasil di download"),
+        content: Text("Silahkan restart aplikasi"),
+        actions: [
+          ElevatedButton(
+            onPressed: Restart.restartApp,
+            child: Text("Restart"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDownloadingBanner() {
+    ScaffoldMessenger.of(context).showMaterialBanner(
+      const MaterialBanner(
+        content: Text('Downloading...'),
+        actions: [
+          SizedBox(
+            height: 14,
+            width: 14,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ],
+      ),
     );
   }
 }
