@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,10 +18,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void initState() {
     Future.delayed(const Duration(seconds: 2), () {
       ref.read(storageProvider).read("token").then((value) {
-        // log(value);
         if (value != null) {
+          log(value);
           ref.read(refreshNotifier.notifier).refresh();
-          nextPageRemoveAll(context, "/");
+          if (ref.watch(refreshNotifier).error != null) {
+            nextPageRemoveAll(context, "/login");
+          } else {
+            nextPageRemoveAll(context, "/");
+          }
         } else {
           nextPageRemoveAll(context, "/login");
         }

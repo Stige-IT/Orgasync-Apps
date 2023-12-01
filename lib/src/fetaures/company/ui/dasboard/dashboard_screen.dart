@@ -11,6 +11,8 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void _getData() {
     ref.read(detailCompanyNotifier.notifier).get(widget.companyId);
+    ref.read(totalCompanyProjectNotifier.notifier).get(widget.companyId);
+    ref.read(employeeCompanyNotifier.notifier).getEmployee(widget.companyId);
   }
 
   @override
@@ -22,7 +24,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final company = ref.watch(detailCompanyNotifier);
+    final totalProject = ref.watch(totalCompanyProjectNotifier).total;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: context.theme.colorScheme.primary,
@@ -41,6 +45,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           await Future.delayed(const Duration(seconds: 2), () => _getData());
         },
         child: Builder(builder: (_) {
+          final employee = ref.watch(employeeCompanyNotifier);
           if (company.isLoading) {
             return const Center(child: LoadingWidget());
           } else if (company.error != null) {
@@ -55,11 +60,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   width: double.infinity,
                   child: Stack(
                     children: [
-                      Container(
-                        height: 130,
-                        width: double.infinity,
-                        color: context.theme.colorScheme.primary,
-                      ),
+                      if (company.data?.cover != null)
+                        Container(
+                          height: 130,
+                          width: double.infinity,
+                          color: context.theme.colorScheme.primary,
+                        )
+                      else
+                        SizedBox(
+                          height: 130,
+                          width: double.infinity,
+                          child: Image.asset(
+                            "assets/images/three_human.png",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       Positioned(
                         left: 50,
                         right: 50,
@@ -104,45 +119,36 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           size: 40,
                           xShift: 10,
                           items: [
-                            Container(
-                              height: 25,
-                              decoration: const BoxDecoration(
-                                border: Border.fromBorderSide(
-                                  BorderSide(color: Colors.white, width: 2),
+                            for (int i = 0; i < 4; i++)
+                              if (i < employee.data!.length)
+                                if (employee.data?[i].user?.image != null)
+                                  CircleAvatarNetwork(
+                                      employee.data?[i].user?.image,
+                                      size: 40)
+                                else
+                                  ProfileWithName(employee.data?[i].user?.name,
+                                      size: 40),
+                            if (employee.total > 4)
+                              Container(
+                                alignment: Alignment.center,
+                                width: 25,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.orange,
                                 ),
-                                shape: BoxShape.circle,
-                                color: Colors.green,
-                              ),
-                            ),
-                            Container(
-                              height: 25,
-                              decoration: const BoxDecoration(
-                                border: Border.fromBorderSide(
-                                  BorderSide(color: Colors.white, width: 2),
-                                ),
-                                shape: BoxShape.circle,
-                                color: Colors.green,
-                              ),
-                            ),
-                            const CircleAvatar(),
-                            Container(
-                              alignment: Alignment.center,
-                              width: 25,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.orange,
-                              ),
-                              child: const Text('+22'),
-                            )
+                                child: Text('+${employee.total}'),
+                              )
                           ],
                         ),
                       ),
                     ),
                     Expanded(
                       child: ListTile(
+                        onTap: () => nextPage(context, "/company/project",
+                            argument: widget.companyId),
                         title: const Text("Total Project"),
                         subtitle: Text(
-                          "50",
+                          "$totalProject",
                           style: context.theme.textTheme.headlineLarge,
                         ),
                       ),
@@ -150,27 +156,29 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                const Column(
+                Column(
                   children: [
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.location_city),
                       visualDensity: VisualDensity(vertical: -4),
                       title: Text("Structure organization"),
                       trailing: Icon(Icons.arrow_forward_ios, size: 15),
                     ),
-                    Divider(),
-                    ListTile(
+                    const Divider(),
+                    const ListTile(
                       leading: Icon(Icons.people),
                       visualDensity: VisualDensity(vertical: -4),
                       title: Text("Employee"),
                       trailing: Icon(Icons.arrow_forward_ios, size: 15),
                     ),
-                    Divider(),
+                    const Divider(),
                     ListTile(
-                      leading: Icon(Icons.assignment),
-                      visualDensity: VisualDensity(vertical: -4),
-                      title: Text("Project"),
-                      trailing: Icon(Icons.arrow_forward_ios, size: 15),
+                      onTap: () => nextPage(context, "/company/project",
+                          argument: widget.companyId),
+                      leading: const Icon(Icons.assignment),
+                      visualDensity: const VisualDensity(vertical: -4),
+                      title: const Text("Project"),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
                     ),
                   ],
                 )
@@ -181,8 +189,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        unselectedItemColor: context.theme.colorScheme.onSurfaceVariant,
-        selectedItemColor: context.theme.colorScheme.primary,
+        unselectedItemColor: context.theme.colorScheme.primary,
+        selectedItemColor: context.theme.colorScheme.onSurface,
         showUnselectedLabels: true,
         currentIndex: 0,
         onTap: (index) {},

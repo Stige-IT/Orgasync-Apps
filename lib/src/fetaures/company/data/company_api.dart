@@ -3,6 +3,8 @@ part of "../company.dart";
 abstract class CompanyApi {
   Future<Either<String, ResponseData<List<MyCompany>>>> getCompany(int page);
   Future<Either<String, CompanyDetail>> getDetail(String companyId);
+  Future<Either<String, ResponseData<List<EmployeeCompany>>>> getEmployee(
+      String companyId);
   Future<Either<String, bool>> joinCompany(String code);
   Future<Either<String, bool>> createCompany(CompanyRequest companyRequest);
 }
@@ -97,6 +99,32 @@ class CompanyApiImpl implements CompanyApi {
           return Left("already_registered".tr());
         }
         return Left("failed".tr());
+      default:
+        return Left("failed".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, ResponseData<List<EmployeeCompany>>>> getEmployee(
+      String companyId,
+      {int page = 1}) async {
+    Uri url = Uri.parse(
+        "${ConstantUrl.BASE_URL}/company/me/employee?id_company=$companyId&page=$page");
+    final token = await storage.read("token");
+    final response = await client.get(url, headers: {
+      "Authorization": "Bearer $token",
+    });
+    switch (response.statusCode) {
+      case 200:
+        List result = jsonDecode(response.body)['items'];
+        final data = result.map((e) => EmployeeCompany.fromJson(e)).toList();
+        return Right(
+          ResponseData(
+              data: data,
+              total: jsonDecode(response.body)['total'],
+              currentPage: jsonDecode(response.body)['page'],
+              lastPage: jsonDecode(response.body)['pages']),
+        );
       default:
         return Left("failed".tr());
     }

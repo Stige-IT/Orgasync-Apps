@@ -11,7 +11,10 @@ import 'package:orgasync/src/components/empty_widget.dart';
 import 'package:orgasync/src/components/error_button.dart';
 import 'package:orgasync/src/components/profile_with_name.dart';
 import 'package:orgasync/src/fetaures/company/ui/widgets/stacked_widget.dart';
+import 'package:orgasync/src/fetaures/projects/project.dart';
+import 'package:orgasync/src/fetaures/user/user.dart';
 import 'package:orgasync/src/models/state.dart';
+import 'package:orgasync/src/utils/extensions/page_function.dart';
 import 'package:orgasync/src/utils/helper/exception_to_message.dart';
 import 'package:orgasync/src/utils/helper/http_provider/http_provider.dart';
 import 'package:orgasync/src/utils/helper/local_storage/secure_storage.dart';
@@ -32,12 +35,17 @@ part "models/my_company.dart";
 part "models/company.dart";
 part "models/type_employee.dart";
 part "models/type_company.dart";
+part "models/position.dart";
 part "models/company_detail.dart";
+part "models/employee_company.dart";
+
 part 'data/company_api.dart';
 part "data/type_company_api.dart";
+
 part 'provider/company_notifier.dart';
 part "provider/company_provider.dart";
 part "provider/type_company_notifier.dart";
 part 'provider/type_company_provider.dart';
+
 part 'ui/dasboard/dashboard_screen.dart';
 part "ui/form/create_company_screen.dart";
