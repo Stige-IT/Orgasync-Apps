@@ -48,3 +48,60 @@ class EmployeeCompanyNotifier extends StateNotifier<BaseState<List<Employee>>> {
     }
   }
 }
+
+// add employee to company
+class AddEmployeeNotifier extends StateNotifier<States> {
+  final CompanyApiImpl _companyApiImpl;
+  final Ref ref;
+  AddEmployeeNotifier(this._companyApiImpl, this.ref) : super(States.noState());
+
+  Future<bool> add(String companyId, {required List<UserData> users}) async {
+    state = States.loading();
+    List<String> emails = [];
+    for (UserData user in users) {
+      emails.add(user.email!);
+    }
+    try {
+      final result =
+          await _companyApiImpl.addEmployee(companyId, emails: emails);
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(employeeCompanyNotifier.notifier).refresh(companyId);
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
+// state notifier for delete employee in company
+class DeleteEmployeeNotifier extends StateNotifier<States> {
+  final EmployeeApi _employeeApiImpl;
+  final Ref ref;
+
+  DeleteEmployeeNotifier(this._employeeApiImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> delete(String employeeId, String companyId) async {
+    state = States.loading();
+    try {
+      final result = await _employeeApiImpl.deleteEmployee(employeeId);
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(employeeCompanyNotifier.notifier).getEmployee(companyId);
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}

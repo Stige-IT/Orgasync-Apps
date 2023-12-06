@@ -80,5 +80,11 @@
   "street_address" : "Street address",
   "zip_code" : "Zip code",
   "input_zip_code" : "Input zip code",
-  "check_update_version" : "Check update version"
+  "check_update_version" : "Check update version",
+  "more" : "More",
+  "user_has_registered" : "User has registered",
+  "delete_employee" : "Delete employee",
+  "delete_employee_message" : "Are you sure you want to delete {name} employee?",
+  "delete_employee_success" : "Delete employee success",
+  "add_employee" : "Add employee"
 }

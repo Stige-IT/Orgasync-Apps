@@ -80,5 +80,11 @@
   "street_address" : "Alamat jalan",
   "zip_code" : "Kode pos",
   "input_zip_code" : "Masukkan kode pos Anda",
-  "check_update_version" : "Periksa pembaruan versi"
+  "check_update_version" : "Periksa pembaruan versi",
+  "more" : "Lainnya",
+  "user_has_registered" : "Pengguna telah terdaftar",
+  "delete_employee" : "Hapus karyawan",
+  "delete_employee_message" : "Apakah Anda yakin ingin menghapus {name} ini?",
+  "delete_employee_success" : "Karyawan berhasil dihapus",
+  "add_employee" : "Tambah karyawan"
 } 

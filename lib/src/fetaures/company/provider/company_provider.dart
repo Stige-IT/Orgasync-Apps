@@ -1,5 +1,8 @@
 part of "../company.dart";
 
+// index of stack screen
+final indexScreenProvider = StateProvider<int>((ref) => 0);
+
 // type company
 final typeCompanyNotifier = StateProvider.autoDispose<String?>((ref) => null);
 
@@ -27,4 +30,10 @@ final joinCompanyNotifier =
 final createCompanyNotifier =
     StateNotifierProvider.autoDispose<CreateCompanyNotifier, States>((ref) {
   return CreateCompanyNotifier(ref.watch(companyProvider), ref);
+});
+
+// check role in company
+final roleInCompanyNotifier =
+    StateNotifierProvider<RoleInCompanyNotifier, States<Role>>((ref) {
+  return RoleInCompanyNotifier(ref.watch(companyProvider));
 });

@@ -153,3 +153,41 @@ class EditPasswordNotifier extends StateNotifier<States<bool>> {
     }
   }
 }
+
+// search user notifier
+class SearchUserNotifier extends StateNotifier<States<List<UserData>>> {
+  final UserApi userApi;
+
+  SearchUserNotifier(this.userApi) : super(States.noState());
+
+  Future<void> search(String email) async {
+    state = States.loading();
+    try {
+      final result = await userApi.searchUser(email);
+      result.fold(
+        (error) => state = States.error(error),
+        (data) => state = States.finished(data),
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+    }
+  }
+}
+
+// temporary state notifier for user when add employee
+class CandidateEmployeeNotifier extends StateNotifier<List<UserData>> {
+  CandidateEmployeeNotifier() : super([]);
+
+  void add(UserData user) {
+    if (state.contains(user)) return;
+    state = [...state, user];
+  }
+
+  void remove(UserData user) {
+    state = state.where((element) => element.id != user.id).toList();
+  }
+
+  void clear() {
+    state = [];
+  }
+}

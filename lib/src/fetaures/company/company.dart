@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -42,10 +41,15 @@ part "models/employee_company.dart";
 part 'data/company_api.dart';
 part "data/type_company_api.dart";
 
+part "enums/role.dart";
+
 part 'provider/company_notifier.dart';
 part "provider/company_provider.dart";
 part "provider/type_company_notifier.dart";
 part 'provider/type_company_provider.dart';
 
 part 'ui/dasboard/dashboard_screen.dart';
+part 'ui/dasboard/home/dashboard_home_widget.dart';
+part 'ui/dasboard/task/dashboard_task_widget.dart';
+part 'ui/dasboard/more/dashboard_more_widget.dart';
 part "ui/form/create_company_screen.dart";

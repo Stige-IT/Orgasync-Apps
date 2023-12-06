@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:orgasync/src/config/theme/colors.dart';
+import 'package:orgasync/src/utils/helper/theme_of_context.dart';
 
 class ProfileWithName extends StatelessWidget {
   final String? name;
@@ -15,7 +15,7 @@ class ProfileWithName extends StatelessWidget {
       height: size,
       width: size,
       decoration: BoxDecoration(
-        color: colors[Random().nextInt(colors.length)],
+        color: context.theme.colorScheme.primary,
         shape: BoxShape.circle,
       ),
       child: FittedBox(
@@ -23,8 +23,11 @@ class ProfileWithName extends StatelessWidget {
         child: Center(
           child: Text(
             (name ?? "  ").substring(0, 2).toUpperCase(),
-            style:
-                TextStyle(fontSize: size! * 0.5, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: size! * 0.5,
+              fontWeight: FontWeight.bold,
+              color: context.theme.colorScheme.onPrimary,
+            ),
           ),
         ),
       ),

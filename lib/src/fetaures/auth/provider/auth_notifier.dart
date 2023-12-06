@@ -124,15 +124,22 @@ class RefreshTokenNotifier extends StateNotifier<States> {
 
   RefreshTokenNotifier(this.authApiImpl) : super(States.noState());
 
-  void refresh() async {
+  Future<bool> refresh() async {
     try {
       final result = await authApiImpl.refreshToken();
-      result.fold(
-        (error) => state = States.error(error),
-        (success) => state = States.noState(),
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (success) {
+          state = States.noState();
+          return true;
+        },
       );
     } catch (exception) {
       state = States.error(exceptionTomessage(exception));
+      return false;
     }
   }
 }

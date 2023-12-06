@@ -16,16 +16,18 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
+    log("🚀 SplashScreen", name: "SplashScreen");
     Future.delayed(const Duration(seconds: 2), () {
       ref.read(storageProvider).read("token").then((value) {
         if (value != null) {
           log(value);
-          ref.read(refreshNotifier.notifier).refresh();
-          if (ref.watch(refreshNotifier).error != null) {
-            nextPageRemoveAll(context, "/login");
-          } else {
-            nextPageRemoveAll(context, "/");
-          }
+          ref.read(refreshNotifier.notifier).refresh().then((success) {
+            if (success) {
+              nextPageRemoveAll(context, "/");
+            } else {
+              nextPageRemoveAll(context, "/login");
+            }
+          });
         } else {
           nextPageRemoveAll(context, "/login");
         }

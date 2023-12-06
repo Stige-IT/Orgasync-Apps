@@ -42,6 +42,10 @@ class AppRoute {
     },
 
     /// USER PAGES
+    "/user/search": (context) {
+      final companyId = ModalRoute.of(context)!.settings.arguments as String;
+      return SearchUserScreen(companyId);
+    },
     "/profile": (_) => const ProfileScreen(),
     "/profile/form": (_) => const FormProfileScreen(),
     "/profile/my-company": (_) => const MyCompanyScreen(),

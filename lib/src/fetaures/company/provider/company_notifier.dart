@@ -141,3 +141,34 @@ class CreateCompanyNotifier extends StateNotifier<States> {
     }
   }
 }
+
+// check role in company
+class RoleInCompanyNotifier extends StateNotifier<States<Role>> {
+  final CompanyApiImpl _companyApiImpl;
+  RoleInCompanyNotifier(this._companyApiImpl) : super(States.noState());
+
+  Future<void> check(String companyId) async {
+    state = States.loading();
+    try {
+      final result = await _companyApiImpl.checkRoleInCompany(companyId);
+      result.fold(
+        (error) => state = States.error(error),
+        (data) => state = States.finished(_parseRole(data)),
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+    }
+  }
+
+  Role _parseRole(String role) {
+    print("🧑 $role");
+    switch (role) {
+      case "owner":
+        return Role.owner;
+      case "admin":
+        return Role.admin;
+      default:
+        return Role.member;
+    }
+  }
+}

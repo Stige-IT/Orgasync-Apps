@@ -15,6 +15,8 @@ abstract class UserApi {
   // edit password
   Future<Either<String, bool>> editPassword(
       String password, String newPassword);
+  // searching user by email
+  Future<Either<String, List<UserData>>> searchUser(String query);
 }
 
 final userProvider = StateProvider<UserApiImpl>((ref) {
@@ -36,6 +38,7 @@ class UserApiImpl implements UserApi {
     });
     switch (response.statusCode) {
       case 200:
+        await storage.write("id_user", jsonDecode(response.body)['id']);
         final data = jsonDecode(response.body);
         final userData = UserData.fromJson(data);
         return Right(userData);
@@ -134,6 +137,23 @@ class UserApiImpl implements UserApi {
       return const Right(true);
     } else {
       return Left("error".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, List<UserData>>> searchUser(String email) async {
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/users/search/$email");
+    final token = await storage.read("token");
+    final response = await client.get(url, headers: {
+      "Authorization": "Bearer $token",
+    });
+    switch (response.statusCode) {
+      case 200:
+        List result = jsonDecode(response.body)['data'];
+        final data = result.map((e) => UserData.fromJson(e)).toList();
+        return Right(data);
+      default:
+        return Left("error".tr());
     }
   }
 }

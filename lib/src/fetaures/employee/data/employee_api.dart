@@ -6,6 +6,8 @@ abstract class EmployeeApi {
   Future<Either<String, ResponseData<List<Employee>>>> getEmployeeCompany(
       String companyId,
       {int page = 1});
+  // delete employee
+  Future<Either<String, bool>> deleteEmployee(String employeeId);
 }
 
 final employeeProvider = Provider<EmployeeImpl>((ref) {
@@ -63,6 +65,21 @@ class EmployeeImpl implements EmployeeApi {
               currentPage: jsonDecode(response.body)['page'],
               lastPage: jsonDecode(response.body)['pages']),
         );
+      default:
+        return Left("failed".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> deleteEmployee(String employeeId) async {
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/employee/$employeeId");
+    final token = await storage.read("token");
+    final response = await client.delete(url, headers: {
+      "Authorization": "Bearer $token",
+    });
+    switch (response.statusCode) {
+      case 200:
+        return const Right(true);
       default:
         return Left("failed".tr());
     }

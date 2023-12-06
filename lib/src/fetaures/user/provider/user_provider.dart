@@ -35,3 +35,15 @@ final editPasswordNotifier =
         (ref) {
   return EditPasswordNotifier(ref.watch(userProvider));
 });
+
+// searching user
+final searchUserNotifier =
+    StateNotifierProvider<SearchUserNotifier, States<List<UserData>>>((ref) {
+  return SearchUserNotifier(ref.watch(userProvider));
+});
+
+// candidate user for employee
+final candidateUserNotifier = StateNotifierProvider.autoDispose<
+    CandidateEmployeeNotifier, List<UserData>>((ref) {
+  return CandidateEmployeeNotifier();
+});

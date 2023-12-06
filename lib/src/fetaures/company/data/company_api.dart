@@ -6,6 +6,9 @@ abstract class CompanyApi {
 
   Future<Either<String, bool>> joinCompany(String code);
   Future<Either<String, bool>> createCompany(CompanyRequest companyRequest);
+  Future<Either<String, String>> checkRoleInCompany(String companyId);
+  Future<Either<String, bool>> addEmployee(String companyId,
+      {required List<String> emails});
 }
 
 final companyProvider = Provider<CompanyApiImpl>((ref) {
@@ -31,7 +34,6 @@ class CompanyApiImpl implements CompanyApi {
       case 200:
         final data = jsonDecode(response.body);
         List result = jsonDecode(response.body)['items'];
-        log(result.toString());
         final company = result.map((e) => MyCompany.fromJson(e)).toList();
         return Right(
           ResponseData(
@@ -98,6 +100,43 @@ class CompanyApiImpl implements CompanyApi {
           return Left("already_registered".tr());
         }
         return Left("failed".tr());
+      default:
+        return Left("failed".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, String>> checkRoleInCompany(String companyId) async {
+    Uri url = Uri.parse(
+        "${ConstantUrl.BASE_URL}/company/me/role?id_company=$companyId");
+    final token = await storage.read("token");
+    final response = await client.get(url, headers: {
+      "Authorization": "Bearer $token",
+    });
+    switch (response.statusCode) {
+      case 200:
+        final role = jsonDecode(response.body)['type']['name'];
+        return Right(role);
+      default:
+        return Left("failed".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> addEmployee(String companyId,
+      {required List<String> emails}) async {
+    Uri url = Uri.parse(
+        "${ConstantUrl.BASE_URL}/company/me/add-employee?id_company=$companyId");
+    final token = await storage.read("token");
+    final response = await client.post(url, body: jsonEncode(emails), headers: {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    });
+    switch (response.statusCode) {
+      case 201:
+        return const Right(true);
+      case 401:
+        return Left("user_has_registered".tr());
       default:
         return Left("failed".tr());
     }
