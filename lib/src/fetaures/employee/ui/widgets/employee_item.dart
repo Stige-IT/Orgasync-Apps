@@ -1,11 +1,15 @@
 part of "../../employee.dart";
 
-class EmployeeItemWidget extends StatelessWidget {
+class EmployeeItemWidget extends ConsumerWidget {
+  final String companyId;
   final Employee data;
-  const EmployeeItemWidget(this.data, {Key? key}) : super(key: key);
+  const EmployeeItemWidget(this.data, this.companyId, {Key? key})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final role = ref.watch(roleInCompanyNotifier).data;
+    final typeEmployee = ref.watch(typeEmployeeNotifier).data;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
@@ -40,11 +44,38 @@ class EmployeeItemWidget extends StatelessWidget {
             }
           },
         ),
-        trailing: Chip(
-            backgroundColor: data.type?.name == "owner"
-                ? context.theme.colorScheme.tertiary.withOpacity(0.5)
-                : null,
-            label: Text(data.type?.name ?? "")),
+        trailing: PopupMenuButton(
+          enabled: role == Role.owner,
+          onSelected: (newType) {
+            ref
+                .read(updateTypeEmployeeNotifier.notifier)
+                .update(companyId, data.id!, idTypeEmployee: newType);
+          },
+          constraints: const BoxConstraints(
+            minWidth: 20,
+            maxWidth: double.infinity,
+            minHeight: 20,
+            maxHeight: 200,
+          ),
+          itemBuilder: (_) => (typeEmployee ?? [])
+              .map((type) => PopupMenuItem(
+                    value: type.id,
+                    child: Text(
+                      type.name ?? "",
+                      style: TextStyle(
+                        fontWeight: type.name == data.type?.name
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ))
+              .toList(),
+          child: Chip(
+              backgroundColor: data.type?.name == "owner"
+                  ? context.theme.colorScheme.tertiary.withOpacity(0.5)
+                  : null,
+              label: Text(data.type?.name ?? "")),
+        ),
       ),
     );
   }

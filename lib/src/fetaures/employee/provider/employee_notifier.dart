@@ -105,3 +105,79 @@ class DeleteEmployeeNotifier extends StateNotifier<States> {
     }
   }
 }
+
+// type employee
+class TypeEmployeeNotifier extends StateNotifier<States<List<TypeEmployee>>> {
+  final EmployeeApi _employeeApi;
+
+  TypeEmployeeNotifier(this._employeeApi) : super(States.noState());
+
+  Future<void> getTypeEmployee() async {
+    state = States.loading();
+    try {
+      final result = await _employeeApi.getTypeEmployee();
+      result.fold(
+        (error) => state = States.error(error),
+        (data) => state = States.finished(data),
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+    }
+  }
+}
+
+// create type employee
+class CreateTypeEmployeeNotifier extends StateNotifier<States> {
+  final EmployeeApi _employeeApi;
+  final Ref ref;
+
+  CreateTypeEmployeeNotifier(this._employeeApi, this.ref)
+      : super(States.noState());
+
+  Future<bool> create(String name, int level) async {
+    state = States.loading();
+    try {
+      final result = await _employeeApi.createTypeEmployee(name, level);
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(typeEmployeeNotifier.notifier).getTypeEmployee();
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
+// update type employee
+class UpdateTypeEmployeeNotifier extends StateNotifier<States> {
+  final EmployeeApi _employeeApi;
+  final Ref ref;
+
+  UpdateTypeEmployeeNotifier(this._employeeApi, this.ref)
+      : super(States.noState());
+
+  Future<bool> update(String companyId, String id,
+      {required String idTypeEmployee}) async {
+    state = States.loading();
+    try {
+      final result =
+          await _employeeApi.updateEmployee(id, idTypeEmployee: idTypeEmployee);
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(employeeCompanyNotifier.notifier).getEmployee(companyId);
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}

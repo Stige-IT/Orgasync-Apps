@@ -14,6 +14,21 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final role = ref.watch(roleInCompanyNotifier).data;
+      switch (role) {
+        case Role.owner:
+          ref.read(typeEmployeeNotifier.notifier).getTypeEmployee();
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final role = ref.watch(roleInCompanyNotifier).data;
     final me = ref.watch(userNotifier).data;
@@ -66,7 +81,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                           trailing: const Icon(Icons.delete),
                           tileColor: context.theme.colorScheme.error,
                         ),
-                        child: EmployeeItemWidget(data),
+                        child: EmployeeItemWidget(data, widget.companyId),
                       );
                     },
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
