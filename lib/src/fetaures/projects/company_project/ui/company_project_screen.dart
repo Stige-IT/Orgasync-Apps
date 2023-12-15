@@ -49,14 +49,50 @@ class _CompanyProjectScreenState extends ConsumerState<CompanyProjectScreen> {
             return const EmptyWidget();
           } else {
             return ListView.builder(
+              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 100.0),
               itemCount: project.data!.length,
               itemBuilder: (_, index) {
                 final data = project.data![index];
-                return ProjectItemWidget(data);
+                return InkWell(
+                    onTap: () {
+                      nextPage(context, "/company/project/detail",
+                          argument: data.id);
+                    },
+                    onLongPress: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Delete Project"),
+                          content: const Text(
+                              "Are you sure want to delete this project?"),
+                          actions: [
+                            TextButton(
+                              onPressed: Navigator.of(context).pop,
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                ref
+                                    .read(deleteCompanyProjectNotifier.notifier)
+                                    .delete(widget.companyId, data.id!);
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Delete"),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: ProjectItemWidget(data));
               },
             );
           }
         }),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => nextPage(context, "/company/project/form"),
+        child: const Icon(Icons.add),
       ),
     );
   }

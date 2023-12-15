@@ -104,7 +104,7 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
                         size: 40,
                         xShift: 10,
                         items: [
-                          for (int i = 0; i < 4; i++)
+                          for (int i = 0; i < 3; i++)
                             if (i < (employee.data ?? []).length)
                               if (employee.data?[i].user?.image != null)
                                 CircleAvatarNetwork(
@@ -113,7 +113,7 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
                               else
                                 ProfileWithName(employee.data?[i].user?.name,
                                     size: 40),
-                          if (employee.total > 4)
+                          if (employee.total > 3)
                             Container(
                               alignment: Alignment.center,
                               width: 25,
@@ -121,7 +121,7 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
                                 shape: BoxShape.circle,
                                 color: Colors.orange,
                               ),
-                              child: Text('+${employee.total - 4}'),
+                              child: Text('+${employee.total - 3}'),
                             )
                         ],
                       ),

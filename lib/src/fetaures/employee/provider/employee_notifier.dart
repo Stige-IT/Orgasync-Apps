@@ -181,3 +181,23 @@ class UpdateTypeEmployeeNotifier extends StateNotifier<States> {
     }
   }
 }
+
+// search employee
+class SearchEmployeeNotifier extends StateNotifier<States<List<Employee>>> {
+  final EmployeeApi _employeeApi;
+
+  SearchEmployeeNotifier(this._employeeApi) : super(States.noState());
+
+  Future<void> search(String companyId, String query) async {
+    state = States.loading();
+    try {
+      final result = await _employeeApi.searchEmployee(companyId, query: query);
+      result.fold(
+        (error) => state = States.error(error),
+        (data) => state = States.finished(data),
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+    }
+  }
+}

@@ -38,3 +38,10 @@ final updateTypeEmployeeNotifier =
         (ref) {
   return UpdateTypeEmployeeNotifier(ref.watch(employeeProvider), ref);
 });
+
+// search employee
+final searchEmployeeNotifier =
+    StateNotifierProvider<SearchEmployeeNotifier, States<List<Employee>>>(
+        (ref) {
+  return SearchEmployeeNotifier(ref.watch(employeeProvider));
+});

@@ -40,6 +40,13 @@ class AppRoute {
       final companyId = ModalRoute.of(context)!.settings.arguments as String;
       return CompanyProjectScreen(companyId);
     },
+    "/company/project/detail": (context) {
+      final companyProjectId =
+          ModalRoute.of(context)!.settings.arguments as String;
+      return DetailCompanyProjectScreen(companyProjectId);
+    },
+    "/company/project/form": (_) => const FormCompanyProjectScreen(),
+    "/company/project/employee/add": (_) => const AddEmployeeProjectScreen(),
 
     /// USER PAGES
     "/user/search": (context) {

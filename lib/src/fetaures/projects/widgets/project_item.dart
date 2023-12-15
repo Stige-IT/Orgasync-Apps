@@ -6,6 +6,7 @@ class ProjectItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -21,30 +22,64 @@ class ProjectItemWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            data.name ?? "",
-            style: context.theme.textTheme.headlineSmall!.copyWith(
-              fontWeight: FontWeight.w600,
-              color: context.theme.colorScheme.onSurface,
+          Container(
+            height: 70,
+            width: 70,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: context.theme.colorScheme.primary,
+              borderRadius: BorderRadius.circular(10),
             ),
+            child: Builder(builder: (_) {
+              if (data.image != null) {
+                return CachedNetworkImage(
+                  imageUrl: "${ConstantUrl.BASEIMGURL}/${data.image!}",
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const LoadingWidget(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                );
+              } else {
+                return Image.asset('assets/images/app_logo.png',
+                    fit: BoxFit.cover);
+              }
+            }),
           ),
-          const SizedBox(height: 8),
-          Text(
-            data.description ?? "",
-            style: context.theme.textTheme.bodyMedium!.copyWith(
-              fontWeight: FontWeight.w400,
-              color: context.theme.colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            data.createdAt!.dateFormat(),
-            style: context.theme.textTheme.bodyMedium!.copyWith(
-              fontWeight: FontWeight.w400,
-              color: context.theme.colorScheme.onSurface,
+          const SizedBox(width: 20),
+          SizedBox(
+            width: size.width * 0.6,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  data.name ?? "",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.theme.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.theme.colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  data.description ?? "",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.theme.textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: context.theme.colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  data.createdAt!.dateFormat(),
+                  style: context.theme.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: context.theme.colorScheme.onSurface,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

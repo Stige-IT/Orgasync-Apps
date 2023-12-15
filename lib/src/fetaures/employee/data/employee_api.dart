@@ -15,6 +15,10 @@ abstract class EmployeeApi {
   Future<Either<String, List<TypeEmployee>>> getTypeEmployee();
   // create type employee
   Future<Either<String, bool>> createTypeEmployee(String name, int level);
+
+  // search employee in company
+  Future<Either<String, List<Employee>>> searchEmployee(String idCompany,
+      {String? query});
 }
 
 final employeeProvider = Provider<EmployeeImpl>((ref) {
@@ -146,6 +150,25 @@ class EmployeeImpl implements EmployeeApi {
         return const Right(true);
       default:
         return Left("failed".tr());
+    }
+  }
+
+  @override
+  Future<Either<String, List<Employee>>> searchEmployee(String idCompany,
+      {String? query}) async {
+    Uri url = Uri.parse(
+        "${ConstantUrl.BASE_URL}/employee/search/$idCompany?query=$query");
+    final token = await storage.read("token");
+    final response = await client.get(url, headers: {
+      "Authorization": "Bearer $token",
+    });
+    switch (response.statusCode) {
+      case 200:
+        List result = jsonDecode(response.body)['items'];
+        final data = result.map((e) => Employee.fromJson(e)).toList();
+        return right(data);
+      default:
+        return left("error".tr());
     }
   }
 }

@@ -142,7 +142,7 @@ class UserApiImpl implements UserApi {
 
   @override
   Future<Either<String, List<UserData>>> searchUser(String email) async {
-    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/users/search/$email");
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/users/search?query=$email");
     final token = await storage.read("token");
     final response = await client.get(url, headers: {
       "Authorization": "Bearer $token",

@@ -46,3 +46,109 @@ class CompanyProjectNotifier
 
   void refresh(String companyId) => get(companyId, page: 1, makeLoading: true);
 }
+
+// detail company project with States<CompanyProject>
+class DetailCompanyProjectNotifier
+    extends StateNotifier<States<CompanyProject>> {
+  final CompanyProjectImpl _projectImpl;
+  DetailCompanyProjectNotifier(this._projectImpl) : super(States.noState());
+
+  Future<void> get(String id) async {
+    state = States.loading();
+    try {
+      final result = await _projectImpl.detailCompanyProject(id);
+      result.fold(
+        (error) => state = States.error(error),
+        (response) => state = States.finished(response),
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+    }
+  }
+}
+
+// create company project
+class CreateCompanyProjectNotifier extends StateNotifier<States> {
+  final CompanyProjectImpl _projectImpl;
+  final Ref ref;
+  CreateCompanyProjectNotifier(this._projectImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> create(
+    String companyId, {
+    required String name,
+    required String description,
+    File? image,
+  }) async {
+    state = States.loading();
+    try {
+      final result = await _projectImpl.createCompanyProject(
+        companyId,
+        name: name,
+        description: description,
+        image: image,
+      );
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (response) {
+          state = States.noState();
+          ref.read(companyProjectNotifier.notifier).refresh(companyId);
+          return true;
+        },
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
+// delete company project
+class DeleteCompanyProjectNotifier extends StateNotifier<States> {
+  final CompanyProjectImpl _projectImpl;
+  final Ref ref;
+  DeleteCompanyProjectNotifier(this._projectImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> delete(String companyId, String id) async {
+    state = States.loading();
+    try {
+      final result = await _projectImpl.deleteCompanyProject(id);
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (response) {
+          state = States.noState();
+          ref.read(companyProjectNotifier.notifier).refresh(companyId);
+          return true;
+        },
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
+// temporary state notifier for user when add employee
+class CandidateEmployeeProjectNotifier extends StateNotifier<List<Employee>> {
+  CandidateEmployeeProjectNotifier() : super([]);
+
+  void add(Employee user) {
+    if (state.contains(user)) return;
+    state = [...state, user];
+  }
+
+  void remove(Employee user) {
+    state = state.where((element) => element.id != user.id).toList();
+  }
+
+  void clear() {
+    state = [];
+  }
+}
