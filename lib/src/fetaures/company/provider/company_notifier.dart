@@ -172,3 +172,30 @@ class RoleInCompanyNotifier extends StateNotifier<States<Role>> {
     }
   }
 }
+
+// delete company
+class DeleteCompanyNotifier extends StateNotifier<States> {
+  final CompanyApiImpl _companyApiImpl;
+  final Ref ref;
+
+  DeleteCompanyNotifier(this._companyApiImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> delete(String companyId) async {
+    state = States.loading();
+    try {
+      final result = await _companyApiImpl.deleteCompany(companyId);
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(companyNotifier.notifier).refresh();
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}

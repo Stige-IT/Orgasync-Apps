@@ -37,3 +37,9 @@ final roleInCompanyNotifier =
     StateNotifierProvider<RoleInCompanyNotifier, States<Role>>((ref) {
   return RoleInCompanyNotifier(ref.watch(companyProvider));
 });
+
+// delete company
+final deleteCompanyNotifier =
+    StateNotifierProvider<DeleteCompanyNotifier, States>((ref) {
+  return DeleteCompanyNotifier(ref.watch(companyProvider), ref);
+});

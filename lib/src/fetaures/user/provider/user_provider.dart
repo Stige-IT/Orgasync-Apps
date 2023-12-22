@@ -37,8 +37,8 @@ final editPasswordNotifier =
 });
 
 // searching user
-final searchUserNotifier =
-    StateNotifierProvider<SearchUserNotifier, States<List<UserData>>>((ref) {
+final searchUserNotifier = StateNotifierProvider.autoDispose<SearchUserNotifier,
+    States<List<UserData>>>((ref) {
   return SearchUserNotifier(ref.watch(userProvider));
 });
 

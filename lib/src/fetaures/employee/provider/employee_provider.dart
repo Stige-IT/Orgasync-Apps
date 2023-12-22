@@ -40,8 +40,7 @@ final updateTypeEmployeeNotifier =
 });
 
 // search employee
-final searchEmployeeNotifier =
-    StateNotifierProvider<SearchEmployeeNotifier, States<List<Employee>>>(
-        (ref) {
+final searchEmployeeNotifier = StateNotifierProvider.autoDispose<
+    SearchEmployeeNotifier, States<List<Employee>>>((ref) {
   return SearchEmployeeNotifier(ref.watch(employeeProvider));
 });

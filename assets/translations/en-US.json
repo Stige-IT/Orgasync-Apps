@@ -86,5 +86,6 @@
   "delete_employee" : "Delete employee",
   "delete_employee_message" : "Are you sure you want to delete {name} employee?",
   "delete_employee_success" : "Delete employee success",
-  "add_employee" : "Add employee"
+  "add_employee" : "Add employee",
+  "search_email_user" : "Search email user"
 }

@@ -60,7 +60,7 @@ class EmployeeImpl implements EmployeeApi {
       String companyId,
       {int page = 1}) async {
     Uri url = Uri.parse(
-        "${ConstantUrl.BASE_URL}/company/me/employee?id_company=$companyId&page=$page");
+        "${ConstantUrl.BASE_URL}/company/$companyId/employee?page=$page");
     final token = await storage.read("token");
     final response = await client.get(url, headers: {
       "Authorization": "Bearer $token",

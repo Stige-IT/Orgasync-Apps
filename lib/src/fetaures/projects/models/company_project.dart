@@ -28,3 +28,38 @@ class CompanyProject {
     return data;
   }
 }
+
+class DetailCompanyProject {
+  CompanyProject? companyProject;
+  int? totalEmployee;
+  List<Employee>? employee;
+  int? totalProject;
+  List<Project>? project;
+
+  DetailCompanyProject(
+      {this.companyProject,
+      this.totalEmployee,
+      this.employee,
+      this.totalProject,
+      this.project});
+
+  DetailCompanyProject.fromJson(Map<String, dynamic> json) {
+    companyProject = json['company_project'] != null
+        ? CompanyProject.fromJson(json['company_project'])
+        : null;
+    totalEmployee = json['total_employee'];
+    if (json['employee'] != null) {
+      employee = <Employee>[];
+      json['employee'].forEach((v) {
+        employee!.add(Employee.fromJson(v));
+      });
+    }
+    totalProject = json['total_project'];
+    if (json['project'] != null) {
+      project = <Project>[];
+      json['project'].forEach((v) {
+        project!.add(Project.fromJson(v));
+      });
+    }
+  }
+}

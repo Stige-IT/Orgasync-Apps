@@ -49,7 +49,7 @@ class CompanyProjectNotifier
 
 // detail company project with States<CompanyProject>
 class DetailCompanyProjectNotifier
-    extends StateNotifier<States<CompanyProject>> {
+    extends StateNotifier<States<DetailCompanyProject>> {
   final CompanyProjectImpl _projectImpl;
   DetailCompanyProjectNotifier(this._projectImpl) : super(States.noState());
 

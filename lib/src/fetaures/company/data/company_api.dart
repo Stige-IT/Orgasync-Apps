@@ -6,25 +6,28 @@ abstract class CompanyApi {
 
   Future<Either<String, bool>> joinCompany(String code);
   Future<Either<String, bool>> createCompany(CompanyRequest companyRequest);
+  Future<Either<String, bool>> deleteCompany(String companyId);
   Future<Either<String, String>> checkRoleInCompany(String companyId);
   Future<Either<String, bool>> addEmployee(String companyId,
       {required List<String> emails});
 }
 
 final companyProvider = Provider<CompanyApiImpl>((ref) {
-  return CompanyApiImpl(ref.watch(httpProvider), ref.watch(storageProvider));
+  return CompanyApiImpl(ref.watch(httpProvider), ref.watch(storageProvider),
+      ref.watch(httpRequestProvider));
 });
 
 class CompanyApiImpl implements CompanyApi {
   final Client client;
   final SecureStorage storage;
+  final HttpRequest httpRequest;
 
-  CompanyApiImpl(this.client, this.storage);
+  CompanyApiImpl(this.client, this.storage, this.httpRequest);
 
   @override
   Future<Either<String, ResponseData<List<MyCompany>>>> getCompany(
       int page) async {
-    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/me?page=$page");
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/joined?page=$page");
     final token = await storage.read("token");
     final response = await client.get(url, headers: {
       "Authorization": "Bearer $token",
@@ -49,8 +52,7 @@ class CompanyApiImpl implements CompanyApi {
 
   @override
   Future<Either<String, CompanyDetail>> getDetail(String companyId) async {
-    Uri url = Uri.parse(
-        "${ConstantUrl.BASE_URL}/company/me/detail?id_company=$companyId");
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/$companyId");
     final token = await storage.read('token');
     final response =
         await client.get(url, headers: {"Authorization": "Bearer $token"});
@@ -66,7 +68,7 @@ class CompanyApiImpl implements CompanyApi {
 
   @override
   Future<Either<String, bool>> joinCompany(String code) async {
-    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/me/join?code=$code");
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/join?code=$code");
     final token = await storage.read("token");
     final response = await client.post(url, headers: {
       "Authorization": "Bearer $token",
@@ -83,7 +85,7 @@ class CompanyApiImpl implements CompanyApi {
   @override
   Future<Either<String, bool>> createCompany(
       CompanyRequest companyRequest) async {
-    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/me/create");
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company");
     final token = await storage.read("token");
     final response = await client
         .post(url, body: jsonEncode(companyRequest.toJson()), headers: {
@@ -107,8 +109,7 @@ class CompanyApiImpl implements CompanyApi {
 
   @override
   Future<Either<String, String>> checkRoleInCompany(String companyId) async {
-    Uri url = Uri.parse(
-        "${ConstantUrl.BASE_URL}/company/me/role?id_company=$companyId");
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/$companyId/role");
     final token = await storage.read("token");
     final response = await client.get(url, headers: {
       "Authorization": "Bearer $token",
@@ -125,8 +126,8 @@ class CompanyApiImpl implements CompanyApi {
   @override
   Future<Either<String, bool>> addEmployee(String companyId,
       {required List<String> emails}) async {
-    Uri url = Uri.parse(
-        "${ConstantUrl.BASE_URL}/company/me/add-employee?id_company=$companyId");
+    Uri url =
+        Uri.parse("${ConstantUrl.BASE_URL}/company/$companyId/add-employee");
     final token = await storage.read("token");
     final response = await client.post(url, body: jsonEncode(emails), headers: {
       "Authorization": "Bearer $token",
@@ -140,5 +141,15 @@ class CompanyApiImpl implements CompanyApi {
       default:
         return Left("failed".tr());
     }
+  }
+
+  @override
+  Future<Either<String, bool>> deleteCompany(String companyId) async {
+    final url = "${ConstantUrl.BASE_URL}/company/$companyId";
+    final response = await httpRequest.delete(url);
+    return response.fold(
+      (failure) => left(failure),
+      (success) => right(success),
+    );
   }
 }

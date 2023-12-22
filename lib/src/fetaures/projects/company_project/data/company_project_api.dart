@@ -14,7 +14,7 @@ abstract class CompanyProjectApi {
   });
 
   // detail company project
-  Future<Either<String, CompanyProject>> detailCompanyProject(String id);
+  Future<Either<String, DetailCompanyProject>> detailCompanyProject(String id);
 
   // delete company project by id
   Future<Either<String, bool>> deleteCompanyProject(String id);
@@ -36,7 +36,7 @@ class CompanyProjectImpl implements CompanyProjectApi {
       String idCompany,
       {int? page}) async {
     Uri url = Uri.parse(
-        "${ConstantUrl.BASE_URL}/company/project?id_company=$idCompany&page=$page");
+        "${ConstantUrl.BASE_URL}/company-project?id_company=$idCompany&page=$page");
     final token = await storage.read("token");
     final response =
         await _client.get(url, headers: {"Authorization": "Bearer $token"});
@@ -61,7 +61,7 @@ class CompanyProjectImpl implements CompanyProjectApi {
     File? image,
   }) async {
     Uri url = Uri.parse(
-        "${ConstantUrl.BASE_URL}/company/project?id_company=$idCompany");
+        "${ConstantUrl.BASE_URL}/company-project?id_company=$idCompany");
     final token = await storage.read("token");
     var request = http.MultipartRequest("POST", url)
       ..headers.addAll({"Authorization": "Bearer $token"})
@@ -86,7 +86,7 @@ class CompanyProjectImpl implements CompanyProjectApi {
   // delete company project by id
   @override
   Future<Either<String, bool>> deleteCompanyProject(String id) async {
-    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/project/$id");
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company-project/$id");
     final token = await storage.read("token");
     final response =
         await _client.delete(url, headers: {"Authorization": "Bearer $token"});
@@ -99,8 +99,9 @@ class CompanyProjectImpl implements CompanyProjectApi {
   }
 
   @override
-  Future<Either<String, CompanyProject>> detailCompanyProject(String id) async {
-    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company/project/$id");
+  Future<Either<String, DetailCompanyProject>> detailCompanyProject(
+      String id) async {
+    Uri url = Uri.parse("${ConstantUrl.BASE_URL}/company-project/$id");
     final token = await storage.read("token");
     final response = await _client.get(url, headers: {
       "Authorization": "Bearer $token",
@@ -109,7 +110,7 @@ class CompanyProjectImpl implements CompanyProjectApi {
     switch (response.statusCode) {
       case 200:
         final data = jsonDecode(response.body);
-        return right(CompanyProject.fromJson(data));
+        return right(DetailCompanyProject.fromJson(data));
       default:
         return left("error".tr());
     }

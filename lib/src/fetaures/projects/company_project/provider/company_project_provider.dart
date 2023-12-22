@@ -13,9 +13,8 @@ final companyProjectNotifier = StateNotifierProvider<CompanyProjectNotifier,
 });
 
 // detail company porject
-final detailCompanyProjectNotifier =
-    StateNotifierProvider<DetailCompanyProjectNotifier, States<CompanyProject>>(
-        (ref) {
+final detailCompanyProjectNotifier = StateNotifierProvider<
+    DetailCompanyProjectNotifier, States<DetailCompanyProject>>((ref) {
   return DetailCompanyProjectNotifier(ref.watch(companyProjectProvider));
 });
 

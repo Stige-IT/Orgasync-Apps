@@ -39,13 +39,13 @@ class _DetailCompanyProjectScreenState
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            if (detailCompany.data?.image != null)
+            if (detailCompany.data?.companyProject?.image != null)
               SizedBox(
                 height: 70,
                 width: 70,
                 child: CachedNetworkImage(
                   imageUrl:
-                      "${ConstantUrl.BASEIMGURL}/${detailCompany.data!.image!}",
+                      "${ConstantUrl.BASEIMGURL}/${detailCompany.data!.companyProject?.image!}",
                   fit: BoxFit.cover,
                   placeholder: (context, url) => const LoadingWidget(),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -53,22 +53,23 @@ class _DetailCompanyProjectScreenState
               ),
             ListTile(
               title: Text(
-                detailCompany.data?.name ?? "",
+                detailCompany.data?.companyProject?.name ?? "",
                 textAlign: TextAlign.center,
                 style: context.theme.textTheme.headlineSmall!.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
               subtitle: Text(
-                detailCompany.data?.description ?? "",
+                detailCompany.data?.companyProject?.description ?? "",
                 textAlign: TextAlign.center,
               ),
             ),
             ListTile(
               leading: const Icon(Icons.people),
-              title: const Text("20 Employee"),
+              title: Text(
+                  "${detailCompany.data?.totalEmployee} ${'employee'.tr()}"),
               trailing: IconButton(
-                onPressed: () {},
+                onPressed: () => nextPage(context, "/company/project/employee"),
                 icon: const Icon(Icons.arrow_forward),
               ),
             ),
@@ -76,40 +77,37 @@ class _DetailCompanyProjectScreenState
               children: [
                 ListTile(
                   leading: const Icon(Icons.assignment),
-                  title: const Text("10 Project"),
+                  title: Text(
+                      "${detailCompany.data?.totalProject} ${'project'.tr()}"),
                   trailing: IconButton(
-                    onPressed: () {},
+                    onPressed: () => nextPage(context, "/project"),
                     icon: const Icon(Icons.arrow_forward),
                   ),
                 ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Chip(label: Text("TODO : 12")),
-                    Chip(label: Text("DOING : 5")),
-                    Chip(label: Text("DONE : 10")),
-                  ],
-                )
               ],
             ),
+            const SizedBox(height: 10),
             ListTile(
               title: Text("list_project".tr()),
             ),
-            SizedBox(
-              height: size.height * 0.6,
-              child: ListView.separated(
-                itemBuilder: (_, i) => Card(
-                  elevation: 2,
-                  color: context.theme.colorScheme.primary.withOpacity(0.5),
-                  child: ListTile(
-                    title: Text("Project ${i + 1}"),
-                    subtitle: Text("Description Project ${i + 1}"),
-                  ),
+            const Divider(),
+            if (detailCompany.data?.project?.isEmpty ?? true)
+              const Padding(
+                padding: EdgeInsets.only(top: 40.0),
+                child: EmptyWidget(),
+              )
+            else
+              SizedBox(
+                height: size.height * 0.6,
+                child: ListView.separated(
+                  itemBuilder: (_, i) {
+                    final project = detailCompany.data?.project?[i];
+                    return CardProject(project);
+                  },
+                  separatorBuilder: (_, i) => const Divider(),
+                  itemCount: detailCompany.data?.project?.length ?? 0,
                 ),
-                separatorBuilder: (_, i) => const Divider(),
-                itemCount: 10,
-              ),
-            )
+              )
           ],
         ),
       ),

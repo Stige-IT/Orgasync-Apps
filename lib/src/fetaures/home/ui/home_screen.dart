@@ -37,12 +37,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         toolbarHeight: context.height * 0.1,
         backgroundColor: Colors.transparent,
         // leading: Image.asset("assets/images/app_logo.png"),
-        title: Text(
-          "app_name".tr(),
-          style: Theme.of(context)
-              .textTheme
-              .displaySmall!
-              .copyWith(fontWeight: FontWeight.w600),
+        title: InkWell(
+          onTap: Platform.isWindows || Platform.isLinux || Platform.isMacOS
+              ? () {
+                  ref.read(companyNotifier.notifier).refresh();
+                }
+              : null,
+          child: Text(
+            "app_name".tr(),
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall!
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
         ),
         actions: [
           // IconButton(
