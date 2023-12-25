@@ -152,3 +152,132 @@ class CandidateEmployeeProjectNotifier extends StateNotifier<List<Employee>> {
     state = [];
   }
 }
+
+// get members of company project
+class MemberCompanyProjectNotifier
+    extends StateNotifier<BaseState<List<EmployeeCompanyProject>>> {
+  final CompanyProjectImpl _projectImpl;
+  final Ref ref;
+  MemberCompanyProjectNotifier(this._projectImpl, this.ref)
+      : super(const BaseState());
+
+  Future<void> get(String idCompanyProject,
+      {int? page, bool? makeLoading = false, bool? isLoadMore = false}) async {
+    if (makeLoading!) {
+      state = state.copyWith(isLoading: true);
+    }
+    try {
+      final result = await _projectImpl
+          .getMemberCompanyProject(idCompanyProject, page: page ?? state.page);
+      result.fold(
+        (error) => state = state.copyWith(
+            error: error, isLoading: false, isLoadingMore: false),
+        (response) => state = state.copyWith(
+          data:
+              isLoadMore! ? [...state.data!, ...response.data!] : response.data,
+          page: response.currentPage!,
+          lastPage: response.lastPage!,
+          total: response.total!,
+          isLoading: false,
+          isLoadingMore: false,
+          error: null,
+        ),
+      );
+    } catch (exception) {
+      state = state.copyWith(
+          error: exceptionTomessage(exception),
+          isLoading: false,
+          isLoadingMore: false);
+    }
+  }
+
+  void loadMore(String idCompanyProject) async {
+    if (state.page == state.lastPage) return;
+    state = state.copyWith(page: state.page + 1);
+    get(idCompanyProject, isLoadMore: true);
+  }
+
+  void refresh(String idCompanyProject) =>
+      get(idCompanyProject, page: 1, makeLoading: true);
+
+  Future<bool> removeMember(String idCompanyProject, String idUser) async {
+    final temp = state;
+    state = state.copyWith(
+        data: state.data!.where((element) => element.id != idUser).toList());
+    final result = await _projectImpl.removeMemberFromCompanyProject(
+        idCompanyProject, idUser);
+    return result.fold((error) {
+      state = temp;
+      return false;
+    }, (response) {
+      ref.read(detailCompanyProjectNotifier.notifier).get(idCompanyProject);
+      return true;
+    });
+  }
+}
+
+// add member to company project
+class AddMemberToCompanyProjectNotifier extends StateNotifier<States> {
+  final CompanyProjectImpl _projectImpl;
+  final Ref ref;
+  AddMemberToCompanyProjectNotifier(this._projectImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> add(String idCompanyProject, List<String> idUser) async {
+    state = States.loading();
+    try {
+      final result = await _projectImpl.addMemberToCompanyProject(
+          idCompanyProject, idUser);
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (response) {
+          state = States.noState();
+          ref.read(detailCompanyProjectNotifier.notifier).get(idCompanyProject);
+          ref
+              .read(memberCompanyProjectNotifier.notifier)
+              .refresh(idCompanyProject);
+          return true;
+        },
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
+// remove member from company project
+class RemoveMemberFromCompanyProjectNotifier extends StateNotifier<States> {
+  final CompanyProjectImpl _projectImpl;
+  final Ref ref;
+  RemoveMemberFromCompanyProjectNotifier(this._projectImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> remove(String idCompanyProject, String idUser) async {
+    state = States.loading();
+    try {
+      final result = await _projectImpl.removeMemberFromCompanyProject(
+          idCompanyProject, idUser);
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (response) {
+          state = States.noState();
+          ref.read(detailCompanyProjectNotifier.notifier).get(idCompanyProject);
+          ref
+              .read(memberCompanyProjectNotifier.notifier)
+              .refresh(idCompanyProject);
+          return true;
+        },
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:appflowy_board/appflowy_board.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -19,7 +18,6 @@ import 'package:orgasync/src/config/contants/base_url.dart';
 import 'package:orgasync/src/fetaures/company/company.dart';
 import 'package:orgasync/src/fetaures/employee/employee.dart';
 import 'package:orgasync/src/fetaures/employee/models/employee.dart';
-import 'package:orgasync/src/fetaures/user/user.dart';
 import 'package:orgasync/src/models/response_data.dart';
 import 'package:orgasync/src/models/state.dart';
 import 'package:orgasync/src/utils/extensions/formatted_date.dart';
@@ -40,6 +38,7 @@ import '../../components/profile_with_name.dart';
 part 'company_project/data/company_project_api.dart';
 part "models/company_project.dart";
 part "models/project.dart";
+part "models/employee_company_project.dart";
 part "widgets/project_item.dart";
 part "widgets/card_project.dart";
 part "company_project/provider/company_project_notifier.dart";

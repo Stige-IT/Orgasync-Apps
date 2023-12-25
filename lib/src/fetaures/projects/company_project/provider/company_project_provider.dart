@@ -2,11 +2,6 @@ part of "../../project.dart";
 
 final imageProvider = StateProvider.autoDispose<File?>((ref) => null);
 
-final employeProjectTempProvider = StateNotifierProvider.autoDispose<
-    CandidateEmployeeProjectNotifier, List<Employee>>((ref) {
-  return CandidateEmployeeProjectNotifier();
-});
-
 final companyProjectNotifier = StateNotifierProvider<CompanyProjectNotifier,
     BaseState<List<CompanyProject>>>((ref) {
   return CompanyProjectNotifier(ref.watch(companyProjectProvider));
@@ -33,4 +28,31 @@ final createCompanyProjectNotifier =
 final deleteCompanyProjectNotifier =
     StateNotifierProvider<DeleteCompanyProjectNotifier, States>((ref) {
   return DeleteCompanyProjectNotifier(ref.watch(companyProjectProvider), ref);
+});
+
+final employeProjectTempProvider = StateNotifierProvider.autoDispose<
+    CandidateEmployeeProjectNotifier, List<Employee>>((ref) {
+  return CandidateEmployeeProjectNotifier();
+});
+
+// member company project
+final memberCompanyProjectNotifier = StateNotifierProvider<
+    MemberCompanyProjectNotifier,
+    BaseState<List<EmployeeCompanyProject>>>((ref) {
+  return MemberCompanyProjectNotifier(ref.watch(companyProjectProvider), ref);
+});
+
+// add member to company project
+final addMemberToCompanyProjectNotifier =
+    StateNotifierProvider<AddMemberToCompanyProjectNotifier, States>((ref) {
+  return AddMemberToCompanyProjectNotifier(
+      ref.watch(companyProjectProvider), ref);
+});
+
+// remove member from company project
+final removeMemberFromCompanyProjectNotifier =
+    StateNotifierProvider<RemoveMemberFromCompanyProjectNotifier, States>(
+        (ref) {
+  return RemoveMemberFromCompanyProjectNotifier(
+      ref.watch(companyProjectProvider), ref);
 });

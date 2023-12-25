@@ -3,8 +3,13 @@ part of "../../project.dart";
 abstract class ProjectApi {
   // get project by company project id
   Future<Either<String, List<Project>>> getProjects(String idCompanyProject);
+  // get detail project
+  Future<Either<String, Project>> detailProject(String idProject);
   // create new project
   Future<Either<String, bool>> createProject(String idCompanyProject,
+      {required String name, required String description});
+  // update project
+  Future<Either<String, bool>> updateProject(String idProject,
       {required String name, required String description});
   // delete project
   Future<Either<String, bool>> deleteProject(String idProject);
@@ -41,6 +46,16 @@ class ProjectImpl implements ProjectApi {
   }
 
   @override
+  Future<Either<String, Project>> detailProject(String idProject) async {
+    final url = "${ConstantUrl.BASE_URL}/project/$idProject";
+    final result = await httpRequest.get(url);
+    return result.fold(
+      (error) => left(error),
+      (response) => right(Project.fromJson(response)),
+    );
+  }
+
+  @override
   Future<Either<String, bool>> createProject(String idCompanyProject,
       {required String name, required String description}) async {
     Uri url = Uri.parse(
@@ -63,6 +78,21 @@ class ProjectImpl implements ProjectApi {
   Future<Either<String, bool>> deleteProject(String idProject) async {
     Uri url = Uri.parse("${ConstantUrl.BASE_URL}/project/$idProject");
     final result = await httpRequest.delete(url.toString());
+    return result.fold(
+      (error) => left(error),
+      (response) => right(response),
+    );
+  }
+
+  @override
+  Future<Either<String, bool>> updateProject(
+    String idProject, {
+    required String name,
+    required String description,
+  }) async {
+    final url = "${ConstantUrl.BASE_URL}/project/$idProject";
+    final body = {"name": name, "description": description};
+    final result = await httpRequest.put(url, data: body);
     return result.fold(
       (error) => left(error),
       (response) => right(response),

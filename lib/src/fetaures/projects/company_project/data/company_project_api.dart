@@ -18,18 +18,31 @@ abstract class CompanyProjectApi {
 
   // delete company project by id
   Future<Either<String, bool>> deleteCompanyProject(String id);
+
+  // get member company project
+  Future<Either<String, ResponseData<List<EmployeeCompanyProject>>>>
+      getMemberCompanyProject(String idCompanyProject, {int? page});
+
+  // add member to company project
+  Future<Either<String, bool>> addMemberToCompanyProject(
+      String idCompanyProject, List<String> idUser);
+
+  // remove member from company project
+  Future<Either<String, bool>> removeMemberFromCompanyProject(
+      String idCompanyProject, String idUser);
 }
 
 final companyProjectProvider = Provider<CompanyProjectImpl>((ref) {
-  return CompanyProjectImpl(
-      ref.watch(httpProvider), ref.watch(storageProvider));
+  return CompanyProjectImpl(ref.watch(httpProvider), ref.watch(storageProvider),
+      ref.watch(httpRequestProvider));
 });
 
 class CompanyProjectImpl implements CompanyProjectApi {
   final Client _client;
   final SecureStorage storage;
+  final HttpRequest httpRequest;
 
-  CompanyProjectImpl(this._client, this.storage);
+  CompanyProjectImpl(this._client, this.storage, this.httpRequest);
 
   @override
   Future<Either<String, ResponseData<List<CompanyProject>>>> getProjects(
@@ -114,5 +127,54 @@ class CompanyProjectImpl implements CompanyProjectApi {
       default:
         return left("error".tr());
     }
+  }
+
+  @override
+  Future<Either<String, ResponseData<List<EmployeeCompanyProject>>>>
+      getMemberCompanyProject(String idCompanyProject, {int? page = 1}) async {
+    final url =
+        "${ConstantUrl.BASE_URL}/company-project/$idCompanyProject/employee?page=$page";
+    final response = await httpRequest.get(url);
+    return response.fold(
+      (failure) => left(failure),
+      (response) {
+        List result = response['items'];
+        final data =
+            result.map((e) => EmployeeCompanyProject.fromJson(e)).toList();
+        final total = response['total'];
+        final currentPage = response['page'];
+        final lastPage = response['pages'];
+        return right(ResponseData(
+          data: data,
+          total: total,
+          currentPage: currentPage,
+          lastPage: lastPage,
+        ));
+      },
+    );
+  }
+
+  @override
+  Future<Either<String, bool>> addMemberToCompanyProject(
+      String idCompanyProject, List<String> idUser) async {
+    final url =
+        "${ConstantUrl.BASE_URL}/company-project/$idCompanyProject/employee";
+    final response = await httpRequest.post(url, body: {"employee_id": idUser});
+    return response.fold(
+      (failure) => left(failure),
+      (success) => right(success),
+    );
+  }
+
+  @override
+  Future<Either<String, bool>> removeMemberFromCompanyProject(
+      String idCompanyProject, String idUser) async {
+    final url =
+        "${ConstantUrl.BASE_URL}/company-project/$idCompanyProject/employee/$idUser";
+    final response = await httpRequest.delete(url);
+    return response.fold(
+      (failure) => left(failure),
+      (success) => right(success),
+    );
   }
 }

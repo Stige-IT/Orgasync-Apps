@@ -41,8 +41,27 @@ class HttpRequest {
     final response = await _client.post(Uri.parse(url),
         body: jsonEncode(body), headers: headers);
     if (response.statusCode == 201) {
-      final result = jsonDecode(response.body);
-      return right(result);
+      return right(true);
+    } else {
+      return left("error".tr());
+    }
+  }
+
+  // put
+  Future<Either<String, bool>> put(String url,
+      {Map<String, dynamic>? data}) async {
+    final token = await storage.read("token");
+    final response = await _client.put(
+      Uri.parse(url),
+      body: jsonEncode(data),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return right(true);
     } else {
       return left("error".tr());
     }

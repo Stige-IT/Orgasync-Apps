@@ -28,6 +28,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.dispose();
   }
 
+  void _handleRefresh() {
+    if (!kIsWeb) {
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        ref.read(companyNotifier.notifier).refresh();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userNotifier).data;
@@ -38,11 +46,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         backgroundColor: Colors.transparent,
         // leading: Image.asset("assets/images/app_logo.png"),
         title: InkWell(
-          onTap: Platform.isWindows || Platform.isLinux || Platform.isMacOS
-              ? () {
-                  ref.read(companyNotifier.notifier).refresh();
-                }
-              : null,
+          onTap: _handleRefresh,
           child: Text(
             "app_name".tr(),
             style: Theme.of(context)

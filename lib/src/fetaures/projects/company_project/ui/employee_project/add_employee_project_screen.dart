@@ -142,8 +142,9 @@ class _AddEmployeeProjectScreenState
                     }),
                     onPressed: () {
                       if (candidate.contains(employees.data![i])) return;
-                      if (_joinedUser(employees.data!, employees.data![i]))
+                      if (_joinedUser(employees.data!, employees.data![i])) {
                         return;
+                      }
                       ref
                           .read(employeProjectTempProvider.notifier)
                           .add(employees.data![i]);
@@ -205,19 +206,27 @@ class _AddEmployeeProjectScreenState
                 FilledButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    // ref
-                    //     .read(addEmployeeNotifier.notifier)
-                    //     .add(widget.companyId, users: candidate)
-                    //     .then((success) {
-                    //   if (success) {
-                    //     Navigator.of(context).pop();
-                    //     showSnackbar(context, "succes".tr(),
-                    //         type: SnackBarType.success);
-                    //   } else {
-                    //     showSnackbar(context, "failed".tr(),
-                    //         type: SnackBarType.error);
-                    //   }
-                    // });
+                    final idCompanyProject = ref
+                        .watch(detailCompanyProjectNotifier)
+                        .data!
+                        .companyProject!
+                        .id;
+                    final employees = ref.watch(employeProjectTempProvider);
+                    final idEmployees = employees.map((e) => e.id!).toList();
+                    ref
+                        .read(addMemberToCompanyProjectNotifier.notifier)
+                        .add(idCompanyProject!, idEmployees)
+                        .then((success) {
+                      if (success) {
+                        Navigator.of(context).pop();
+                        ref.read(employeProjectTempProvider.notifier).clear();
+                        showSnackbar(context, "invite_success".tr());
+                      } else {
+                        final err =
+                            ref.watch(addMemberToCompanyProjectNotifier).error;
+                        showSnackbar(context, err!, type: SnackBarType.error);
+                      }
+                    });
                   },
                   child: Text("invite".tr()),
                 ),

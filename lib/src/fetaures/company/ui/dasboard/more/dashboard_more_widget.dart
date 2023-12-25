@@ -17,32 +17,60 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            Card(
-              child: ListTile(
+            ListTile(
+                visualDensity: const VisualDensity(vertical: 4),
                 leading: Builder(builder: (_) {
                   if (company?.logo != null) {
-                    return CircleAvatarNetwork(company!.logo, size: 40);
+                    return CircleAvatarNetwork(company!.logo, size: 120);
                   } else {
-                    return ProfileWithName(company?.name ?? "  ", size: 40);
+                    return ProfileWithName(company?.name ?? "  ", size: 120);
                   }
                 }),
-                title: Text(company?.name ?? ""),
-                subtitle: TextButton.icon(
-                  style: TextButton.styleFrom(alignment: Alignment.centerLeft),
-                  label: Text(company?.code ?? ""),
-                  icon: const Icon(Icons.copy),
-                  onPressed: () {
-                    Clipboard.setData(const ClipboardData(text: "code copied"));
-                    showSnackbar(context, "copied".tr());
-                  },
+                title: Text(
+                  company?.name ?? "",
+                  style: context.theme.textTheme.headlineSmall,
                 ),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(company?.code ?? ""),
+                    IconButton(
+                      onPressed: () {
+                        Clipboard.setData(
+                            const ClipboardData(text: "code copied"));
+                        showSnackbar(context, "copied".tr());
+                      },
+                      icon: const Icon(Icons.copy),
+                    )
+                  ],
+                )),
+            const Divider(),
+            const SizedBox(height: 20),
+            Card(
+              elevation: 3,
+              child: ListTile(
+                leading: const Icon(Icons.location_city),
+                title: Text("edit_company".tr()),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {},
               ),
-              // create list title delete company
+            ),
+            Card(
+              elevation: 3,
+              child: ListTile(
+                leading: const Icon(Icons.book),
+                title: Text("logbook".tr()),
+                trailing: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.toggle_off_outlined, size: 40),
+                ),
+                onTap: () {},
+              ),
             ),
             const Spacer(),
             Card(
               child: ListTile(
-                leading: const Icon(Icons.disabled_by_default_outlined),
+                leading: const Icon(Icons.delete, color: Colors.red),
                 title: Text("remove_company".tr()),
                 onTap: _handleDeleteCompany,
               ),

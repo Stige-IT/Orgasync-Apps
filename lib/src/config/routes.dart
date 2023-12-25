@@ -55,7 +55,14 @@ class AppRoute {
       final projectId = ModalRoute.of(context)!.settings.arguments as String;
       return DetailProjectScreen(projectId);
     },
-    "/project/form": (_) => const FormProjectScreen(),
+    "/project/form": (context) {
+      final project = ModalRoute.of(context)!.settings.arguments as Project?;
+      if (project != null) {
+        return FormProjectScreen(project: project);
+      } else {
+        return const FormProjectScreen();
+      }
+    },
 
     /// USER PAGES
     "/user/search": (context) {
