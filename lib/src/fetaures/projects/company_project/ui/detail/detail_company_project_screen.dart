@@ -32,7 +32,15 @@ class _DetailCompanyProjectScreenState
         elevation: 0,
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+          IconButton(
+              onPressed: () {
+                nextPage(
+                  context,
+                  "/company/project/form",
+                  argument: detailCompany.data?.companyProject,
+                );
+              },
+              icon: const Icon(Icons.edit)),
         ],
       ),
       body: SingleChildScrollView(

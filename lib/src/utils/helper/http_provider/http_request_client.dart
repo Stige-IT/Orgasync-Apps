@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:orgasync/src/utils/helper/http_provider/http_provider.dart';
@@ -64,6 +66,34 @@ class HttpRequest {
       return right(true);
     } else {
       return left("error".tr());
+    }
+  }
+
+  // multipart post / put
+  Future<Either<String, bool>> multipart(String method, String url,
+      {Map<String, String>? data, File? file, String? fieldFile}) async {
+    final token = await storage.read("token");
+    final request = MultipartRequest(method, Uri.parse(url));
+    request.headers.addAll({"Authorization": "Bearer $token"});
+    request.fields.addAll(data!);
+    if (file != null) {
+      final multipartFile = MultipartFile.fromBytes(
+        fieldFile!,
+        file.readAsBytesSync(),
+        filename: file.path.split("/").last,
+      );
+      request.files.add(multipartFile);
+    }
+    final response = await request.send();
+    if (kDebugMode) {
+      print(await response.stream.bytesToString());
+    }
+    switch (response.statusCode) {
+      case 200:
+      case 201:
+        return right(true);
+      default:
+        return left("error".tr());
     }
   }
 

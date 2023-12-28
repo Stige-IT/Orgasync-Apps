@@ -24,6 +24,12 @@ final createCompanyProjectNotifier =
   return CreateCompanyProjectNotifier(ref.watch(companyProjectProvider), ref);
 });
 
+// update company project
+final updateCompanyProjectNotifier =
+    StateNotifierProvider<UpdateCompanyProjectNotifier, States>((ref) {
+  return UpdateCompanyProjectNotifier(ref.watch(companyProjectProvider), ref);
+});
+
 // delete company project
 final deleteCompanyProjectNotifier =
     StateNotifierProvider<DeleteCompanyProjectNotifier, States>((ref) {

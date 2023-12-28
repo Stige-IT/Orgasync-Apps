@@ -1,7 +1,8 @@
 part of "../../../project.dart";
 
 class FormCompanyProjectScreen extends ConsumerStatefulWidget {
-  const FormCompanyProjectScreen({super.key});
+  final CompanyProject? companyProject;
+  const FormCompanyProjectScreen({super.key, this.companyProject});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -15,9 +16,13 @@ class _FormCompanyProjectScreenState
 
   @override
   void initState() {
+    super.initState();
     _nameCtrl = TextEditingController();
     _descriptionCtrl = TextEditingController();
-    super.initState();
+    if (widget.companyProject != null) {
+      _nameCtrl.text = widget.companyProject?.name ?? "";
+      _descriptionCtrl.text = widget.companyProject?.description ?? "";
+    }
   }
 
   @override
@@ -33,15 +38,21 @@ class _FormCompanyProjectScreenState
     final createLoading = ref.watch(createCompanyProjectNotifier).isLoading;
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          "project".tr(),
-          style: context.theme.textTheme.headlineSmall!.copyWith(
-            fontWeight: FontWeight.w600,
+          elevation: 0,
+          centerTitle: true,
+          title: Text(
+            "project".tr(),
+            style: context.theme.textTheme.headlineSmall!.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-      ),
+          actions: [
+            if (widget.companyProject != null)
+              IconButton(
+                onPressed: _handleDeleteProject,
+                icon: const Icon(Icons.delete),
+              ),
+          ]),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -77,6 +88,11 @@ class _FormCompanyProjectScreenState
                     child: Builder(builder: (_) {
                       if (image != null) {
                         return Image.file(image, fit: BoxFit.cover);
+                      } else if (widget.companyProject?.image != null) {
+                        return Image.network(
+                          "${ConstantUrl.BASEIMGURL}/${widget.companyProject?.image}",
+                          fit: BoxFit.cover,
+                        );
                       }
                       return const Icon(Icons.image, color: Colors.white);
                     }),
@@ -102,32 +118,91 @@ class _FormCompanyProjectScreenState
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _handleCreateProject,
+        onPressed: _handleSaveProject,
         child: const Icon(Icons.check),
       ),
     );
   }
 
-  void _handleCreateProject() {
+  void _handleDeleteProject() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("delete_project".tr()),
+        content: Text("delete_project_confirm".tr()),
+        actions: [
+          TextButton(
+            onPressed: Navigator.of(context).pop,
+            child: Text("cancel".tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              final companyId = ref.read(detailCompanyNotifier).data!.id;
+              Navigator.of(context).pop();
+              ref
+                  .read(deleteCompanyProjectNotifier.notifier)
+                  .delete(companyId!, widget.companyProject!.id!)
+                  .then((success) {
+                if (success) {
+                  showSnackbar(context, "delete_project_success".tr(),
+                      type: SnackBarType.success);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                } else {
+                  final error = ref.watch(deleteCompanyProjectNotifier).error!;
+                  showSnackbar(context, error, type: SnackBarType.error);
+                }
+              });
+            },
+            child: Text("delete".tr()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleSaveProject() {
     final company = ref.watch(detailCompanyNotifier).data;
     final image = ref.watch(imageProvider);
-    ref
-        .read(createCompanyProjectNotifier.notifier)
-        .create(
-          company!.id!,
-          name: _nameCtrl.text,
-          description: _descriptionCtrl.text,
-          image: image,
-        )
-        .then((success) {
-      if (success) {
-        showSnackbar(context, "create_project_success".tr(),
-            type: SnackBarType.success);
-        Navigator.of(context).pop();
-      } else {
-        showSnackbar(context, "create_project_failed".tr(),
-            type: SnackBarType.error);
-      }
-    });
+    if (widget.companyProject != null) {
+      final companyProjectId = widget.companyProject!.id;
+      ref
+          .read(updateCompanyProjectNotifier.notifier)
+          .update(
+            companyProjectId!,
+            name: _nameCtrl.text,
+            description: _descriptionCtrl.text,
+            image: image,
+          )
+          .then((success) {
+        if (success) {
+          showSnackbar(context, "update_project_success".tr(),
+              type: SnackBarType.success);
+          Navigator.of(context).pop();
+        } else {
+          final error = ref.watch(updateCompanyProjectNotifier).error!;
+          showSnackbar(context, error, type: SnackBarType.error);
+        }
+      });
+    } else {
+      ref
+          .read(createCompanyProjectNotifier.notifier)
+          .create(
+            company!.id!,
+            name: _nameCtrl.text,
+            description: _descriptionCtrl.text,
+            image: image,
+          )
+          .then((success) {
+        if (success) {
+          showSnackbar(context, "create_project_success".tr(),
+              type: SnackBarType.success);
+          Navigator.of(context).pop();
+        } else {
+          showSnackbar(context, "create_project_failed".tr(),
+              type: SnackBarType.error);
+        }
+      });
+    }
   }
 }

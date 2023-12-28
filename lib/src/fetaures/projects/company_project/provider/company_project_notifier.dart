@@ -106,6 +106,46 @@ class CreateCompanyProjectNotifier extends StateNotifier<States> {
   }
 }
 
+// update company project
+class UpdateCompanyProjectNotifier extends StateNotifier<States> {
+  final CompanyProjectImpl _projectImpl;
+  final Ref ref;
+  UpdateCompanyProjectNotifier(this._projectImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> update(
+    String id, {
+    required String name,
+    required String description,
+    File? image,
+  }) async {
+    state = States.loading();
+    try {
+      final result = await _projectImpl.updateCompanyProject(
+        id,
+        name: name,
+        description: description,
+        image: image,
+      );
+      return result.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (response) {
+          state = States.noState();
+          ref.read(detailCompanyProjectNotifier.notifier).get(id);
+          // ref.read(companyProjectNotifier.notifier).refresh(id);
+          return true;
+        },
+      );
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
 // delete company project
 class DeleteCompanyProjectNotifier extends StateNotifier<States> {
   final CompanyProjectImpl _projectImpl;

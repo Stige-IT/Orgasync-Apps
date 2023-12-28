@@ -16,6 +16,10 @@ abstract class CompanyProjectApi {
   // detail company project
   Future<Either<String, DetailCompanyProject>> detailCompanyProject(String id);
 
+  // update company project
+  Future<Either<String, bool>> updateCompanyProject(String id,
+      {required String name, required String description, File? image});
+
   // delete company project by id
   Future<Either<String, bool>> deleteCompanyProject(String id);
 
@@ -94,6 +98,29 @@ class CompanyProjectImpl implements CompanyProjectApi {
       default:
         return left("error".tr());
     }
+  }
+
+  // update company project
+
+  @override
+  Future<Either<String, bool>> updateCompanyProject(
+    String id, {
+    required String name,
+    required String description,
+    File? image,
+  }) async {
+    final url = "${ConstantUrl.BASE_URL}/company-project/$id";
+    final result = await httpRequest.multipart(
+      "PUT",
+      url,
+      data: {"name": name, "description": description},
+      file: image,
+      fieldFile: "image",
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (response) => right(response),
+    );
   }
 
   // delete company project by id
