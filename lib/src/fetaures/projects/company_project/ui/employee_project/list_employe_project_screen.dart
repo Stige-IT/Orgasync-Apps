@@ -21,7 +21,7 @@ class _ListEmployeeProjectScreenState
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => _getData());
+    // Future.microtask(() => _getData());
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.position.pixels ==
@@ -53,59 +53,65 @@ class _ListEmployeeProjectScreenState
           ),
         ],
       ),
-      body: Builder(builder: (_) {
-        if (membersProject.isLoading) {
-          return const Center(child: LoadingWidget());
-        } else if (membersProject.error != null) {
-          return ErrorButtonWidget(membersProject.error!, () => _getData());
-        } else if (membersProject.data == null ||
-            membersProject.data!.isEmpty) {
-          return const EmptyWidget();
-        } else {
-          return ListView.separated(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(15.0),
-            itemBuilder: (_, i) {
-              if (membersProject.isLoadingMore &&
-                  i == membersProject.data!.length) {
-                return const Center(child: LoadingWidget());
-              }
-              final employee = membersProject.data![i];
-              return Dismissible(
-                key: Key(employee.id!),
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 15.0),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                direction: DismissDirection.endToStart,
-                confirmDismiss: (_) => _handleDismiss(employee),
-                child: Card(
-                  child: ListTile(
-                    onTap: () {},
-                    leading: Builder(builder: (_) {
-                      if (employee.employee?.user?.image != null) {
-                        return CircleAvatarNetwork(
-                            employee.employee!.user!.image!);
-                      } else {
-                        return ProfileWithName(
-                            employee.employee?.user?.name ?? "  ");
-                      }
-                    }),
-                    title: Text(employee.employee?.user?.name ?? ""),
-                    subtitle: Text(employee.employee?.user?.email ?? ""),
-                  ),
-                ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 0, maxWidth: 1024),
+          child: Builder(builder: (_) {
+            if (membersProject.isLoading) {
+              return const Center(child: LoadingWidget());
+            } else if (membersProject.error != null) {
+              return ErrorButtonWidget(membersProject.error!, () => _getData());
+            } else if (membersProject.data == null ||
+                membersProject.data!.isEmpty) {
+              return const EmptyWidget();
+            } else {
+              return ListView.separated(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(15.0),
+                itemBuilder: (_, i) {
+                  if (membersProject.isLoadingMore &&
+                      i == membersProject.data!.length) {
+                    return const Center(child: LoadingWidget());
+                  }
+                  final employee = membersProject.data![i];
+                  return Dismissible(
+                    key: Key(employee.id!),
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 15.0),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    direction: DismissDirection.endToStart,
+                    confirmDismiss: (_) => _handleDismiss(employee),
+                    child: Card(
+                      child: ListTile(
+                        onTap: () {},
+                        leading: Builder(builder: (_) {
+                          if (employee.employee?.user?.image != null) {
+                            return CircleAvatarNetwork(
+                                employee.employee!.user!.image!);
+                          } else {
+                            return ProfileWithName(
+                                employee.employee?.user?.name ?? "  ");
+                          }
+                        }),
+                        title: Text(employee.employee?.user?.name ?? ""),
+                        subtitle: Text(employee.employee?.user?.email ?? ""),
+                      ),
+                    ),
+                  );
+                },
+                separatorBuilder: (_, i) => const Divider(),
+                itemCount: membersProject.isLoadingMore
+                    ? (membersProject.data ?? []).length + 1
+                    : membersProject.data?.length ?? 0,
               );
-            },
-            separatorBuilder: (_, i) => const Divider(),
-            itemCount: membersProject.isLoadingMore
-                ? (membersProject.data ?? []).length + 1
-                : membersProject.data?.length ?? 0,
-          );
-        }
-      }),
+            }
+          }),
+        ),
+      ),
     );
   }
 

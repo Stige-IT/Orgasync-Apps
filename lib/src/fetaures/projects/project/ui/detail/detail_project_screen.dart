@@ -12,6 +12,8 @@ class DetailProjectScreen extends ConsumerStatefulWidget {
 class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
   void _getData() {
     ref.read(detailProjectNotifier.notifier).get(widget.projectId);
+    ref.watch(taskNotifier.notifier).getTasks(widget.projectId);
+    ref.watch(statusNotifier.notifier).getStatus();
   }
 
   @override
@@ -22,14 +24,19 @@ class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     final stateProject = ref.watch(detailProjectNotifier);
+    final todo = ref.watch(taskNotifier).data?.todo;
+    final doing = ref.watch(taskNotifier).data?.doing;
+    final done = ref.watch(taskNotifier).data?.done;
     final project = stateProject.data;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         scrolledUnderElevation: 0,
-        centerTitle: true,
+        title: Text(
+          ConstantApp.appName.toUpperCase(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             onPressed: () =>
@@ -38,62 +45,31 @@ class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListTile(
-              title: Text(
-                project?.name ?? "",
-                textAlign: TextAlign.center,
-                style: context.theme.textTheme.headlineSmall!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              subtitle: Text(
-                project?.description ?? "",
-                textAlign: TextAlign.center,
-                style: context.theme.textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            // SizedBox(
-            //   height: size.height * 0.8,
-            //   child: KanbanBoard(
-            //     [
-            //       BoardListsData(
-            //         title: "TODO",
-            //         header: const Text("TODO"),
-            //         footer: const Text("Total: 0"),
-            //         items: [],
-            //       ),
-            //       BoardListsData(
-            //         title: "DOING",
-            //         header: const Text("DOING"),
-            //         footer: const Text("Total: 0"),
-            //         items: [],
-            //       ),
-            //     ],
-            //     onItemLongPress: (cardIndex, listIndex) {
-            //       print("onItemLongPress $cardIndex, $listIndex");
-            //     },
-            //     onItemTap: (cardIndex, listIndex) {
-            //       print("onItemTap $cardIndex, $listIndex");
-            //     },
-            //     onListTap: (listIndex) {
-            //       print("onListTap $listIndex");
-            //     },
-            //     onListLongPress: (listIndex) {
-            //       print("onListLongPress $listIndex");
-            //     },
-            //     onNewCardInsert: (cardIndex, listIndex, text) {
-            //       print("onNewCardInsert $cardIndex, $listIndex, $text");
-            //     },
-            //   ),
-            // ),
-            // const SizedBox(height: 70),
-          ],
-        ),
+      body: ListView(
+        padding: context.isMobile
+            ? const EdgeInsets.fromLTRB(0, 15.0, 0, 50.0)
+            : const EdgeInsets.fromLTRB(50, 15.0, 50, 50.0),
+        children: [
+          const HeaderWidget(),
+          SectionTask(
+            "TODO",
+            icon: Icons.assignment,
+            data: todo ?? [],
+            color: Colors.grey.withOpacity(.1),
+          ),
+          SectionTask(
+            "DOING",
+            icon: Icons.assignment_add,
+            data: doing ?? [],
+            color: Colors.yellow.withOpacity(.1),
+          ),
+          SectionTask(
+            "DONE",
+            icon: Icons.assignment_turned_in,
+            data: done ?? [],
+            color: Colors.green.withOpacity(.1),
+          ),
+        ],
       ),
     );
   }

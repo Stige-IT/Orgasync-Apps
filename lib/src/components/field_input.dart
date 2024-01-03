@@ -18,6 +18,7 @@ class FieldInput extends StatelessWidget {
   final void Function()? onTap;
   final String? Function(String?)? validator;
   final int? maxLines;
+  final bool borderActive;
 
   const FieldInput({
     super.key,
@@ -38,6 +39,7 @@ class FieldInput extends StatelessWidget {
     this.onTap,
     this.maxLines,
     this.textAlign = TextAlign.start,
+    this.borderActive = true,
   });
 
   @override
@@ -62,18 +64,18 @@ class FieldInput extends StatelessWidget {
             textAlign: textAlign!,
             minLines: keyboardType == TextInputType.multiline ? null : 1,
             maxLines:
-            (keyboardType == TextInputType.multiline && maxLines == null)
-                ? null
-                : maxLines ?? 1,
+                (keyboardType == TextInputType.multiline && maxLines == null)
+                    ? null
+                    : maxLines ?? 1,
             obscureText: obsecureText,
             controller: controllers,
             keyboardType: keyboardType,
             onChanged: onChanged,
             onEditingComplete: onEditingComplete,
             validator: validator ??
-                    (String? value) {
+                (String? value) {
                   if (value!.isEmpty || value == "0") {
-                    return ;
+                    return;
                   }
                   return null;
                 },
@@ -84,11 +86,13 @@ class FieldInput extends StatelessWidget {
               prefixText: prefixText,
               contentPadding: const EdgeInsets.all(20),
               suffixIcon: suffixIcon,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  isRounded! ? 50 : 5,
-                ),
-              ),
+              border: borderActive
+                  ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        isRounded! ? 50 : 5,
+                      ),
+                    )
+                  : InputBorder.none,
               hintText: hintText,
               enabled: enable ?? true,
               prefixIcon: prefixIcons,

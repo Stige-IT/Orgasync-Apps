@@ -72,6 +72,11 @@ class AppRoute {
       }
     },
 
+    "/task/detail" :(context){
+      final taskId = ModalRoute.of(context)?.settings.arguments as String;
+      return DetailTaskScreen(taskId);
+    },
+
     /// USER PAGES
     "/user/search": (context) {
       final companyId = ModalRoute.of(context)!.settings.arguments as String;

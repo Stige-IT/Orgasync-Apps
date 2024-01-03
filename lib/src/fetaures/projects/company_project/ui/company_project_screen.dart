@@ -28,66 +28,77 @@ class _CompanyProjectScreenState extends ConsumerState<CompanyProjectScreen> {
         backgroundColor: context.theme.colorScheme.background,
         foregroundColor: context.theme.colorScheme.onSurfaceVariant,
         centerTitle: true,
-        title: Text(
-          "project".tr(),
-          style: context.theme.textTheme.headlineSmall!.copyWith(
-            fontWeight: FontWeight.w600,
+        title: InkWell(
+          onTap: () => _getData(),
+          child: Text(
+            "project".tr(),
+            style: context.theme.textTheme.headlineSmall!.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.delayed(const Duration(seconds: 2), () => _getData());
-        },
-        child: Builder(builder: (_) {
-          final project = ref.watch(companyProjectNotifier);
-          if (project.isLoading) {
-            return const Center(child: LoadingWidget());
-          } else if (project.error != null) {
-            return ErrorButtonWidget(project.error!, () => _getData());
-          } else if (project.data == null || project.data!.isEmpty) {
-            return const EmptyWidget();
-          } else {
-            return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 100.0),
-              itemCount: project.data!.length,
-              itemBuilder: (_, index) {
-                final data = project.data![index];
-                return InkWell(
-                    onTap: () {
-                      nextPage(context, "/company/project/detail",
-                          argument: data.id);
-                    },
-                    onLongPress: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text("Delete Project"),
-                          content: const Text(
-                              "Are you sure want to delete this project?"),
-                          actions: [
-                            TextButton(
-                              onPressed: Navigator.of(context).pop,
-                              child: const Text("Cancel"),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 0, maxWidth: 1024),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await Future.delayed(
+                  const Duration(seconds: 2), () => _getData());
+            },
+            child: Builder(builder: (_) {
+              final project = ref.watch(companyProjectNotifier);
+              if (project.isLoading) {
+                return const Center(child: LoadingWidget());
+              } else if (project.error != null) {
+                return ErrorButtonWidget(project.error!, () => _getData());
+              } else if (project.data == null || project.data!.isEmpty) {
+                return const EmptyWidget();
+              } else {
+                return ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 100.0),
+                  itemCount: project.data!.length,
+                  itemBuilder: (_, index) {
+                    final data = project.data![index];
+                    return InkWell(
+                        onTap: () {
+                          nextPage(context, "/company/project/detail",
+                              argument: data.id);
+                        },
+                        onLongPress: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text("Delete Project"),
+                              content: const Text(
+                                  "Are you sure want to delete this project?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: Navigator.of(context).pop,
+                                  child: const Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(deleteCompanyProjectNotifier
+                                            .notifier)
+                                        .delete(widget.companyId, data.id!);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Delete"),
+                                ),
+                              ],
                             ),
-                            TextButton(
-                              onPressed: () {
-                                ref
-                                    .read(deleteCompanyProjectNotifier.notifier)
-                                    .delete(widget.companyId, data.id!);
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: ProjectItemWidget(data));
-              },
-            );
-          }
-        }),
+                          );
+                        },
+                        child: ProjectItemWidget(data));
+                  },
+                );
+              }
+            }),
+          ),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(

@@ -45,6 +45,7 @@ class DropdownContainer<T> extends StatelessWidget {
                 ]),
             child: DropdownButtonHideUnderline(
                 child: DropdownButton<T?>(
+              itemHeight: null,
               value: value,
               hint: Text(hint ?? "choice_your_option".tr()),
               isExpanded: true,
