@@ -190,6 +190,99 @@ class TaskNotifier extends StateNotifier<BaseState<TaskDataModel>> {
       (success) => true,
     );
   }
+
+  // remove
+  Future<bool> removeTask(TaskItem taskItem) async {
+    final temp = state.data;
+    TaskDataModel newTaskModel = TaskDataModel(
+      todo: state.data!.todo,
+      doing: state.data!.doing,
+      done: state.data!.done,
+    );
+
+    switch (taskItem.status?.name) {
+      case "todo":
+        final index = state.data?.todo
+            ?.indexWhere((element) => element.id == taskItem.id);
+        if (index != null) {
+          newTaskModel.todo?.removeAt(index);
+        }
+        break;
+      case "doing":
+        final index = state.data?.doing
+            ?.indexWhere((element) => element.id == taskItem.id);
+        if (index != null) {
+          newTaskModel.doing?.removeAt(index);
+        }
+        break;
+      case "done":
+        final index = state.data?.done
+            ?.indexWhere((element) => element.id == taskItem.id);
+        if (index != null) {
+          newTaskModel.done?.removeAt(index);
+        }
+        break;
+      default:
+    }
+
+    state = state.copyWith(data: newTaskModel);
+    final result =
+        await ref.watch(deleteTaskNotifier.notifier).deleteTask(taskItem.id!);
+    return result.fold(
+      (error) {
+        state = state.copyWith(data: temp);
+        return false;
+      },
+      (success) => true,
+    );
+  }
+}
+
+// get detail task by id
+class DetailTaskNotifier extends StateNotifier<BaseState<TaskItem>> {
+  final TaskApi taskApi;
+  DetailTaskNotifier(this.taskApi) : super(const BaseState());
+
+  Future<void> getDetailTask(String taskId) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final response = await taskApi.getDetailTask(taskId);
+      response.fold(
+        (error) => state = state.copyWith(error: error, isLoading: false),
+        (data) => state = state.copyWith(data: data, isLoading: false),
+      );
+    } catch (e) {
+      state = state.copyWith(error: exceptionTomessage(e), isLoading: false);
+    }
+  }
+}
+
+// create new task
+class AddTaskNotifier extends StateNotifier<States> {
+  final TaskApi taskApi;
+  final Ref ref;
+  AddTaskNotifier(this.taskApi, this.ref) : super(States.noState());
+
+  Future<bool> add(String idProject, TaskItem taskItem) async {
+    state = States.loading();
+    try {
+      final response = await taskApi.createTask(idProject, taskItem);
+      return response.fold(
+        (error) {
+          state = States.error(error);
+          return false;
+        },
+        (data) {
+          ref.watch(taskNotifier.notifier).getTasks(idProject);
+          state = States.noState();
+          return true;
+        },
+      );
+    } catch (e) {
+      state = States.error(exceptionTomessage(e));
+      return false;
+    }
+  }
 }
 
 // update task
@@ -202,6 +295,32 @@ class UpdateTaskNotifier extends StateNotifier<States> {
     state = States.loading();
     try {
       final response = await taskApi.updateTask(taskId, taskItem);
+      return response.fold(
+        (error) {
+          state = States.error(error);
+          return left(false);
+        },
+        (data) {
+          state = States.noState();
+          return right(true);
+        },
+      );
+    } catch (e) {
+      state = States.error(exceptionTomessage(e));
+      return left(false);
+    }
+  }
+}
+
+// delete task
+class DeleteTaskNotifier extends StateNotifier<States> {
+  final TaskApi taskApi;
+  DeleteTaskNotifier(this.taskApi) : super(States.noState());
+
+  Future<Either<bool, bool>> deleteTask(String taskId) async {
+    state = States.loading();
+    try {
+      final response = await taskApi.deleteTask(taskId);
       return response.fold(
         (error) {
           state = States.error(error);

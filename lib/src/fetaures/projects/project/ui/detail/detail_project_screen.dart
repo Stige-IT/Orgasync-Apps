@@ -33,7 +33,10 @@ class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
       appBar: AppBar(
         elevation: 0,
         scrolledUnderElevation: 0,
-        centerTitle: true,
+        title: Text(
+          ConstantApp.appName.toUpperCase(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             onPressed: () =>
@@ -43,7 +46,9 @@ class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 50.0),
+        padding: context.isMobile
+            ? const EdgeInsets.fromLTRB(0, 15.0, 0, 50.0)
+            : const EdgeInsets.fromLTRB(50, 15.0, 50, 50.0),
         children: [
           const HeaderWidget(),
           SectionTask(

@@ -21,7 +21,7 @@ class _ListEmployeeProjectScreenState
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => _getData());
+    // Future.microtask(() => _getData());
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.position.pixels ==

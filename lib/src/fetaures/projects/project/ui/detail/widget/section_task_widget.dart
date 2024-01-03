@@ -17,13 +17,13 @@ class SectionTask extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.only(bottom: 40.0),
       child: ExpansionTile(
         backgroundColor: color,
         initiallyExpanded: true,
         leading: Icon(icon),
         childrenPadding: const EdgeInsets.symmetric(vertical: 10.0),
-        title: Text(sectionName),
+        title: Text("$sectionName (${data.length})"),
         children: [
           SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -45,12 +45,13 @@ class SectionTask extends ConsumerWidget {
                       context.theme.colorScheme.background,
                     ),
                     showCheckboxColumn: false,
-                    dataRowMinHeight: 30,
-                    dataRowMaxHeight: 100,
+                    dataRowMinHeight: 20,
+                    dataRowMaxHeight: 70,
                     columns: const [
                       DataColumn(label: Text("Name")),
                       DataColumn(label: Text("Status")),
                       DataColumn(label: Text("Assigneed")),
+                      DataColumn(label: Text("priority")),
                       DataColumn(label: Text("start date")),
                       DataColumn(label: Text("end date")),
                     ],
@@ -73,7 +74,36 @@ class SectionTask extends ConsumerWidget {
     final status = ref.watch(statusNotifier).data;
     final employee = ref.watch(memberCompanyProjectNotifier).data;
     return DataRow(
-      onSelectChanged: (value) {},
+      onLongPress: () {
+        // dialog confirm delete
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text("Delete Task"),
+            content: const Text("Are you sure want to delete this task?"),
+            actions: [
+              TextButton(
+                onPressed: Navigator.of(context).pop,
+                child: const Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  ref.read(taskNotifier.notifier).removeTask(e).then((success) {
+                    if (!success) {
+                      final err = ref.watch(updateTaskNotifier).error!;
+                      showSnackbar(context, err, type: SnackBarType.error);
+                    }
+                  });
+                },
+                child: const Text("Delete"),
+              ),
+            ],
+          ),
+        );
+      },
+      onSelectChanged: (value) =>
+          showDialog(context: context, builder: (_) => DetailTaskScreen(e.id!)),
       cells: [
         DataCell(Container(
           constraints: BoxConstraints(maxWidth: context.isMobile ? 150 : 300),
@@ -98,7 +128,15 @@ class SectionTask extends ConsumerWidget {
               [],
           onSelected: (value) {
             if (value.name != e.status?.name) {
-              ref.read(taskNotifier.notifier).changeStatus(e, value);
+              ref
+                  .read(taskNotifier.notifier)
+                  .changeStatus(e, value)
+                  .then((success) {
+                if (!success) {
+                  final err = ref.watch(updateTaskNotifier).error!;
+                  showSnackbar(context, err, type: SnackBarType.error);
+                }
+              });
             }
           },
           child: Chip(
@@ -146,45 +184,68 @@ class SectionTask extends ConsumerWidget {
                   );
                 }).toList() ??
                 [],
-            child: Stack(
+            child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Builder(builder: (_) {
-                    if (e.assignee != null) {
-                      if (e.assignee!.employee?.user?.image != null) {
-                        final image = e.assignee!.employee!.user!.image!;
-                        return CircleAvatarNetwork(image);
-                      } else {
-                        final name = e.assignee?.employee?.user?.name;
-                        return ProfileWithName(name ?? "  ");
-                      }
-                    }
-                    return const CircleAvatar(
-                      radius: 25,
-                      child: Icon(Icons.person),
-                    );
-                  }),
-                ),
-                if (e.assignee != null)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: InkWell(
-                      onTap: () {
-                        // remove assignee
-                        ref.read(taskNotifier.notifier).removeAssigned(e);
-                      },
-                      child: const CircleAvatar(
-                        radius: 10,
-                        child: Icon(Icons.close, size: 10),
-                      ),
+                Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Builder(builder: (_) {
+                        if (e.assignee != null) {
+                          final name = e.assignee?.employee?.user?.name;
+                          if (e.assignee!.employee?.user?.image != null) {
+                            final image = e.assignee!.employee!.user!.image!;
+                            return CircleAvatarNetwork(image);
+                          } else {
+                            return ProfileWithName(name ?? "  ");
+                          }
+                        }
+                        return const CircleAvatar(
+                          radius: 25,
+                          child: Icon(Icons.person),
+                        );
+                      }),
                     ),
-                  )
+                    if (e.assignee != null)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: InkWell(
+                          onTap: () {
+                            // remove assignee
+                            ref
+                                .read(taskNotifier.notifier)
+                                .removeAssigned(e)
+                                .then((success) {
+                              if (!success) {
+                                final err =
+                                    ref.watch(updateTaskNotifier).error!;
+                                showSnackbar(context, err,
+                                    type: SnackBarType.error);
+                              }
+                            });
+                          },
+                          child: const CircleAvatar(
+                            radius: 10,
+                            child: Icon(Icons.close, size: 10),
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+                SizedBox(width: context.isMobile ? 5 : 10),
+                if (context.isDesktop)
+                  Text(
+                    e.assignee?.employee?.user?.name ?? "-",
+                    style: const TextStyle(fontSize: 12),
+                  ),
               ],
             ),
           ),
         ),
+
+        ///[* Priority *]
+        DataCell(Text(e.priority?.name ?? "-")),
 
         ///[* Start Date *]
         DataCell(ListTile(
@@ -195,7 +256,7 @@ class SectionTask extends ConsumerWidget {
           visualDensity: VisualDensity.compact,
           leading: const Icon(Icons.date_range),
           title: Text(
-            e.startDate?.dateFormat() ?? "",
+            e.startDate?.dateFormat() ?? "-",
             style: const TextStyle(color: Colors.green, fontSize: 10),
           ),
         )),
@@ -208,7 +269,7 @@ class SectionTask extends ConsumerWidget {
           contentPadding: EdgeInsets.zero,
           visualDensity: VisualDensity.compact,
           leading: const Icon(Icons.date_range_outlined),
-          title: Text(e.endDate?.dateFormat() ?? "",
+          title: Text(e.endDate?.dateFormat() ?? "-",
               style: const TextStyle(color: Colors.red, fontSize: 10)),
         )),
       ],

@@ -19,6 +19,7 @@ import 'package:orgasync/src/fetaures/employee/employee.dart';
 import 'package:orgasync/src/fetaures/employee/models/employee.dart';
 import 'package:orgasync/src/models/response_data.dart';
 import 'package:orgasync/src/models/state.dart';
+import 'package:orgasync/src/utils/extensions/first_name_formatted.dart';
 import 'package:orgasync/src/utils/extensions/formatted_date.dart';
 import 'package:orgasync/src/utils/extensions/page_function.dart';
 import 'package:orgasync/src/utils/helper/exception_to_message.dart';
@@ -31,9 +32,11 @@ import 'package:orgasync/src/utils/helper/theme_of_context.dart';
 
 import '../../components/circle_avatar_network.dart';
 import '../../components/circular_loading.dart';
+import '../../components/dropdown_container.dart';
 import '../../components/empty_widget.dart';
 import '../../components/error_button.dart';
 import '../../components/profile_with_name.dart';
+import '../../config/contants/constant_app.dart';
 
 part 'company_project/data/company_project_api.dart';
 part "models/company_project.dart";
@@ -58,6 +61,7 @@ part "company_project/ui/employee_project/list_employe_project_screen.dart";
 
 // project
 part "project/data/project_api.dart";
+part "project/ui/detail/widget/dialog_form_task_widget.dart";
 part "task/data/task_api.dart";
 part "status/data/status_api.dart";
 
@@ -66,9 +70,15 @@ part "project/provider/project_notifier.dart";
 
 part "task/provider/task_notifier.dart";
 part "task/provider/task_provider.dart";
+part "task/ui/detail/detail_task_screen.dart";
 
 part "status/provider/status_provider.dart";
 part "status/provider/status_notifier.dart";
+
+part "priority/data/priority_api.dart";
+part "priority/provider/priority_notifier.dart";
+part "priority/provider/priority_provider.dart";
+part "priority/model/priority.dart";
 
 part "project/ui/project_screen.dart";
 part "project/ui/form/form_project_screen.dart";

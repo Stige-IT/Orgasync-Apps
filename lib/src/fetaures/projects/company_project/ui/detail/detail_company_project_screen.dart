@@ -15,6 +15,10 @@ class _DetailCompanyProjectScreenState
     ref
         .read(detailCompanyProjectNotifier.notifier)
         .get(widget.companyProjectId);
+    ref
+        .read(memberCompanyProjectNotifier.notifier)
+        .refresh(widget.companyProjectId);
+    ref.watch(priorityNotifier.notifier).getPriorities();
   }
 
   @override

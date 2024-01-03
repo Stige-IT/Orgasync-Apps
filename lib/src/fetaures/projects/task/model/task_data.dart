@@ -58,7 +58,7 @@ class TaskItem {
   TaskItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     idProject = json['id_project'];
-    title = json['name'];
+    title = json['title'];
     description = json['description'];
     status = json['status'] != null ? Status.fromJson(json['status']) : null;
     assignee =

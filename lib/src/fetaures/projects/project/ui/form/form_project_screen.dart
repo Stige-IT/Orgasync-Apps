@@ -47,28 +47,43 @@ class _FormProjectScreenState extends ConsumerState<FormProjectScreen> {
             ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            FieldInput(
-              title: "name".tr(),
-              hintText: "input_name".tr(),
-              controllers: _nameCtrl,
+      body: Center(
+        child: Container(
+          alignment: Alignment.center,
+          constraints: const BoxConstraints(minWidth: 0, maxWidth: 600),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                FieldInput(
+                  title: "name".tr(),
+                  hintText: "input_name".tr(),
+                  controllers: _nameCtrl,
+                ),
+                FieldInput(
+                  title: "description".tr(),
+                  hintText: "input_description".tr(),
+                  controllers: _descriptionCtrl,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 5,
+                ),
+                const SizedBox(height: 25.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.all(20.0),
+                    ),
+                    onPressed: _handleSaveProject,
+                    child: Text("save".tr()),
+                  ),
+                ),
+              ],
             ),
-            FieldInput(
-              title: "description".tr(),
-              hintText: "input_description".tr(),
-              controllers: _descriptionCtrl,
-              keyboardType: TextInputType.multiline,
-              maxLines: 5,
-            ),
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _handleSaveProject,
-        child: const Icon(Icons.check),
       ),
     );
   }
