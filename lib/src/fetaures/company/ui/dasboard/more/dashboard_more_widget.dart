@@ -12,6 +12,7 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
   @override
   Widget build(BuildContext context) {
     final company = ref.watch(detailCompanyNotifier).data;
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -46,36 +47,50 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
                 )),
             const Divider(),
             const SizedBox(height: 20),
-            Card(
-              elevation: 3,
-              child: ListTile(
-                leading: const Icon(Icons.location_city),
-                title: Text("edit_company".tr()),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
+            if (roleUser == Role.owner)
+              Column(
+                children: [
+                  Card(
+                    elevation: 3,
+                    child: ListTile(
+                      leading: const Icon(Icons.location_city),
+                      title: Text("edit_company".tr()),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {},
+                    ),
+                  ),
+                  Card(
+                    elevation: 3,
+                    child: ListTile(
+                      leading: const Icon(Icons.book),
+                      title: Text("logbook".tr()),
+                      trailing: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.toggle_off_outlined, size: 40),
+                      ),
+                      onTap: () {},
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Card(
-              elevation: 3,
-              child: ListTile(
-                leading: const Icon(Icons.book),
-                title: Text("logbook".tr()),
-                trailing: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.toggle_off_outlined, size: 40),
-                ),
-                onTap: () {},
-              ),
-            ),
-            const Spacer(),
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.delete, color: Colors.red),
-                title: Text("remove_company".tr()),
-                onTap: _handleDeleteCompany,
-              ),
-            ),
             const SizedBox(height: 40),
+            const Spacer(),
+            if (roleUser == Role.owner)
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.delete, color: Colors.red),
+                  title: Text("remove_company".tr()),
+                  onTap: _handleDeleteCompany,
+                ),
+              )
+            else
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.logout, color: Colors.red),
+                  title: Text("leave_company".tr()),
+                  onTap: _handleLeaveCompany,
+                ),
+              ),
           ],
         ),
       ),
@@ -112,6 +127,42 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
               });
             },
             child: Text("remove".tr()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleLeaveCompany() {
+    // alert dialog leave company
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("leave_company".tr()),
+        content: Text("leave_company_content".tr()),
+        actions: [
+          TextButton(
+            onPressed: Navigator.of(context).pop,
+            child: Text("cancel".tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              final idCompany = ref.watch(detailCompanyNotifier).data!.id;
+              ref
+                  .read(leaveCompanyNotifier.notifier)
+                  .leaveCompany(idCompany!)
+                  .then((success) {
+                if (success) {
+                  showSnackbar(context, "leave_company_success".tr());
+                  Navigator.of(context).pop();
+                } else {
+                  final err = ref.watch(leaveCompanyNotifier).error;
+                  showSnackbar(context, err!, type: SnackBarType.error);
+                }
+              });
+            },
+            child: Text("leave".tr()),
           ),
         ],
       ),
