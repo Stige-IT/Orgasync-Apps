@@ -38,24 +38,31 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.delayed(const Duration(seconds: 1), () => _getData());
-        },
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.all(15.0),
-                itemCount: projects.data?.length ?? 0,
-                itemBuilder: (context, index) {
-                  final project = projects.data?[index];
-                  return CardProject(project);
-                },
-                separatorBuilder: (context, index) => const Divider(),
-              ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 0, maxWidth: 1024),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await Future.delayed(
+                  const Duration(seconds: 1), () => _getData());
+            },
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(15.0),
+                    itemCount: projects.data?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final project = projects.data?[index];
+                      return CardProject(project);
+                    },
+                    separatorBuilder: (context, index) => const Divider(),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

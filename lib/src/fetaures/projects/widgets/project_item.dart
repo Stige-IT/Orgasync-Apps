@@ -48,7 +48,7 @@ class ProjectItemWidget extends StatelessWidget {
           ),
           const SizedBox(width: 20),
           SizedBox(
-            width: size.width * 0.6,
+            width: context.isMobile ? size.width * .5 : size.width * .3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

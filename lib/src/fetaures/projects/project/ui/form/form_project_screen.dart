@@ -47,9 +47,9 @@ class _FormProjectScreenState extends ConsumerState<FormProjectScreen> {
             ),
         ],
       ),
-      body: Center(
+      body: Align(
+        alignment: Alignment.topCenter,
         child: Container(
-          alignment: Alignment.center,
           constraints: const BoxConstraints(minWidth: 0, maxWidth: 600),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(15.0),
@@ -68,23 +68,30 @@ class _FormProjectScreenState extends ConsumerState<FormProjectScreen> {
                   maxLines: 5,
                 ),
                 const SizedBox(height: 25.0),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.all(20.0),
+                if (context.isDesktop)
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.all(20.0),
+                      ),
+                      onPressed: _handleSaveProject,
+                      child: Text("save".tr()),
                     ),
-                    onPressed: _handleSaveProject,
-                    child: Text("save".tr()),
                   ),
-                ),
               ],
             ),
           ),
         ),
       ),
+      floatingActionButton: context.isMobile
+          ? FloatingActionButton(
+              onPressed: _handleSaveProject,
+              child: const Icon(Icons.check),
+            )
+          : null,
     );
   }
 
