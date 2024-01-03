@@ -38,7 +38,7 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
                     IconButton(
                       onPressed: () {
                         Clipboard.setData(
-                            const ClipboardData(text: "code copied"));
+                            ClipboardData(text: company?.code ?? ""));
                         showSnackbar(context, "copied".tr());
                       },
                       icon: const Icon(Icons.copy),
