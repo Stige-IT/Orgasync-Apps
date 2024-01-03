@@ -41,73 +41,96 @@ class _RegisterCompanyWidgetState extends ConsumerState<RegisterCompanyWidget> {
         title: Text("create_company".tr()),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 50.0),
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                "create_your_company".tr(),
-                style: const TextStyle(
-                  height: 1.2,
-                  fontSize: 44,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "description_app".tr(),
-                style: const TextStyle(fontSize: 18),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 40),
-                child:
-                    Image.asset("assets/images/three_human.png", height: 200),
-              ),
-            ],
-          ),
-          Form(
-            key: formKey,
-            child: Column(
+      body: Container(
+        alignment: Alignment.center,
+        constraints: const BoxConstraints(minWidth: 0, maxWidth: 1024 * 1.5),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 50.0),
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                FieldInput(
-                  title: "name".tr(),
-                  hintText: "input_company_name".tr(),
-                  controllers: _nameCtrl,
+                Text(
+                  "create_your_company".tr(),
+                  style: const TextStyle(
+                    height: 1.2,
+                    fontSize: 44,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                FieldInput(
-                  title: "size_employee".tr(),
-                  hintText: "input_size".tr(),
-                  controllers: _sizeCtrl,
-                  keyboardType: TextInputType.number,
+                const SizedBox(height: 10),
+                Text(
+                  "description_app".tr(),
+                  style: const TextStyle(fontSize: 18),
                 ),
-                DropdownContainer(
-                  title: "type_company".tr(),
-                  value: ref.watch(idTypeCompanyProvider),
-                  items: (typeCompanies ?? [])
-                      .map(
-                        (type) => DropdownMenuItem(
-                          value: type.id,
-                          child: Text(type.name ?? ""),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    ref.read(idTypeCompanyProvider.notifier).state = value;
-                  },
-                ),
-                const SizedBox(height: 20),
-                FilledButton(
-                  onPressed: _handleRegister,
-                  child: isLoading ? const LoadingWidget() : Text("save".tr()),
-                ),
+                if (context.isMobile)
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 40),
+                    child: Image.asset("assets/images/three_human.png",
+                        height: 200),
+                  ),
               ],
             ),
-          ),
-        ],
+            Row(
+              children: [
+                Flexible(
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        FieldInput(
+                          title: "name".tr(),
+                          hintText: "input_company_name".tr(),
+                          controllers: _nameCtrl,
+                        ),
+                        FieldInput(
+                          title: "size_employee".tr(),
+                          hintText: "input_size".tr(),
+                          controllers: _sizeCtrl,
+                          keyboardType: TextInputType.number,
+                        ),
+                        DropdownContainer(
+                          title: "type_company".tr(),
+                          value: ref.watch(idTypeCompanyProvider),
+                          items: (typeCompanies ?? [])
+                              .map(
+                                (type) => DropdownMenuItem(
+                                  value: type.id,
+                                  child: Text(type.name ?? ""),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            ref.read(idTypeCompanyProvider.notifier).state =
+                                value;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        FilledButton(
+                          onPressed: _handleRegister,
+                          child: isLoading
+                              ? const LoadingWidget()
+                              : Text("save".tr()),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (context.isDesktop)
+                  Flexible(
+                    child: Center(
+                      child: Image.asset(
+                        "assets/images/three_human.png",
+                        height: 400,
+                      ),
+                    ),
+                  )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
