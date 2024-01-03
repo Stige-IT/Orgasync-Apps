@@ -104,6 +104,8 @@ class HttpRequest {
         .delete(Uri.parse(url), headers: {"Authorization": "Bearer $token"});
     if (response.statusCode == 200) {
       return right(true);
+    } else if (response.statusCode == 401) {
+      return left(jsonDecode(response.body)['message']);
     } else {
       return left("error".tr());
     }

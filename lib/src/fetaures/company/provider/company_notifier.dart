@@ -115,6 +115,33 @@ class JoinCompanyNotifier extends StateNotifier<States> {
   }
 }
 
+// leave company
+class LeaveCompanyNotifier extends StateNotifier<States> {
+  final CompanyApiImpl _companyApiImpl;
+  final Ref ref;
+
+  LeaveCompanyNotifier(this._companyApiImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> leaveCompany(String companyId) async {
+    state = States.loading();
+    try {
+      final result = await _companyApiImpl.leaveCompany(companyId);
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(companyNotifier.notifier).refresh();
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
 // create new company state notifier
 class CreateCompanyNotifier extends StateNotifier<States> {
   final CompanyApiImpl _companyApiImpl;

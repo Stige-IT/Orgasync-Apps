@@ -28,7 +28,7 @@ class ProfileDataWidget extends ConsumerWidget {
                       children: [
                         TotalJoinWidget(
                             total: totalCompany ?? 0, title: "Join Company"),
-                        const TotalJoinWidget(total: 10, title: "Join Project"),
+                        const TotalJoinWidget(total: 0, title: "Join Project"),
                       ],
                     ),
                   );

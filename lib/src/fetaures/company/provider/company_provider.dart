@@ -26,6 +26,12 @@ final joinCompanyNotifier =
   return JoinCompanyNotifier(ref.watch(companyProvider), ref);
 });
 
+// leave company
+final leaveCompanyNotifier =
+    StateNotifierProvider<LeaveCompanyNotifier, States>((ref) {
+  return LeaveCompanyNotifier(ref.watch(companyProvider), ref);
+});
+
 // create new company
 final createCompanyNotifier =
     StateNotifierProvider.autoDispose<CreateCompanyNotifier, States>((ref) {

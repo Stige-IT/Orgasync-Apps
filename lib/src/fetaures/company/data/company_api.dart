@@ -5,6 +5,7 @@ abstract class CompanyApi {
   Future<Either<String, CompanyDetail>> getDetail(String companyId);
 
   Future<Either<String, bool>> joinCompany(String code);
+  Future<Either<String, bool>> leaveCompany(String companyId);
   Future<Either<String, bool>> createCompany(CompanyRequest companyRequest);
   Future<Either<String, bool>> deleteCompany(String companyId);
   Future<Either<String, String>> checkRoleInCompany(String companyId);
@@ -80,6 +81,17 @@ class CompanyApiImpl implements CompanyApi {
         final message = jsonDecode(response.body)['message'];
         return Left(message);
     }
+  }
+
+  @override
+  Future<Either<String, bool>> leaveCompany(String companyId) {
+    final url = "${ConstantUrl.BASE_URL}/company/$companyId/leave";
+    return httpRequest.delete(url).then((value) {
+      return value.fold(
+        (failure) => left(failure),
+        (success) => right(success),
+      );
+    });
   }
 
   @override

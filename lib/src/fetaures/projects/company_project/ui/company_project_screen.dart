@@ -22,6 +22,7 @@ class _CompanyProjectScreenState extends ConsumerState<CompanyProjectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -101,10 +102,12 @@ class _CompanyProjectScreenState extends ConsumerState<CompanyProjectScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => nextPage(context, "/company/project/form"),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: roleUser == Role.owner
+          ? FloatingActionButton(
+              onPressed: () => nextPage(context, "/company/project/form"),
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

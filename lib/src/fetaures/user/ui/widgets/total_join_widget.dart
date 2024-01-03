@@ -9,13 +9,12 @@ class TotalJoinWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListTile(
-        onTap: () => nextPage(context, "/profile/my-company"),
+        // onTap: () => nextPage(context, "/profile/my-company"),
         tileColor: context.theme.colorScheme.primary,
         title: Text(
           "$total",
           textAlign: TextAlign.center,
-          style:
-          context.theme.textTheme.displayMedium!.copyWith(
+          style: context.theme.textTheme.displayMedium!.copyWith(
             color: context.theme.colorScheme.onPrimary,
           ),
         ),

@@ -63,8 +63,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           //   },
           //   icon: const Icon(Icons.logout),
           // ),
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.notifications_none)),
+          // IconButton(
+          //     onPressed: () {}, icon: const Icon(Icons.notifications_none)),
           InkWell(
             onTap: () => nextPage(context, "/profile"),
             child: user == null || user.image == null

@@ -41,19 +41,20 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
           return ListView(
             children: [
               SizedBox(
-                height: 230,
+                height: context.isMobile ? 230 : 300,
                 width: double.infinity,
                 child: Stack(
                   children: [
-                    if (company.data?.cover != null)
+                    if (company.data?.cover == null)
                       Container(
-                        height: 200,
+                        height: context.isMobile ? 200 : 270,
                         width: double.infinity,
-                        color: context.theme.colorScheme.primary,
+                        color:
+                            context.theme.colorScheme.primary.withOpacity(0.9),
                       )
                     else
                       SizedBox(
-                        height: 200,
+                        height: context.isMobile ? 200 : 270,
                         width: double.infinity,
                         child: Image.asset(
                           "assets/images/three_human.png",
