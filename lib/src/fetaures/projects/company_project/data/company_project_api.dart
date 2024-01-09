@@ -44,7 +44,7 @@ final companyProjectProvider = Provider<CompanyProjectImpl>((ref) {
 class CompanyProjectImpl implements CompanyProjectApi {
   final Client _client;
   final SecureStorage storage;
-  final HttpRequest httpRequest;
+  final HttpRequestClient httpRequest;
 
   CompanyProjectImpl(this._client, this.storage, this.httpRequest);
 

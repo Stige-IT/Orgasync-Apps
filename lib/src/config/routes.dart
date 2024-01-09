@@ -4,6 +4,8 @@ import 'package:orgasync/src/fetaures/company/company.dart';
 import 'package:orgasync/src/fetaures/home/home.dart';
 import 'package:orgasync/src/fetaures/projects/project.dart';
 import '../fetaures/employee/employee.dart';
+import '../fetaures/logbooks/logbook/logbook.dart';
+import '../fetaures/logbooks/logbook_employee/logbook_employee.dart';
 import '../fetaures/splash/ui/splash_screen.dart';
 import '../fetaures/user/user.dart';
 
@@ -72,9 +74,22 @@ class AppRoute {
       }
     },
 
-    "/task/detail" :(context){
+    "/task/detail": (context) {
       final taskId = ModalRoute.of(context)?.settings.arguments as String;
       return DetailTaskScreen(taskId);
+    },
+
+    /// LOGBOOK PAGE
+    "/logbook": (_) => const LogBookScreen(),
+    "/logbook/detail": (context) {
+      final logBookId = ModalRoute.of(context)!.settings.arguments as String;
+      return DetailLogBookScreen(logBookId);
+    },
+    "/logbook/employee/form": (_) => const AddLogBookEmployeeScreen(),
+    "/activity": (context) {
+      final idLogBookEmployee =
+          ModalRoute.of(context)!.settings.arguments as String;
+      return SizedBox();
     },
 
     /// USER PAGES

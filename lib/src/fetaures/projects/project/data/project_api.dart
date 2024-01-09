@@ -24,7 +24,7 @@ final projectProvider = Provider<ProjectImpl>((ref) {
 class ProjectImpl implements ProjectApi {
   final Client _client;
   final SecureStorage storage;
-  final HttpRequest httpRequest;
+  final HttpRequestClient httpRequest;
 
   ProjectImpl(this._client, this.storage, this.httpRequest);
 

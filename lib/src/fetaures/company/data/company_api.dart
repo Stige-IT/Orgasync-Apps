@@ -21,7 +21,7 @@ final companyProvider = Provider<CompanyApiImpl>((ref) {
 class CompanyApiImpl implements CompanyApi {
   final Client client;
   final SecureStorage storage;
-  final HttpRequest httpRequest;
+  final HttpRequestClient httpRequest;
 
   CompanyApiImpl(this.client, this.storage, this.httpRequest);
 

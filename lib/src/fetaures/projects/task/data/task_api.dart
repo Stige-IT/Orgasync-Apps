@@ -18,7 +18,7 @@ final taskProvider = Provider<TaskImpl>((ref) {
 });
 
 class TaskImpl implements TaskApi {
-  final HttpRequest httpRequest;
+  final HttpRequestClient httpRequest;
 
   TaskImpl({required this.httpRequest});
 

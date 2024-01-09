@@ -1,0 +1,31 @@
+import 'package:dartz/dartz.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:orgasync/src/config/contants/base_url.dart';
+import 'package:orgasync/src/fetaures/employee/models/employee.dart';
+import 'package:orgasync/src/fetaures/logbooks/logbook/logbook.dart';
+import 'package:orgasync/src/models/response_data.dart';
+import 'package:orgasync/src/models/state.dart';
+import 'package:orgasync/src/utils/extensions/page_function.dart';
+import 'package:orgasync/src/utils/helper/exception_to_message.dart';
+import 'package:orgasync/src/utils/helper/http_provider/http_request_client.dart';
+import 'package:orgasync/src/utils/helper/layout/minheight_context.dart';
+import 'package:orgasync/src/utils/helper/theme_of_context.dart';
+
+import '../../../components/avatar_profile.dart';
+import '../../../components/circular_loading.dart';
+import '../../../components/empty_widget.dart';
+import '../../../components/error_button.dart';
+import '../../../components/field_input.dart';
+import '../../../components/show_snackbar.dart';
+import '../../company/company.dart';
+import '../../employee/employee.dart';
+
+part "data/logbook_employee_api.dart";
+part "models/logbook_employee.dart";
+part "provider/logbook_employee_notifier.dart";
+part "provider/logbook_employee_provider.dart";
+part "ui/widgets/dialog_candidate_logbook_employee_widget.dart";
+part "ui/logbook_employee_screen.dart";
+part "ui/search/search_employee_screen.dart";

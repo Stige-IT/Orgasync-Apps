@@ -86,5 +86,6 @@
   "delete_employee" : "Hapus karyawan",
   "delete_employee_message" : "Apakah Anda yakin ingin menghapus {name} ini?",
   "delete_employee_success" : "Karyawan berhasil dihapus",
-  "add_employee" : "Tambah karyawan"
+  "add_employee" : "Tambah karyawan",
+  "search_email_user" : "Cari email pengguna"
 } 

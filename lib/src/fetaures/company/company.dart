@@ -11,6 +11,7 @@ import 'package:orgasync/src/components/empty_widget.dart';
 import 'package:orgasync/src/components/error_button.dart';
 import 'package:orgasync/src/components/profile_with_name.dart';
 import 'package:orgasync/src/fetaures/company/ui/widgets/stacked_widget.dart';
+import 'package:orgasync/src/fetaures/logbooks/logbook/logbook.dart';
 import 'package:orgasync/src/fetaures/projects/project.dart';
 import 'package:orgasync/src/fetaures/user/user.dart';
 import 'package:orgasync/src/models/state.dart';

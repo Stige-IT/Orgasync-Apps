@@ -10,7 +10,7 @@ final statusProvider = Provider<StatusImpl>((ref) {
 });
 
 class StatusImpl implements StatusApi {
-  final HttpRequest httpRequest;
+  final HttpRequestClient httpRequest;
 
   StatusImpl({required this.httpRequest});
 

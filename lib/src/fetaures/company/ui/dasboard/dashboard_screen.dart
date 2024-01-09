@@ -11,6 +11,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Future<void> _getData() async {
     await ref.read(roleInCompanyNotifier.notifier).check(widget.companyId);
+    ref.watch(logBookNotifier.notifier).refresh(widget.companyId);
   }
 
   @override
@@ -68,7 +69,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         title: Text("home".tr()),
                       ),
                     ),
-                    const SizedBox(height: 10),
                     Card(
                       shape: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -85,7 +85,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         title: Text("task".tr()),
                       ),
                     ),
-                    const SizedBox(height: 10),
                     Card(
                       shape: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -98,6 +97,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       child: ListTile(
                         onTap: () => _changeIndex(2),
+                        leading: const Icon(Icons.book),
+                        title: Text("logbook".tr()),
+                      ),
+                    ),
+                    Card(
+                      shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: indexScreen == 3
+                            ? BorderSide(
+                                color: context.theme.colorScheme.primary,
+                                width: 2,
+                              )
+                            : BorderSide.none,
+                      ),
+                      child: ListTile(
+                        onTap: () => _changeIndex(3),
                         leading: const Icon(Icons.more_horiz),
                         title: Text("more".tr()),
                       ),
@@ -114,6 +129,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 children: [
                   DashboardHomeWidget(widget.companyId),
                   const DashboardTaskWidget(),
+                  const LogBookScreen(),
                   const DashboardMoreWidget(),
                 ],
               ),
@@ -138,6 +154,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.assignment),
                   label: "task".tr(),
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.book),
+                  label: "logbook".tr(),
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.more_horiz),

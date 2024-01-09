@@ -9,8 +9,8 @@ class DashboardHomeWidget extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
-  void _getData() {
-    ref.read(detailCompanyNotifier.notifier).get(widget.companyId);
+  void _getData() async {
+    await ref.read(detailCompanyNotifier.notifier).get(widget.companyId);
     ref.read(totalCompanyProjectNotifier.notifier).get(widget.companyId);
     ref.read(employeeCompanyNotifier.notifier).getEmployee(widget.companyId);
   }
