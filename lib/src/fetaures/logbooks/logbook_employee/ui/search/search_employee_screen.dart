@@ -28,9 +28,14 @@ class _AddLogBookEmployeeScreenState
     return employee.any((e) => e.user?.id == user.id);
   }
 
+  bool _joinedEmployee(List<LogBookEmployee> employees, Employee user) {
+    return employees.any((e) => e.employee?.id == user.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     final candidate = ref.watch(logBookEmployeeTempProvider);
+    final joinedEmployees = ref.watch(logBookEmployeeNotifier).data;
     final employees = ref.watch(searchEmployeeNotifier);
     final companyId = ref.watch(detailCompanyNotifier).data?.id;
     return Scaffold(
@@ -135,8 +140,9 @@ class _AddLogBookEmployeeScreenState
                         icon: Builder(builder: (_) {
                           if (candidate.contains(employees.data![i])) {
                             return const Icon(Icons.check);
-                          } else if (_joinedUser(
-                              employees.data!, employees.data![i])) {
+                          } else if (_joinedEmployee(
+                                  joinedEmployees!, employees.data![i]) ||
+                              _joinedUser(candidate, employees.data![i])) {
                             return Text("joined".tr());
                           }
                           return const Icon(Icons.add);

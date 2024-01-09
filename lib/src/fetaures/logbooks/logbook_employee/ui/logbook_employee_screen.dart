@@ -108,7 +108,7 @@ class LogBookEmployeeScreenState extends ConsumerState<LogBookEmployeeScreen> {
                           child: ListTile(
                             onLongPress: () => _handleLogPress(employee),
                             onTap: () => nextPage(context, "/activity",
-                                argument: employee.id),
+                                argument: {"id_logbook_employee": employee.id}),
                             leading: AvatarProfile(
                                 image: employee.employee?.user?.image,
                                 name: employee.employee?.user?.name ?? ""),

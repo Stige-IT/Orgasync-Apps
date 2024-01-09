@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:orgasync/src/fetaures/auth/auth.dart';
 import 'package:orgasync/src/fetaures/company/company.dart';
 import 'package:orgasync/src/fetaures/home/home.dart';
+import 'package:orgasync/src/fetaures/logbooks/logbook_activity/logbook_activity.dart';
 import 'package:orgasync/src/fetaures/projects/project.dart';
 import '../fetaures/employee/employee.dart';
 import '../fetaures/logbooks/logbook/logbook.dart';
@@ -87,9 +88,13 @@ class AppRoute {
     },
     "/logbook/employee/form": (_) => const AddLogBookEmployeeScreen(),
     "/activity": (context) {
-      final idLogBookEmployee =
-          ModalRoute.of(context)!.settings.arguments as String;
-      return SizedBox();
+      final argument = ModalRoute.of(context)?.settings.arguments as Map;
+
+      if (argument['id_logbook_employee'] == null) {
+        return LogBookActivityScreen(idLogBook: argument['id_logbook']);
+      }
+      return LogBookActivityScreen(
+          idLogBookEmployee: argument['id_logbook_employee'] as String);
     },
 
     /// USER PAGES

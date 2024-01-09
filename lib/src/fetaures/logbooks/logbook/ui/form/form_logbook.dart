@@ -1,7 +1,8 @@
 part of "../../logbook.dart";
 
 class FormLogbookScreen extends ConsumerStatefulWidget {
-  const FormLogbookScreen({super.key});
+  final LogBook? logBook;
+  const FormLogbookScreen({super.key, this.logBook});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -18,6 +19,18 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
     super.initState();
     _nameCtrl = TextEditingController();
     _descriptionCtrl = TextEditingController();
+
+    /// if logbook not null, set value to controller
+    Future.microtask(() {
+      if (widget.logBook != null) {
+        _nameCtrl.text = widget.logBook!.name!;
+        _descriptionCtrl.text = widget.logBook!.description!;
+        ref.read(selectedStartDateProvider.notifier).state =
+            DateTime.parse(widget.logBook!.periodeStart!);
+        ref.read(selectedEndDateProvider.notifier).state =
+            DateTime.parse(widget.logBook!.periodeEnd!);
+      }
+    });
   }
 
   @override
@@ -35,12 +48,15 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
       child: Material(
         color: Colors.transparent,
         child: Container(
-          constraints: const BoxConstraints(minWidth: 0, maxWidth: 1024),
+          constraints: const BoxConstraints(minWidth: 0, maxWidth: 720),
           margin: const EdgeInsets.all(20),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: context.theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: context.theme.colorScheme.onBackground,
+            ),
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -133,17 +149,59 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: SizedBox(
-                    width: 200,
-                    height: 50,
-                    child: FilledButton(
-                      onPressed: _handleSave,
-                      child: Text("save".tr()),
+                Row(
+                  mainAxisAlignment: widget.logBook != null
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
+                  children: [
+                    if (widget.logBook != null)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          width: 200,
+                          height: 50,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.red),
+                              foregroundColor: Colors.red,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              ref
+                                  .watch(deleteLogBookNotifier.notifier)
+                                  .delete(widget.logBook!.id!)
+                                  .then(
+                                (success) {
+                                  if (success) {
+                                    showSnackbar(
+                                        context, "success_delete".tr());
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    final error =
+                                        ref.watch(deleteLogBookNotifier).error;
+                                    showSnackbar(context, error!,
+                                        type: SnackBarType.error);
+                                  }
+                                },
+                              );
+                            },
+                            child: Text("remove".tr()),
+                          ),
+                        ),
+                      ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: SizedBox(
+                        width: 200,
+                        height: 50,
+                        child: FilledButton(
+                          onPressed: _handleSave,
+                          child: Text("save".tr()),
+                        ),
+                      ),
                     ),
-                  ),
-                )
+                  ],
+                ),
               ],
             ),
           ),
@@ -160,17 +218,37 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
         periodeEnd != null) {
       Navigator.of(context).pop();
       final logBook = LogBook(
+        id: widget.logBook?.id,
         name: _nameCtrl.text,
         description: _descriptionCtrl.text,
         periodeStart: periodeStart.toString(),
         periodeEnd: periodeEnd.toString(),
       );
-      ref.read(addLogBookNotifier.notifier).addLogBook(logBook).then((success) {
-        if (!success) {
-          final error = ref.watch(addLogBookNotifier).error;
-          showSnackbar(context, error!, type: SnackBarType.error);
-        }
-      });
+      if (widget.logBook != null) {
+        /// update logbook
+        ref
+            .watch(updateLogBookNotifier.notifier)
+            .updateLogBook(logBook)
+            .then((success) {
+          if (success) {
+            showSnackbar(context, "success_update".tr());
+          } else {
+            final error = ref.watch(updateLogBookNotifier).error;
+            showSnackbar(context, error!, type: SnackBarType.error);
+          }
+        });
+      } else {
+        /// create logbook
+        ref
+            .read(addLogBookNotifier.notifier)
+            .addLogBook(logBook)
+            .then((success) {
+          if (!success) {
+            final error = ref.watch(addLogBookNotifier).error;
+            showSnackbar(context, error!, type: SnackBarType.error);
+          }
+        });
+      }
     } else {
       showSnackbar(context, "please_fill_the_form".tr());
     }

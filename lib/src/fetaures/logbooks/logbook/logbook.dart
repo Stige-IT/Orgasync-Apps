@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:orgasync/src/components/avatar_profile.dart';
 import 'package:orgasync/src/components/field_input.dart';
 import 'package:orgasync/src/config/contants/base_url.dart';
 import 'package:orgasync/src/fetaures/company/company.dart';

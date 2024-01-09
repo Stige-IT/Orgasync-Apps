@@ -20,6 +20,11 @@ final addLogBookNotifier =
   return AddLogBookNotifier(ref.watch(logBookProvider), ref);
 });
 
+final updateLogBookNotifier =
+    StateNotifierProvider<UpdateLogBookNotifier, States>((ref) {
+  return UpdateLogBookNotifier(ref.watch(logBookProvider), ref);
+});
+
 final deleteLogBookNotifier =
     StateNotifierProvider<DeleteLogBookNotifier, States>((ref) {
   return DeleteLogBookNotifier(ref.watch(logBookProvider), ref);

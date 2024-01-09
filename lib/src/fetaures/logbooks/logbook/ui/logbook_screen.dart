@@ -63,7 +63,8 @@ class _LogBookScreenState extends ConsumerState<LogBookScreen> {
                         nextPage(context, "/logbook/detail",
                             argument: logBook.id);
                       } else {
-                        nextPage(context, "/logbook/activity");
+                        nextPage(context, "/activity",
+                            argument: {"id_logbook": logBook.id});
                       }
                     },
                     leading: const CircleAvatar(child: Icon(Icons.book)),

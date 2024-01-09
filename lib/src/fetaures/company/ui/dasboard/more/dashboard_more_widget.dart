@@ -56,19 +56,12 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
                       leading: const Icon(Icons.location_city),
                       title: Text("edit_company".tr()),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {},
-                    ),
-                  ),
-                  Card(
-                    elevation: 3,
-                    child: ListTile(
-                      leading: const Icon(Icons.book),
-                      title: Text("logbook".tr()),
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.toggle_off_outlined, size: 40),
-                      ),
-                      onTap: () {},
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => const DialogEditCompanyWidget(),
+                        );
+                      },
                     ),
                   ),
                 ],

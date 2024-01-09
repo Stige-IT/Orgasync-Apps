@@ -50,6 +50,41 @@ class CompanyNotifier extends StateNotifier<BaseState<List<MyCompany>>> {
   }
 }
 
+// update company
+class UpdateCompanyNotifier extends StateNotifier<States> {
+  final CompanyApiImpl _companyApiImpl;
+  final Ref ref;
+
+  UpdateCompanyNotifier(this._companyApiImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> updateCompany(
+    String companyId, {
+    required String name,
+    File? image,
+  }) async {
+    state = States.loading();
+    try {
+      final result = await _companyApiImpl.updateCompany(
+        companyId,
+        name: name,
+        image: image,
+      );
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(detailCompanyNotifier.notifier).get(companyId);
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
 // get detail company
 class DetailCompanyNotifier extends StateNotifier<States<CompanyDetail>> {
   final CompanyApi _companyApi;

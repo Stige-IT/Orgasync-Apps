@@ -102,6 +102,33 @@ class AddLogBookNotifier extends StateNotifier<States> {
   }
 }
 
+// update logbook
+class UpdateLogBookNotifier extends StateNotifier<States> {
+  final LogBookApiImpl _api;
+  final Ref ref;
+  UpdateLogBookNotifier(this._api, this.ref) : super(States.noState());
+
+  Future<bool> updateLogBook(LogBook logBook) async {
+    final idCompany = ref.read(detailCompanyNotifier).data?.id;
+    state = States.loading();
+    try {
+      final result = await _api.updateLogBook(logBook);
+      result.fold(
+        (error) => state = States.error(error),
+        (data) => state = States.noState(),
+      );
+      if (result.isRight()) {
+        ref.watch(logBookNotifier.notifier).refresh(idCompany!);
+        ref.watch(detailLogBookNotifier.notifier).get(logBook.id!);
+      }
+      return result.isRight();
+    } catch (e) {
+      state = States.error(exceptionTomessage(e));
+      return false;
+    }
+  }
+}
+
 class DeleteLogBookNotifier extends StateNotifier<States> {
   final LogBookApiImpl _api;
   final Ref ref;

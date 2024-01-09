@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:orgasync/src/components/circle_avatar_network.dart';
 import 'package:orgasync/src/components/empty_widget.dart';
 import 'package:orgasync/src/components/error_button.dart';
@@ -57,3 +59,4 @@ part 'ui/dasboard/home/dashboard_home_widget.dart';
 part 'ui/dasboard/task/dashboard_task_widget.dart';
 part 'ui/dasboard/more/dashboard_more_widget.dart';
 part "ui/form/create_company_screen.dart";
+part "ui/form/dialog_edit_company.dart";

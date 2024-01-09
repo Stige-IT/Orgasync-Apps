@@ -7,6 +7,11 @@ abstract class CompanyApi {
   Future<Either<String, bool>> joinCompany(String code);
   Future<Either<String, bool>> leaveCompany(String companyId);
   Future<Either<String, bool>> createCompany(CompanyRequest companyRequest);
+  Future<Either<String, bool>> updateCompany(
+    String companyId, {
+    required String name,
+    File? image,
+  });
   Future<Either<String, bool>> deleteCompany(String companyId);
   Future<Either<String, String>> checkRoleInCompany(String companyId);
   Future<Either<String, bool>> addEmployee(String companyId,
@@ -117,6 +122,26 @@ class CompanyApiImpl implements CompanyApi {
       default:
         return Left("failed".tr());
     }
+  }
+
+  @override
+  Future<Either<String, bool>> updateCompany(
+    String companyId, {
+    required String name,
+    File? image,
+  }) async {
+    final url = "${ConstantUrl.BASE_URL}/company/$companyId";
+    final response = await httpRequest.multipart(
+      "PUT",
+      url,
+      data: {"name": name},
+      file: image,
+      fieldFile: "image",
+    );
+    return response.fold(
+      (failure) => left(failure),
+      (success) => right(success),
+    );
   }
 
   @override
