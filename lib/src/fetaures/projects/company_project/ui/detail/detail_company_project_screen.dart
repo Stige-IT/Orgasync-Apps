@@ -2,6 +2,7 @@ part of "../../../project.dart";
 
 class DetailCompanyProjectScreen extends ConsumerStatefulWidget {
   final String companyProjectId;
+
   const DetailCompanyProjectScreen(this.companyProjectId, {super.key});
 
   @override
@@ -29,6 +30,7 @@ class _DetailCompanyProjectScreenState
 
   @override
   Widget build(BuildContext context) {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
     final detailCompany = ref.watch(detailCompanyProjectNotifier);
     Size size = MediaQuery.of(context).size;
     return ScrollConfiguration(
@@ -40,15 +42,18 @@ class _DetailCompanyProjectScreenState
           elevation: 0,
           centerTitle: true,
           actions: [
+            if(roleUser == Role.owner)
             IconButton(
-                onPressed: () {
-                  nextPage(
-                    context,
-                    "/company/project/form",
-                    argument: detailCompany.data?.companyProject,
-                  );
-                },
-                icon: const Icon(Icons.edit)),
+              onPressed: () {
+                nextPage(
+                  context,
+                  "/company/project/form",
+                  argument: detailCompany.data?.companyProject,
+                );
+              },
+              icon: const Icon(Icons.edit),
+            ),
+            const SizedBox(width: 20),
           ],
         ),
         body: Align(
@@ -86,25 +91,20 @@ class _DetailCompanyProjectScreenState
                     ),
                   ),
                   ListTile(
+                    onTap: () => nextPage(context, "/company/project/employee"),
                     leading: const Icon(Icons.people),
                     title: Text(
                         "${detailCompany.data?.totalEmployee} ${'employee'.tr()}"),
-                    trailing: IconButton(
-                      onPressed: () =>
-                          nextPage(context, "/company/project/employee"),
-                      icon: const Icon(Icons.arrow_forward),
-                    ),
+                    trailing: const Icon(Icons.arrow_forward),
                   ),
                   Column(
                     children: [
                       ListTile(
+                        onTap: () => nextPage(context, "/project"),
                         leading: const Icon(Icons.assignment),
                         title: Text(
                             "${detailCompany.data?.totalProject} ${'project'.tr()}"),
-                        trailing: IconButton(
-                          onPressed: () => nextPage(context, "/project"),
-                          icon: const Icon(Icons.arrow_forward),
-                        ),
+                        trailing: const Icon(Icons.arrow_forward),
                       ),
                     ],
                   ),

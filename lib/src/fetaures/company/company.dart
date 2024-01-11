@@ -17,6 +17,7 @@ import 'package:orgasync/src/fetaures/logbooks/logbook/logbook.dart';
 import 'package:orgasync/src/fetaures/projects/project.dart';
 import 'package:orgasync/src/fetaures/user/user.dart';
 import 'package:orgasync/src/models/state.dart';
+import 'package:orgasync/src/utils/extensions/formatted_date.dart';
 import 'package:orgasync/src/utils/extensions/page_function.dart';
 import 'package:orgasync/src/utils/helper/exception_to_message.dart';
 import 'package:orgasync/src/utils/helper/http_provider/http_provider.dart';
@@ -24,6 +25,7 @@ import 'package:orgasync/src/utils/helper/layout/minheight_context.dart';
 import 'package:orgasync/src/utils/helper/local_storage/secure_storage.dart';
 import 'package:orgasync/src/utils/helper/local_storage/secure_storage_client.dart';
 import 'package:orgasync/src/utils/helper/theme_of_context.dart';
+import 'package:string_to_color/string_to_color.dart';
 
 import '../../components/circular_loading.dart';
 import '../../components/dropdown_container.dart';
@@ -54,6 +56,7 @@ part "provider/company_provider.dart";
 part "provider/type_company_notifier.dart";
 part 'provider/type_company_provider.dart';
 
+part "ui/widgets/tile_menu.dart";
 part 'ui/dasboard/dashboard_screen.dart';
 part 'ui/dasboard/home/dashboard_home_widget.dart';
 part 'ui/dasboard/task/dashboard_task_widget.dart';

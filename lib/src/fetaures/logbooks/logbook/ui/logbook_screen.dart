@@ -1,7 +1,8 @@
 part of "../logbook.dart";
 
 class LogBookScreen extends ConsumerStatefulWidget {
-  const LogBookScreen({super.key});
+  final String idCompany;
+  const LogBookScreen(this.idCompany, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LogBookScreenState();
@@ -9,10 +10,7 @@ class LogBookScreen extends ConsumerStatefulWidget {
 
 class _LogBookScreenState extends ConsumerState<LogBookScreen> {
   void _getData() async {
-    final idCompany = ref.watch(detailCompanyNotifier).data?.id;
-    if (idCompany != null) {
-      ref.read(logBookNotifier.notifier).refresh(idCompany);
-    }
+    ref.read(logBookNotifier.notifier).refresh(widget.idCompany);
   }
 
   @override
@@ -31,7 +29,13 @@ class _LogBookScreenState extends ConsumerState<LogBookScreen> {
     final state = ref.watch(logBookNotifier);
     final data = state.data;
     return Scaffold(
-      // appBar: AppBar(title: const Text("LogBook")),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: InkWell(
+          onTap: () => _getData(),
+          child: const Text("LogBook"),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           await Future.delayed(const Duration(seconds: 1), () => _getData());

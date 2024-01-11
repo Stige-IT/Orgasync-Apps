@@ -71,8 +71,8 @@ class _FormLogBookActivityScreenState
                   ),
                   const SizedBox(height: 10),
                   ListTile(
-                    leading: const Text("Rating: "),
-                    title: Row(
+                    title: const Text("Rating activity: "),
+                    subtitle: Row(
                       children: [
                         for (int i = 0; i < 5; i++)
                           InkWell(
@@ -82,12 +82,12 @@ class _FormLogBookActivityScreenState
                             },
                             child: Builder(builder: (_) {
                               if (i >= selectedRating) {
-                                return const Icon(Icons.star_border, size: 30);
+                                return const Icon(Icons.star_border, size: 40);
                               }
                               return const Icon(
                                 Icons.star,
                                 color: Colors.amber,
-                                size: 30,
+                                size: 40,
                               );
                             }),
                           ),
@@ -108,7 +108,7 @@ class _FormLogBookActivityScreenState
                       leading: const Icon(Icons.image, size: 50),
                       title: Text(
                         image == null
-                            ? "Select Image"
+                            ? "Select Image activity"
                             : image.path.split("\\").last,
                         style: const TextStyle(fontSize: 12),
                       ),

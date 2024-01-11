@@ -2,6 +2,7 @@ part of "../logbook_employee.dart";
 
 class LogBookEmployeeScreen extends ConsumerStatefulWidget {
   final String idLogbook;
+
   const LogBookEmployeeScreen(this.idLogbook, {super.key});
 
   @override
@@ -44,6 +45,7 @@ class LogBookEmployeeScreenState extends ConsumerState<LogBookEmployeeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
     final employeeState = ref.watch(logBookEmployeeNotifier);
     final employeeData = employeeState.data;
     final selectedEmployee = ref.watch(selectedlogBookEmployeeProvider);
@@ -115,17 +117,35 @@ class LogBookEmployeeScreenState extends ConsumerState<LogBookEmployeeScreen> {
                             title: Text(employee.employee?.user?.name ?? ""),
                             subtitle:
                                 Text(employee.employee?.user?.email ?? ""),
-                            trailing: Column(
+                            trailing:roleUser == Role.owner ? Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Text("Total Activity "),
-                                Text(
-                                  "${employee.totalActivity ?? 0}",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
+                                Column(
+                                  children: [
+                                    const Text("Total Activity "),
+                                    Text(
+                                      "${employee.totalActivity ?? 0}",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                                PopupMenuButton(
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      value: "delete",
+                                      child: Text("delete".tr()),
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    if (value == "delete") {
+                                      _handleDismiss([employee]);
+                                    }
+                                  },
                                 ),
                               ],
-                            ),
+                            ) : null,
                           ),
                         ),
                       );

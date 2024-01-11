@@ -23,14 +23,17 @@ class HeaderWidget extends ConsumerWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        trailing: IconButton(
-          tooltip: "add_task".tr(),
+        trailing: FilledButton.icon(
+          style: FilledButton.styleFrom(
+            padding: const EdgeInsets.all(20),
+          ),
           onPressed: () {
             showDialog(
               context: context,
               builder: (_) => const DialogAddTaskWidget(),
             );
           },
+          label: Text("add_task".tr()),
           icon: Icon(
             Icons.add,
             color: context.theme.colorScheme.onBackground,

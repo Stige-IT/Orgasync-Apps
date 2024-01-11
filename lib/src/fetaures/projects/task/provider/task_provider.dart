@@ -20,6 +20,11 @@ final taskNotifier =
   return TaskNotifier(ref.watch(taskProvider), ref);
 });
 
+final taskMeNotifier =
+    StateNotifierProvider<TaskMeNotifier, States<List<TaskMe>>>((ref) {
+  return TaskMeNotifier(ref.watch(taskProvider));
+});
+
 // get detail task by id
 final detailTaskNotifier =
     StateNotifierProvider.autoDispose<DetailTaskNotifier, BaseState<TaskItem>>(

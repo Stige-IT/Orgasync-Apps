@@ -12,21 +12,27 @@ abstract class LogBookApi {
 
 final logBookProvider = Provider<LogBookApiImpl>((ref) {
   return LogBookApiImpl(
-      ref.watch(httpRequestProvider), ref.watch(storageProvider));
+      ref.watch(httpRequestProvider), ref.watch(storageProvider), ref);
 });
 
 class LogBookApiImpl implements LogBookApi {
   final HttpRequestClient _httpRequest;
   final SecureStorage _storage;
+  final Ref ref;
 
-  const LogBookApiImpl(this._httpRequest, this._storage);
+  const LogBookApiImpl(this._httpRequest, this._storage, this.ref);
 
   @override
   Future<Either<String, ResponseData<List<LogBook>>>> getLogBooks(
       String idCompany,
       {required int page}) async {
-    final url =
-        "${ConstantUrl.BASE_URL}/logbook?id_company=$idCompany&page=$page";
+    String url;
+    url = "${ConstantUrl.BASE_URL}/logbook?id_company=$idCompany&page=$page";
+    final role = ref.watch(roleInCompanyNotifier).data;
+    if (role != Role.owner) {
+      url =
+          "${ConstantUrl.BASE_URL}/logbook/me?id_company=$idCompany&page=$page";
+    }
     final response = await _httpRequest.get(url);
     return response.fold(
       (error) => left(error),

@@ -3,6 +3,8 @@ part of "../../project.dart";
 abstract class TaskApi {
   // get task
   Future<Either<String, TaskDataModel>> getTasks(String idProject);
+  // get task me
+  Future<Either<String, List<TaskMe>>> getTasksMe(String idCompany);
   // get detail task
   Future<Either<String, TaskItem>> getDetailTask(String taskId);
   // create new task
@@ -29,6 +31,18 @@ class TaskImpl implements TaskApi {
     return response.fold(
       (error) => Left(error),
       (data) => Right(TaskDataModel.fromJson(data)),
+    );
+  }
+
+  @override
+  Future<Either<String, List<TaskMe>>> getTasksMe(
+    String idCompany,
+  ) async {
+    final url = "${ConstantUrl.BASE_URL}/task/me?id_company=$idCompany";
+    final response = await httpRequest.get(url);
+    return response.fold(
+      (error) => Left(error),
+      (data) => Right((data as List).map((e) => TaskMe.fromJson(e)).toList()),
     );
   }
 

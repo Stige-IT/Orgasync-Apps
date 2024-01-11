@@ -132,7 +132,7 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
                     child: ListTile(
                       onTap: () => nextPage(context, "/company/project",
                           argument: widget.companyId),
-                      title: const Text("Total Project"),
+                      title: Text("total_company_roject".tr()),
                       subtitle: Text(
                         "$totalProject",
                         style: context.theme.textTheme.headlineLarge,

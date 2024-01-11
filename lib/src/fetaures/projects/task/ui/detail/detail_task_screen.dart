@@ -2,6 +2,7 @@ part of "../../../project.dart";
 
 class DetailTaskScreen extends ConsumerStatefulWidget {
   final String taskId;
+
   const DetailTaskScreen(this.taskId, {super.key});
 
   @override
@@ -116,12 +117,84 @@ class _DetailTaskScreenState extends ConsumerState<DetailTaskScreen> {
                   ),
                   // const SizedBox(height: 20.0),
                   const Divider(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text("created_by".tr()),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  dense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: const Icon(Icons.person),
+                                  title: Text(
+                                    task?.createdBy?.employee?.user?.name ?? "",
+                                  ),
+                                ),
+                                ListTile(
+                                  dense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: const Icon(
+                                      Icons.supervised_user_circle_outlined),
+                                  title: Text(
+                                    task?.createdBy?.employee?.type?.name ?? "",
+                                  ),
+                                ),
+                                ListTile(
+                                  dense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  leading:
+                                      const Icon(Icons.assignment_turned_in),
+                                  title: Text(
+                                    "${task?.createdAt?.timeFormat() ?? ""}",
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: Navigator.of(context).pop,
+                                child: Text("close".tr()),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.person,
+                        color: context.theme.colorScheme.onBackground,
+                      ),
+                      label: Text(
+                        "created",
+                        style: TextStyle(
+                            color: context.theme.colorScheme.onBackground),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 20.0),
                   LayoutBuilder(
                     builder: (_, constraint) => SizedBox(
                       width: constraint.maxWidth * .7,
                       child: Column(
                         children: [
+                          ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(Icons.assignment_turned_in),
+                            title: Text(
+                              "updated_by".tr(),
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            subtitle:
+                                Text("${task?.updatedAt?.timeFormat() ?? ""}"),
+                            trailing: Text(
+                                task?.updatedBy?.employee?.user?.name ?? ""),
+                          ),
                           ListTile(
                             contentPadding: EdgeInsets.zero,
                             leading: const Icon(Icons.assignment),
@@ -381,11 +454,54 @@ class _DetailTaskScreenState extends ConsumerState<DetailTaskScreen> {
                     subtitle: FieldInput(
                       hintText: "description".tr(),
                       controllers: _descriptionCtrl,
-                      borderActive: false,
+                      borderActive: true,
                       maxLines: 5,
                       keyboardType: TextInputType.multiline,
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  LayoutBuilder(builder: (_, constraint) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: SizedBox(
+                          width: constraint.maxWidth * .7,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "created_by".tr(),
+                                style: context.theme.textTheme.bodySmall!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  AvatarProfile(
+                                    size: 30,
+                                    image:
+                                        task?.updatedBy?.employee?.user?.image,
+                                    name: task?.updatedBy?.employee?.user?.name,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    task?.updatedBy?.employee?.user?.name ?? "",
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                "${task?.updatedAt?.timeFormat() ?? ""}",
+                                style:
+                                    context.theme.textTheme.bodySmall!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          )),
+                    );
+                  }),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

@@ -81,7 +81,7 @@ class AppRoute {
     },
 
     /// LOGBOOK PAGE
-    "/logbook": (_) => const LogBookScreen(),
+    // "/logbook": (_) => const LogBookScreen(),
     "/logbook/detail": (context) {
       final logBookId = ModalRoute.of(context)!.settings.arguments as String;
       return DetailLogBookScreen(logBookId);

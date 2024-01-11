@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:orgasync/src/components/avatar_profile.dart';
+import 'package:string_to_color/string_to_color.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -45,6 +47,7 @@ part "models/employee_company_project.dart";
 part "status/model/status.dart";
 part "task/model/task.dart";
 part "task/model/task_data.dart";
+part "task/model/task_me.dart";
 part "widgets/project_item.dart";
 part "widgets/card_project.dart";
 part "project/ui/detail/widget/header_widget.dart";
