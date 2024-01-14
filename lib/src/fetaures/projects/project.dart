@@ -31,7 +31,6 @@ import 'package:orgasync/src/utils/helper/layout/minheight_context.dart';
 import 'package:orgasync/src/utils/helper/local_storage/secure_storage.dart';
 import 'package:orgasync/src/utils/helper/local_storage/secure_storage_client.dart';
 import 'package:orgasync/src/utils/helper/theme_of_context.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../components/circle_avatar_network.dart';
 import '../../components/circular_loading.dart';

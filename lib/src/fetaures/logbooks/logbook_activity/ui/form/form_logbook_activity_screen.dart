@@ -159,7 +159,7 @@ class _FormLogBookActivityScreenState
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SizedBox(
-                    width: 150,
+                    width: 100,
                     child: OutlinedButton(
                       onPressed: Navigator.of(context).pop,
                       child: Text("cancel".tr()),
@@ -167,7 +167,7 @@ class _FormLogBookActivityScreenState
                   ),
                   const SizedBox(width: 20),
                   SizedBox(
-                    width: 150,
+                    width: 100,
                     child: FilledButton(
                       onPressed: _handleSave,
                       child: Text("save".tr()),

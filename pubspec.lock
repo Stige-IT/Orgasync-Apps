@@ -429,14 +429,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  fluttertoast:
-    dependency: "direct main"
-    description:
-      name: fluttertoast
-      sha256: dfdde255317af381bfc1c486ed968d5a43a2ded9c931e87cbecd88767d6a71c1
-      url: "https://pub.dev"
-    source: hosted
-    version: "8.2.4"
   freezed:
     dependency: "direct dev"
     description:
@@ -1050,22 +1042,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
-  syncfusion_flutter_charts:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_charts
-      sha256: "02c11d461f4177c60a4cdd501594bb6678f46bee8754f678c7e41c2109f935e7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "24.1.45+2"
-  syncfusion_flutter_core:
-    dependency: transitive
-    description:
-      name: syncfusion_flutter_core
-      sha256: "4afb43254d436e1d41a2ee2761908650ce3ad3453f5bebd283dfe3185d5026a2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "24.1.45"
   synchronized:
     dependency: transitive
     description:

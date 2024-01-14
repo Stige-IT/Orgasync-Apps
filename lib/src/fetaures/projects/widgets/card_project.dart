@@ -44,15 +44,12 @@ class CardProject extends StatelessWidget {
                     CircularProgressIndicator(
                         value: (project!.percentase! / 100),
                         strokeWidth: 10,
-                        backgroundColor: context.theme.colorScheme.onBackground,
+                        backgroundColor: Colors.black.withOpacity(0.5),
                         valueColor:
                             const AlwaysStoppedAnimation<Color>(Colors.green)),
                     Text(
                       "${project!.percentase}%",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: context.theme.colorScheme.background,
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.white),
                     ),
                   ],
                 )),

@@ -138,9 +138,10 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
                         children: [
                           Expanded(
                             child: ListTile(
+                              contentPadding: EdgeInsets.zero,
                               title: Text(
                                 "periode_start".tr(),
-                                style: const TextStyle(fontSize: 12),
+                                style: const TextStyle(fontSize: 10),
                               ),
                               subtitle: Text(
                                 periodeStart?.toString().dateFormat() ?? "-",
@@ -161,12 +162,16 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
                               ),
                             ),
                           ),
-                          const Icon(Icons.arrow_forward),
+                          const Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Icon(Icons.arrow_forward),
+                          ),
                           Expanded(
                             child: ListTile(
+                              contentPadding: EdgeInsets.zero,
                               title: Text(
                                 "periode_start".tr(),
-                                style: const TextStyle(fontSize: 12),
+                                style: const TextStyle(fontSize: 10),
                               ),
                               subtitle: Text(
                                 periodeEnd?.toString().dateFormat() ?? "-",
@@ -203,7 +208,7 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: SizedBox(
-                          width: 200,
+                          width: 120,
                           height: 50,
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
@@ -237,7 +242,7 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: SizedBox(
-                        width: 200,
+                        width: 120,
                         height: 50,
                         child: FilledButton(
                           onPressed: isFilled() ? _handleSave : () {},
