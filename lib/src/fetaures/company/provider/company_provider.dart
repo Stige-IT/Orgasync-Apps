@@ -1,6 +1,7 @@
 part of "../company.dart";
 
 final logoCompanyProvider = StateProvider.autoDispose<File?>((ref) => null);
+final coverCompanyProvider = StateProvider.autoDispose<File?>((ref) => null);
 
 // index of stack screen
 final indexScreenProvider = StateProvider<int>((ref) => 0);

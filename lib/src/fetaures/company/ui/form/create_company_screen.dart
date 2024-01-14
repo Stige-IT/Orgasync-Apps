@@ -108,11 +108,14 @@ class _RegisterCompanyWidgetState extends ConsumerState<RegisterCompanyWidget> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        FilledButton(
-                          onPressed: _handleRegister,
-                          child: isLoading
-                              ? const LoadingWidget()
-                              : Text("save".tr()),
+                        SizedBox(
+                          height: 50,
+                          child: FilledButton(
+                            onPressed: _handleRegister,
+                            child: isLoading
+                                ? const LoadingWidget()
+                                : Text("save".tr()),
+                          ),
                         ),
                       ],
                     ),

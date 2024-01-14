@@ -114,8 +114,8 @@ class CompanyProjectImpl implements CompanyProjectApi {
       "PUT",
       url,
       data: {"name": name, "description": description},
-      file: image,
-      fieldFile: "image",
+      files: [image!],
+      fieldFiles: ["image"],
     );
     return result.fold(
       (failure) => left(failure),

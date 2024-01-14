@@ -20,6 +20,7 @@ class _DetailCompanyProjectScreenState
         .read(memberCompanyProjectNotifier.notifier)
         .refresh(widget.companyProjectId);
     ref.watch(priorityNotifier.notifier).getPriorities();
+    ref.read(projectsNotifier.notifier).get(widget.companyProjectId);
   }
 
   @override
@@ -32,6 +33,7 @@ class _DetailCompanyProjectScreenState
   Widget build(BuildContext context) {
     final roleUser = ref.watch(roleInCompanyNotifier).data;
     final detailCompany = ref.watch(detailCompanyProjectNotifier);
+    final projects = ref.watch(projectsNotifier).data;
     Size size = MediaQuery.of(context).size;
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
@@ -42,17 +44,17 @@ class _DetailCompanyProjectScreenState
           elevation: 0,
           centerTitle: true,
           actions: [
-            if(roleUser == Role.owner)
-            IconButton(
-              onPressed: () {
-                nextPage(
-                  context,
-                  "/company/project/form",
-                  argument: detailCompany.data?.companyProject,
-                );
-              },
-              icon: const Icon(Icons.edit),
-            ),
+            if (roleUser == Role.owner)
+              IconButton(
+                onPressed: () {
+                  nextPage(
+                    context,
+                    "/company/project/form",
+                    argument: detailCompany.data?.companyProject,
+                  );
+                },
+                icon: const Icon(Icons.edit),
+              ),
             const SizedBox(width: 20),
           ],
         ),
@@ -113,7 +115,7 @@ class _DetailCompanyProjectScreenState
                     title: Text("list_project".tr()),
                   ),
                   const Divider(),
-                  if (detailCompany.data?.project?.isEmpty ?? true)
+                  if (projects?.isEmpty ?? true)
                     const Padding(
                       padding: EdgeInsets.only(top: 40.0),
                       child: EmptyWidget(),
@@ -123,11 +125,11 @@ class _DetailCompanyProjectScreenState
                       height: size.height * 0.6,
                       child: ListView.separated(
                         itemBuilder: (_, i) {
-                          final project = detailCompany.data?.project?[i];
+                          final project = (projects ?? [])[i];
                           return CardProject(project);
                         },
                         separatorBuilder: (_, i) => const Divider(),
-                        itemCount: detailCompany.data?.project?.length ?? 0,
+                        itemCount: (projects ?? []).length,
                       ),
                     )
                 ],

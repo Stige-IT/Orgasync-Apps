@@ -83,8 +83,8 @@ class LogBookActivityApiImpl implements LogBookActivityApi {
       "POST",
       url,
       data: body,
-      fieldFile: "image",
-      file: image,
+      fieldFiles: ["image"],
+      files: [image!],
     );
     return response.fold(
       (error) => Left(error),
@@ -109,8 +109,8 @@ class LogBookActivityApiImpl implements LogBookActivityApi {
       "POST",
       url,
       data: body,
-      fieldFile: "image",
-      file: image,
+      fieldFiles: ["image"],
+      files: [image!],
     );
     return response.fold(
       (error) => Left(error),

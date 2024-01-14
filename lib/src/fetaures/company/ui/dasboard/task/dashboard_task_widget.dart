@@ -66,6 +66,27 @@ class _DashboardTaskWidgetState extends ConsumerState<DashboardTaskWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ListTile(
+                                onTap: () {
+                                  nextPage(
+                                    context,
+                                    "/company/project",
+                                    argument: widget.companyId,
+                                  );
+                                  nextPage(
+                                    context,
+                                    "/company/project/detail",
+                                    argument: project.idCompanyProject,
+                                  );
+                                  nextPage(
+                                    context,
+                                    "/project/detail",
+                                    argument: project.idProject,
+                                  );
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => DetailTaskScreen(task.id!),
+                                  );
+                                },
                                 leading: const Icon(Icons.assignment_add),
                                 title: Text(task.title ?? ""),
                                 subtitle: Text(task.description ?? ""),
@@ -82,7 +103,7 @@ class _DashboardTaskWidgetState extends ConsumerState<DashboardTaskWidget> {
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
-                                      "${task.startDate?.timeFormat() ?? ''} - ${task.endDate?.timeFormat() ?? ''}"),
+                                      "${task.startDate?.dateFormat() ?? ''} - ${task.endDate?.dateFormat() ?? ''}"),
                                 ),
                               ),
                             ],

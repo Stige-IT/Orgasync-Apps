@@ -2,8 +2,9 @@ part of "../company.dart";
 
 enum Role {
   admin("admin"),
+  owner("owner"),
   member("member"),
-  owner("owner");
+  guest("guest");
 
   const Role(this.value);
   final String value;

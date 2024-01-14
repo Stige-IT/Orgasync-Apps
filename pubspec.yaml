@@ -58,6 +58,8 @@ dependencies:
   photo_view: ^0.14.0
   string_to_color: ^2.0.0
   string_to_hex: ^0.2.2
+  fluttertoast: ^8.2.4
+  syncfusion_flutter_charts: ^24.1.45+2
 
 dev_dependencies:
   flutter_test:

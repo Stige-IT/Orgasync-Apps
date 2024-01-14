@@ -62,6 +62,7 @@ class UpdateCompanyNotifier extends StateNotifier<States> {
     String companyId, {
     required String name,
     File? image,
+    File? cover,
   }) async {
     state = States.loading();
     try {
@@ -69,6 +70,7 @@ class UpdateCompanyNotifier extends StateNotifier<States> {
         companyId,
         name: name,
         image: image,
+        cover: cover,
       );
       return result.fold((error) {
         state = States.error(error);
@@ -217,6 +219,7 @@ class RoleInCompanyNotifier extends StateNotifier<States<Role>> {
         (error) => state = States.error(error),
         (data) => state = States.finished(_parseRole(data)),
       );
+      log(state.data.toString());
     } catch (exception) {
       state = States.error(exceptionTomessage(exception));
     }
@@ -229,6 +232,8 @@ class RoleInCompanyNotifier extends StateNotifier<States<Role>> {
         return Role.owner;
       case "admin":
         return Role.admin;
+      case "guest":
+        return Role.guest;
       default:
         return Role.member;
     }

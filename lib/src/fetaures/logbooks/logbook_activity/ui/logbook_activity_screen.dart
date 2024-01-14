@@ -98,36 +98,51 @@ class _LogBookActivityScreenState extends ConsumerState<LogBookActivityScreen> {
                                 children: [
                                   ListTile(
                                     leading: const Icon(Icons.book),
-                                    title: Text(e.description ?? ""),
-                                    subtitle: Row(
-                                      children: [
-                                        for (int i = 0; i < 5; i++)
-                                          if (i < e.rating!)
-                                            const Icon(Icons.star,
-                                                color: Colors.amber)
-                                          else
-                                            const Icon(Icons.star_border)
-                                      ],
-                                    ),
+                                    title: const Text("activity"),
                                     trailing: Text(
                                         "${'total_character'.tr()} : ${e.description!.length}"),
                                   ),
-                                  if (e.image != null)
-                                    InkWell(
-                                      onTap: () => _showImage(e),
-                                      child: Container(
-                                        margin: const EdgeInsets.symmetric(
-                                          horizontal: 35,
-                                          vertical: 15,
-                                        ),
-                                        height: 100,
-                                        width: 200,
-                                        child: Image.network(
-                                          "${ConstantUrl.BASEIMGURL}/${e.image}",
-                                          fit: BoxFit.cover,
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InkWell(
+                                        onTap: () => _showImage(e),
+                                        child: Container(
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 35,
+                                            vertical: 15,
+                                          ),
+                                          height: 100,
+                                          width: 200,
+                                          child: Builder(builder: (_) {
+                                            if (e.image == null) {
+                                              return const Icon(Icons.image);
+                                            }
+                                            return Image.network(
+                                              "${ConstantUrl.BASEIMGURL}/${e.image}",
+                                              fit: BoxFit.cover,
+                                            );
+                                          }),
                                         ),
                                       ),
-                                    ),
+                                      Expanded(
+                                        child: ListTile(
+                                          title: Text(e.description ?? ""),
+                                          subtitle: Row(
+                                            children: [
+                                              for (int i = 0; i < 5; i++)
+                                                if (i < e.rating!)
+                                                  const Icon(Icons.star,
+                                                      color: Colors.amber)
+                                                else
+                                                  const Icon(Icons.star_border)
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   const SizedBox(height: 10),
                                   ListTile(
                                     dense: true,

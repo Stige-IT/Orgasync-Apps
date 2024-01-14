@@ -7,7 +7,8 @@ class SectionTask extends ConsumerWidget {
   final List<TaskItem> data;
   final Color color;
   const SectionTask(
-    this.sectionName, this.scrollController, {
+    this.sectionName,
+    this.scrollController, {
     super.key,
     required this.data,
     required this.icon,
@@ -33,7 +34,8 @@ class SectionTask extends ConsumerWidget {
             controller: scrollController,
             child: SingleChildScrollView(
               controller: scrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 25),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 25),
               scrollDirection: Axis.horizontal,
               child: SizedBox(
                 width: context.isMobile ? null : size.width,
@@ -81,6 +83,8 @@ class SectionTask extends ConsumerWidget {
   ) {
     final status = ref.watch(statusNotifier).data;
     final employee = ref.watch(memberCompanyProjectNotifier).data;
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
+
     return DataRow(
       onLongPress: () {
         // dialog confirm delete
@@ -126,13 +130,18 @@ class SectionTask extends ConsumerWidget {
         ///[* Status *]
         DataCell(PopupMenuButton<Status>(
           tooltip: "Choose status",
+          enabled: roleUser != Role.guest,
           itemBuilder: (_) =>
               status?.map((e) {
                 return PopupMenuItem(
                   value: e,
                   child: Chip(
-                      color: MaterialStatePropertyAll(ColorUtils.stringToColor("${e.color}")),
-                      label: Text(e.name?.toUpperCase() ?? "")),
+                      color: MaterialStatePropertyAll(
+                          ColorUtils.stringToColor("${e.color}")),
+                      label: Text(
+                        e.name?.toUpperCase() ?? "",
+                        style: const TextStyle(color: Colors.black),
+                      )),
                 );
               }).toList() ??
               [],
@@ -150,14 +159,19 @@ class SectionTask extends ConsumerWidget {
             }
           },
           child: Chip(
-            color: MaterialStatePropertyAll(ColorUtils.stringToColor("${e.status?.color}")),
-            label: Text(e.status?.name?.toUpperCase() ?? ""),
+            color: MaterialStatePropertyAll(
+                ColorUtils.stringToColor("${e.status?.color}")),
+            label: Text(
+              e.status?.name?.toUpperCase() ?? "",
+              style: const TextStyle(color: Colors.black),
+            ),
           ),
         )),
 
         ///[* Assignee *]
         DataCell(
           PopupMenuButton<EmployeeCompanyProject>(
+            enabled: roleUser != Role.guest,
             tooltip: "Choose employee",
             onSelected: (value) {
               ref
@@ -217,12 +231,13 @@ class SectionTask extends ConsumerWidget {
                         );
                       }),
                     ),
-                    if (e.assignee != null)
+                    if (e.assignee != null && roleUser != Role.guest)
                       Positioned(
                         top: 0,
                         right: 0,
                         child: InkWell(
                           onTap: () {
+                            if (roleUser == Role.guest) return;
                             // remove assignee
                             ref
                                 .read(taskNotifier.notifier)

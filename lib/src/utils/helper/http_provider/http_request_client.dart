@@ -71,18 +71,24 @@ class HttpRequestClient {
 
   // multipart post / put
   Future<Either<String, bool>> multipart(String method, String url,
-      {Map<String, String>? data, File? file, String? fieldFile}) async {
+      {Map<String, String>? data,
+      List<File?>? files,
+      List<String>? fieldFiles}) async {
     final token = await storage.read("token");
     final request = MultipartRequest(method, Uri.parse(url));
     request.headers.addAll({"Authorization": "Bearer $token"});
     request.fields.addAll(data!);
-    if (file != null) {
-      final multipartFile = MultipartFile.fromBytes(
-        fieldFile!,
-        file.readAsBytesSync(),
-        filename: file.path.split("/").last,
-      );
-      request.files.add(multipartFile);
+    if (files != null) {
+      for (int i = 0; i < files.length; i++) {
+        request.files.add(
+          MultipartFile(
+            fieldFiles![i],
+            files[i]!.readAsBytes().asStream(),
+            files[i]!.lengthSync(),
+            filename: files[i]!.path.split("/").last,
+          ),
+        );
+      }
     }
     final response = await request.send();
     if (kDebugMode) {

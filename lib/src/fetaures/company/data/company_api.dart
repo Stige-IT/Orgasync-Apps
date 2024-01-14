@@ -129,14 +129,26 @@ class CompanyApiImpl implements CompanyApi {
     String companyId, {
     required String name,
     File? image,
+    File? cover,
   }) async {
     final url = "${ConstantUrl.BASE_URL}/company/$companyId";
+    List<File> files = [];
+    List<String> names = [];
+    if (cover != null) {
+      files.add(cover);
+      names.add("cover");
+    }
+    if (image != null) {
+      files.add(image);
+      names.add("image");
+    }
+
     final response = await httpRequest.multipart(
       "PUT",
       url,
       data: {"name": name},
-      file: image,
-      fieldFile: "image",
+      files: files,
+      fieldFiles: names,
     );
     return response.fold(
       (failure) => left(failure),

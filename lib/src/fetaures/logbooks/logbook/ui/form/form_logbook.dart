@@ -40,6 +40,15 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
     _descriptionCtrl.dispose();
   }
 
+  bool isFilled() {
+    final periodeStart = ref.watch(selectedStartDateProvider);
+    final periodeEnd = ref.watch(selectedEndDateProvider);
+    return _nameCtrl.text.isNotEmpty &&
+        _descriptionCtrl.text.isNotEmpty &&
+        periodeStart != null &&
+        periodeEnd != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final periodeStart = ref.watch(selectedStartDateProvider);
@@ -82,12 +91,48 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
                         hintText: "input_name".tr(),
                         controllers: _nameCtrl,
                       ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ValueListenableBuilder(
+                          valueListenable: _nameCtrl,
+                          builder: (_, value, __) {
+                            if (value.text.isEmpty) {
+                              return Text(
+                                "*name_required".tr(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.red,
+                                ),
+                              );
+                            }
+                            return const SizedBox();
+                          },
+                        ),
+                      ),
                       FieldInput(
                         title: "description".tr(),
                         hintText: "input_description".tr(),
                         controllers: _descriptionCtrl,
                         keyboardType: TextInputType.multiline,
                         maxLines: 3,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ValueListenableBuilder(
+                          valueListenable: _descriptionCtrl,
+                          builder: (_, value, __) {
+                            if (value.text.isEmpty) {
+                              return Text(
+                                "*description_required".tr(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.red,
+                                ),
+                              );
+                            }
+                            return const SizedBox();
+                          },
+                        ),
                       ),
                       Row(
                         children: [
@@ -195,7 +240,12 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
                         width: 200,
                         height: 50,
                         child: FilledButton(
-                          onPressed: _handleSave,
+                          onPressed: isFilled() ? _handleSave : () {},
+                          style: FilledButton.styleFrom(
+                              backgroundColor: isFilled()
+                                  ? context.theme.colorScheme.primary
+                                  : context.theme.colorScheme.primary
+                                      .withOpacity(.5)),
                           child: Text("save".tr()),
                         ),
                       ),
@@ -249,8 +299,6 @@ class _FormLogbookScreenState extends ConsumerState<FormLogbookScreen> {
           }
         });
       }
-    } else {
-      showSnackbar(context, "please_fill_the_form".tr());
     }
   }
 }

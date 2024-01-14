@@ -92,6 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
+                      height: 50,
                       child: FilledButton(
                         onPressed: _handleLogin,
                         child: loginProvider.isLoading

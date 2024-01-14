@@ -32,6 +32,7 @@ class _DialogEditCompanyWidgetState
   Widget build(BuildContext context) {
     final company = ref.watch(detailCompanyNotifier).data;
     final image = ref.watch(logoCompanyProvider);
+    final cover = ref.watch(coverCompanyProvider);
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -59,23 +60,90 @@ class _DialogEditCompanyWidgetState
               ),
               const Divider(),
               const SizedBox(height: 20),
-              Builder(builder: (_) {
-                if (image != null) {
-                  return CircleAvatar(
-                    radius: 100,
-                    backgroundImage: FileImage(image),
-                  );
-                } else {
-                  if (company?.logo != null) {
-                    return CircleAvatarNetwork(company!.logo, size: 150);
-                  } else {
-                    return const CircleAvatar(
-                      radius: 100,
-                      child: Icon(Icons.location_city, size: 50),
-                    );
-                  }
-                }
-              }),
+              Container(
+                height: 300,
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                child: Stack(
+                  children: [
+                    Container(
+                      alignment: Alignment.bottomRight,
+                      height: 220,
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          if (cover != null)
+                            SizedBox(
+                                width: double.infinity,
+                                height: 220,
+                                child: Image.file(cover, fit: BoxFit.cover))
+                          else if (company?.cover != null)
+                            SizedBox(
+                              width: double.infinity,
+                              height: 220,
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    "${ConstantUrl.BASEIMGURL}/${company!.cover!}",
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          else
+                            Container(
+                              height: 220,
+                              width: double.infinity,
+                              color: Colors.grey,
+                            ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: FilledButton.icon(
+                                onPressed: () async {
+                                  final newImage = await ImagePicker()
+                                      .pickImage(source: ImageSource.gallery);
+                                  if (newImage != null) {
+                                    ref
+                                        .read(coverCompanyProvider.notifier)
+                                        .state = File(newImage.path);
+                                  }
+                                },
+                                icon: const Icon(Icons.edit),
+                                label: const Text("edit cover"),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      left: 50,
+                      right: 50,
+                      bottom: 0,
+                      child: Builder(builder: (_) {
+                        if (image != null) {
+                          return CircleAvatar(
+                            radius: 100,
+                            backgroundImage: FileImage(image),
+                          );
+                        } else {
+                          if (company?.logo != null) {
+                            return CircleAvatarNetwork(company!.logo,
+                                size: 150);
+                          } else {
+                            return const CircleAvatar(
+                              radius: 100,
+                              child: Icon(Icons.location_city, size: 50),
+                            );
+                          }
+                        }
+                      }),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 20),
               OutlinedButton(
                 onPressed: () async {
@@ -109,6 +177,7 @@ class _DialogEditCompanyWidgetState
                             company!.id!,
                             name: _nameCtrl.text,
                             image: image,
+                            cover: cover,
                           )
                           .then((success) {
                         if (!success) {
