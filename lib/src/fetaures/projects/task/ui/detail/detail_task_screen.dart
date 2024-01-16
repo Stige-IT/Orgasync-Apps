@@ -2,6 +2,7 @@ part of "../../../project.dart";
 
 class DetailTaskScreen extends ConsumerStatefulWidget {
   final String taskId;
+
   const DetailTaskScreen(this.taskId, {super.key});
 
   @override
@@ -54,6 +55,8 @@ class _DetailTaskScreenState extends ConsumerState<DetailTaskScreen> {
   }
 
   bool _isUpdatedTaskData() {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
+    if (roleUser == Role.guest) return false;
     if (ref.watch(selectedStatusProvider) != null ||
         ref.watch(selectedAssignedProvider) != null ||
         ref.watch(startDateProvider) != null ||
@@ -69,12 +72,14 @@ class _DetailTaskScreenState extends ConsumerState<DetailTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
     final status = ref.watch(statusNotifier).data;
     final priority = ref.watch(priorityNotifier).data;
     final members = ref.watch(memberCompanyProjectNotifier).data;
     final state = ref.watch(detailTaskNotifier);
     final task = state.data;
     final assignee = task?.assignee?.employee?.user;
+    final statusSelected = ref.watch(selectedStatusProvider);
     Size size = MediaQuery.of(context).size;
     return Center(
       child: Material(
@@ -96,318 +101,454 @@ class _DetailTaskScreenState extends ConsumerState<DetailTaskScreen> {
                 ],
               );
             } else {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: FieldInput(
-                      hintText: "title".tr(),
-                      controllers: _titleCtrl,
-                      borderActive: false,
-                    ),
-                    trailing: CircleAvatar(
-                      child: IconButton(
-                        onPressed: _handleDeleteTask,
-                        icon: const Icon(Icons.delete, color: Colors.red),
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: FieldInput(
+                        hintText: "title".tr(),
+                        controllers: _titleCtrl,
+                        borderActive: false,
+                      ),
+                      trailing: Visibility(
+                        visible: roleUser != Role.guest,
+                        child: CircleAvatar(
+                          child: IconButton(
+                            onPressed: _handleDeleteTask,
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  // const SizedBox(height: 20.0),
-                  const Divider(),
-                  const SizedBox(height: 20.0),
-                  LayoutBuilder(
-                    builder: (_, constraint) => SizedBox(
-                      width: constraint.maxWidth * .7,
-                      child: Column(
-                        children: [
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.assignment),
-                            title: Text("status".tr()),
-                            trailing: PopupMenuButton(
-                              itemBuilder: (_) => [
-                                for (Status item in (status ?? []))
-                                  PopupMenuItem(
-                                    value: item,
-                                    child: Text(item.name?.toUpperCase() ?? ""),
-                                  ),
-                              ],
-                              child: Chip(
-                                label: Builder(builder: (_) {
-                                  if (ref.watch(selectedStatusProvider) !=
-                                      null) {
-                                    return Text(
-                                      ref
-                                              .watch(selectedStatusProvider)
-                                              ?.name
-                                              ?.toUpperCase() ??
+                    // const SizedBox(height: 20.0),
+                    const Divider(),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text("created_by".tr()),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    dense: true,
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: const Icon(Icons.person),
+                                    title: Text(
+                                      task?.createdBy?.employee?.user?.name ??
                                           "",
-                                    );
-                                  }
-                                  return Text(
-                                    task?.status?.name?.toUpperCase() ?? "",
-                                  );
-                                }),
-                              ),
-                              onSelected: (value) {
-                                ref
-                                    .watch(selectedStatusProvider.notifier)
-                                    .state = value;
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.flag),
-                            title: Text("priority".tr()),
-                            trailing: PopupMenuButton(
-                              itemBuilder: (_) => [
-                                for (Priority item in (priority ?? []))
-                                  PopupMenuItem(
-                                    value: item,
-                                    child: Text(item.name?.toUpperCase() ?? ""),
+                                    ),
                                   ),
-                              ],
-                              child: Chip(
-                                label: Builder(builder: (_) {
-                                  if (ref.watch(selectedPriorityProvider) !=
-                                      null) {
-                                    return Text(
-                                      ref
-                                              .watch(selectedPriorityProvider)
-                                              ?.name
-                                              ?.toUpperCase() ??
+                                  ListTile(
+                                    dense: true,
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: const Icon(
+                                        Icons.supervised_user_circle_outlined),
+                                    title: Text(
+                                      task?.createdBy?.employee?.type?.name ??
                                           "",
-                                    );
-                                  }
-                                  return Text(
-                                      task?.priority?.name?.toUpperCase() ??
-                                          "");
-                                }),
-                              ),
-                              onSelected: (value) {
-                                ref
-                                    .watch(selectedPriorityProvider.notifier)
-                                    .state = value;
-                              },
-                            ),
-                          ),
-
-                          /// [*ASSIGNEE]
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.person),
-                            title: Text("assignee".tr()),
-                            trailing: PopupMenuButton(
-                              itemBuilder: (_) => [
-                                for (EmployeeCompanyProject member
-                                    in (members ?? []))
-                                  PopupMenuItem(
-                                    value: member,
-                                    child: Builder(builder: (_) {
-                                      if (member.employee?.user?.image !=
-                                          null) {
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            CircleAvatarNetwork(
-                                              member.employee?.user?.image ??
-                                                  "",
-                                              size: 40,
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              member.employee?.user?.name ?? "",
-                                            ),
-                                          ],
-                                        );
-                                      } else {
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            ProfileWithName(
-                                              member.employee?.user?.name ??
-                                                  "  ",
-                                              size: 40,
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              member.employee?.user?.name ?? "",
-                                            ),
-                                          ],
-                                        );
-                                      }
-                                    }),
+                                    ),
                                   ),
+                                  ListTile(
+                                    dense: true,
+                                    contentPadding: EdgeInsets.zero,
+                                    leading:
+                                        const Icon(Icons.assignment_turned_in),
+                                    title: Text(
+                                      "${task?.createdAt?.timeFormat() ?? ""}",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: Navigator.of(context).pop,
+                                  child: Text("close".tr()),
+                                ),
                               ],
-                              child: Builder(builder: (_) {
-                                if (ref.watch(selectedAssignedProvider) !=
-                                    null) {
-                                  final assignee = ref
-                                      .watch(selectedAssignedProvider)
-                                      ?.employee
-                                      ?.user;
-                                  return Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CircleAvatarNetwork(
-                                        assignee?.image ?? "",
-                                        size: 40,
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        assignee?.name?.firstNameFormatted ??
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.person,
+                          color: context.theme.colorScheme.onBackground,
+                        ),
+                        label: Text(
+                          "created",
+                          style: TextStyle(
+                              color: context.theme.colorScheme.onBackground),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    LayoutBuilder(
+                      builder: (_, constraint) => SizedBox(
+                        width: constraint.maxWidth * .7,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(Icons.assignment),
+                              title: Text("status".tr()),
+                              trailing: PopupMenuButton(
+                                enabled: roleUser != Role.guest,
+                                itemBuilder: (_) => [
+                                  for (Status item in (status ?? []))
+                                    PopupMenuItem(
+                                      value: item,
+                                      child: Chip(
+                                          color: MaterialStatePropertyAll(
+                                            ColorUtils.stringToColor(
+                                                "${item.color}"),
+                                          ),
+                                          label: Text(
+                                            item.name?.toUpperCase() ?? "",
+                                            style: const TextStyle(
+                                                color: Colors.black),
+                                          )),
+                                    ),
+                                ],
+                                child: Chip(
+                                  color: MaterialStatePropertyAll(
+                                    ColorUtils.stringToColor(
+                                        statusSelected != null
+                                            ? "${statusSelected.color}"
+                                            : "${task?.status?.color}"),
+                                  ),
+                                  label: Builder(builder: (_) {
+                                    if (statusSelected != null) {
+                                      return Text(
+                                          statusSelected.name?.toUpperCase() ??
+                                              "",
+                                          style: const TextStyle(
+                                              color: Colors.black));
+                                    }
+                                    return Text(
+                                      task?.status?.name?.toUpperCase() ?? "",
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    );
+                                  }),
+                                ),
+                                onSelected: (value) {
+                                  ref
+                                      .watch(selectedStatusProvider.notifier)
+                                      .state = value;
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(Icons.flag),
+                              title: Text("priority".tr()),
+                              trailing: PopupMenuButton(
+                                enabled: roleUser != Role.guest,
+                                itemBuilder: (_) => [
+                                  for (Priority item in (priority ?? []))
+                                    PopupMenuItem(
+                                      value: item,
+                                      child:
+                                          Text(item.name?.toUpperCase() ?? ""),
+                                    ),
+                                ],
+                                child: Chip(
+                                  label: Builder(builder: (_) {
+                                    if (ref.watch(selectedPriorityProvider) !=
+                                        null) {
+                                      return Text(
+                                        ref
+                                                .watch(selectedPriorityProvider)
+                                                ?.name
+                                                ?.toUpperCase() ??
                                             "",
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Builder(builder: (_) {
-                                        if (assignee?.image != null) {
-                                          return CircleAvatarNetwork(
-                                            assignee?.image ?? "",
-                                            size: 40,
+                                      );
+                                    }
+                                    return Text(
+                                        task?.priority?.name?.toUpperCase() ??
+                                            "");
+                                  }),
+                                ),
+                                onSelected: (value) {
+                                  ref
+                                      .watch(selectedPriorityProvider.notifier)
+                                      .state = value;
+                                },
+                              ),
+                            ),
+
+                            /// [*ASSIGNEE]
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(Icons.person),
+                              title: Text("assignee".tr()),
+                              trailing: PopupMenuButton(
+                                enabled: roleUser != Role.guest,
+                                itemBuilder: (_) => [
+                                  for (EmployeeCompanyProject member
+                                      in (members ?? []))
+                                    PopupMenuItem(
+                                      value: member,
+                                      child: Builder(builder: (_) {
+                                        if (member.employee?.user?.image !=
+                                            null) {
+                                          return Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CircleAvatarNetwork(
+                                                member.employee?.user?.image ??
+                                                    "",
+                                                size: 40,
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Text(
+                                                member.employee?.user?.name ??
+                                                    "",
+                                              ),
+                                            ],
                                           );
                                         } else {
-                                          return ProfileWithName(
-                                            assignee?.name ?? "  ",
-                                            size: 40,
+                                          return Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              ProfileWithName(
+                                                member.employee?.user?.name ??
+                                                    "  ",
+                                                size: 40,
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Text(
+                                                member.employee?.user?.name ??
+                                                    "",
+                                              ),
+                                            ],
                                           );
                                         }
                                       }),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        assignee?.name?.firstNameFormatted ??
-                                            "",
-                                      ),
-                                    ],
+                                    ),
+                                ],
+                                child: Builder(builder: (_) {
+                                  if (ref.watch(selectedAssignedProvider) !=
+                                      null) {
+                                    final assignee = ref
+                                        .watch(selectedAssignedProvider)
+                                        ?.employee
+                                        ?.user;
+                                    return Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircleAvatarNetwork(
+                                          assignee?.image ?? "",
+                                          size: 40,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          assignee?.name?.firstNameFormatted ??
+                                              "",
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    return Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Builder(builder: (_) {
+                                          if (assignee?.image != null) {
+                                            return CircleAvatarNetwork(
+                                              assignee?.image ?? "",
+                                              size: 40,
+                                            );
+                                          } else {
+                                            return ProfileWithName(
+                                              assignee?.name ?? "  ",
+                                              size: 40,
+                                            );
+                                          }
+                                        }),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          assignee?.name?.firstNameFormatted ??
+                                              "",
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                }),
+                                onSelected: (value) {
+                                  ref
+                                      .watch(selectedAssignedProvider.notifier)
+                                      .state = value;
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              onTap: () async {
+                                if (roleUser == Role.guest) return;
+                                final date = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2100),
+                                );
+                                if (date != null) {
+                                  ref.watch(startDateProvider.notifier).state =
+                                      date.toString();
+                                }
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(Icons.date_range),
+                              title: Text("start_date".tr()),
+                              trailing: Builder(builder: (_) {
+                                if (ref.watch(startDateProvider) != null) {
+                                  return Text(
+                                    ref
+                                            .watch(startDateProvider)
+                                            ?.dateFormat() ??
+                                        "-",
+                                    style: context.theme.textTheme.bodySmall!
+                                        .copyWith(fontWeight: FontWeight.bold),
                                   );
                                 }
+                                return Text(
+                                  task?.startDate?.dateFormat() ?? "-",
+                                  style: context.theme.textTheme.bodySmall!
+                                      .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
                               }),
-                              onSelected: (value) {
-                                ref
-                                    .watch(selectedAssignedProvider.notifier)
-                                    .state = value;
-                              },
                             ),
-                          ),
-                          ListTile(
-                            onTap: () async {
-                              final date = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(2100),
-                              );
-                              if (date != null) {
-                                ref.watch(startDateProvider.notifier).state =
-                                    date.toString();
-                              }
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.date_range),
-                            title: Text("start_date".tr()),
-                            trailing: Builder(builder: (_) {
-                              if (ref.watch(startDateProvider) != null) {
-                                return Text(
-                                  ref.watch(startDateProvider)?.dateFormat() ??
-                                      "-",
-                                  style: context.theme.textTheme.bodySmall!
-                                      .copyWith(fontWeight: FontWeight.bold),
-                                );
-                              }
-                              return Text(
-                                task?.startDate?.dateFormat() ?? "-",
-                                style:
-                                    context.theme.textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              );
-                            }),
-                          ),
 
-                          ListTile(
-                            onTap: () async {
-                              final date = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(2100),
-                              );
-                              if (date != null) {
-                                ref.watch(endDateProvider.notifier).state =
-                                    date.toString();
-                              }
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.calendar_today),
-                            title: Text("end_date".tr()),
-                            trailing: Builder(builder: (_) {
-                              if (ref.watch(endDateProvider) != null) {
-                                return Text(
-                                  ref.watch(endDateProvider)?.dateFormat() ??
-                                      "-",
-                                  style: context.theme.textTheme.bodySmall!
-                                      .copyWith(fontWeight: FontWeight.bold),
+                            ListTile(
+                              onTap: () async {
+                                if (roleUser == Role.guest) return;
+
+                                final date = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2100),
                                 );
-                              }
-                              return Text(
-                                task?.endDate?.dateFormat() ?? "-",
-                                style:
-                                    context.theme.textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              );
-                            }),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      "description".tr(),
-                      style: context.theme.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: FieldInput(
-                      hintText: "description".tr(),
-                      controllers: _descriptionCtrl,
-                      borderActive: false,
-                      maxLines: 5,
-                      keyboardType: TextInputType.multiline,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: OutlinedButton(
-                          onPressed: Navigator.of(context).pop,
-                          child: Text("cancel".tr()),
+                                if (date != null) {
+                                  ref.watch(endDateProvider.notifier).state =
+                                      date.toString();
+                                }
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(Icons.calendar_today),
+                              title: Text("end_date".tr()),
+                              trailing: Builder(builder: (_) {
+                                if (ref.watch(endDateProvider) != null) {
+                                  return Text(
+                                    ref.watch(endDateProvider)?.dateFormat() ??
+                                        "-",
+                                    style: context.theme.textTheme.bodySmall!
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  );
+                                }
+                                return Text(
+                                  task?.endDate?.dateFormat() ?? "-",
+                                  style: context.theme.textTheme.bodySmall!
+                                      .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              }),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      if (_isUpdatedTaskData())
+                    ),
+                    const SizedBox(height: 20),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        "description".tr(),
+                        style: context.theme.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: FieldInput(
+                        hintText: "description".tr(),
+                        controllers: _descriptionCtrl,
+                        borderActive: true,
+                        maxLines: 5,
+                        keyboardType: TextInputType.multiline,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    LayoutBuilder(builder: (_, constraint) {
+                      return Align(
+                        alignment: Alignment.centerRight,
+                        child: SizedBox(
+                            width: constraint.maxWidth * .7,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "updated_by".tr(),
+                                  style: context.theme.textTheme.bodySmall!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    AvatarProfile(
+                                      size: 30,
+                                      image: task
+                                          ?.updatedBy?.employee?.user?.image,
+                                      name:
+                                          task?.updatedBy?.employee?.user?.name,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      task?.updatedBy?.employee?.user?.name ??
+                                          "",
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "${task?.updatedAt?.timeFormat() ?? ""}",
+                                  style: context.theme.textTheme.bodySmall!
+                                      .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            )),
+                      );
+                    }),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
                         SizedBox(
                           width: 100,
-                          child: FilledButton(
-                            onPressed: _handleUpdateTask,
-                            child: Text("update".tr()),
+                          child: OutlinedButton(
+                            onPressed: Navigator.of(context).pop,
+                            child: Text("cancel".tr()),
                           ),
                         ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: 10),
+                        if (_isUpdatedTaskData())
+                          SizedBox(
+                            width: 100,
+                            child: FilledButton(
+                              onPressed: _handleUpdateTask,
+                              child: Text("update".tr()),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             }
           }),
@@ -452,6 +593,8 @@ class _DetailTaskScreenState extends ConsumerState<DetailTaskScreen> {
   void _handleDeleteTask() {
     // dialog confirm delete
     // Navigator.of(context).pop();
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
+    if (roleUser == Role.guest) return;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

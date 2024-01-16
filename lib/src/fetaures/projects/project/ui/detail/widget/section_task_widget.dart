@@ -1,12 +1,14 @@
 part of "../../../../project.dart";
 
 class SectionTask extends ConsumerWidget {
+  final ScrollController scrollController;
   final IconData icon;
   final String sectionName;
   final List<TaskItem> data;
   final Color color;
   const SectionTask(
-    this.sectionName, {
+    this.sectionName,
+    this.scrollController, {
     super.key,
     required this.data,
     required this.icon,
@@ -25,39 +27,47 @@ class SectionTask extends ConsumerWidget {
         childrenPadding: const EdgeInsets.symmetric(vertical: 10.0),
         title: Text("$sectionName (${data.length})"),
         children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            scrollDirection: Axis.horizontal,
-            child: SizedBox(
-              width: context.isMobile ? null : size.width,
-              child: Card(
-                elevation: 2,
-                clipBehavior: Clip.antiAlias,
-                margin: const EdgeInsets.all(5.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+          Scrollbar(
+            scrollbarOrientation: ScrollbarOrientation.bottom,
+            thumbVisibility: true,
+            trackVisibility: true,
+            controller: scrollController,
+            child: SingleChildScrollView(
+              controller: scrollController,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 25),
+              scrollDirection: Axis.horizontal,
+              child: SizedBox(
+                width: context.isMobile ? null : size.width,
+                child: Card(
+                  elevation: 2,
+                  clipBehavior: Clip.antiAlias,
+                  margin: const EdgeInsets.all(5.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: DataTable(
+                      dataRowColor: MaterialStateProperty.all(
+                        context.theme.colorScheme.background,
+                      ),
+                      headingRowColor: MaterialStateProperty.all(
+                        context.theme.colorScheme.background,
+                      ),
+                      showCheckboxColumn: false,
+                      dataRowMinHeight: 20,
+                      dataRowMaxHeight: 70,
+                      columns: const [
+                        DataColumn(label: Text("Name")),
+                        DataColumn(label: Text("Status")),
+                        DataColumn(label: Text("Assigneed")),
+                        DataColumn(label: Text("priority")),
+                        DataColumn(label: Text("start date")),
+                        DataColumn(label: Text("end date")),
+                      ],
+                      rows: data.map((e) {
+                        return rowItems(context, e, ref);
+                      }).toList()),
                 ),
-                child: DataTable(
-                    dataRowColor: MaterialStateProperty.all(
-                      context.theme.colorScheme.background,
-                    ),
-                    headingRowColor: MaterialStateProperty.all(
-                      context.theme.colorScheme.background,
-                    ),
-                    showCheckboxColumn: false,
-                    dataRowMinHeight: 20,
-                    dataRowMaxHeight: 70,
-                    columns: const [
-                      DataColumn(label: Text("Name")),
-                      DataColumn(label: Text("Status")),
-                      DataColumn(label: Text("Assigneed")),
-                      DataColumn(label: Text("priority")),
-                      DataColumn(label: Text("start date")),
-                      DataColumn(label: Text("end date")),
-                    ],
-                    rows: data.map((e) {
-                      return rowItems(context, e, ref);
-                    }).toList()),
               ),
             ),
           ),
@@ -73,6 +83,8 @@ class SectionTask extends ConsumerWidget {
   ) {
     final status = ref.watch(statusNotifier).data;
     final employee = ref.watch(memberCompanyProjectNotifier).data;
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
+
     return DataRow(
       onLongPress: () {
         // dialog confirm delete
@@ -118,11 +130,18 @@ class SectionTask extends ConsumerWidget {
         ///[* Status *]
         DataCell(PopupMenuButton<Status>(
           tooltip: "Choose status",
+          enabled: roleUser != Role.guest,
           itemBuilder: (_) =>
               status?.map((e) {
                 return PopupMenuItem(
                   value: e,
-                  child: Text(e.name?.toUpperCase() ?? ""),
+                  child: Chip(
+                      color: MaterialStatePropertyAll(
+                          ColorUtils.stringToColor("${e.color}")),
+                      label: Text(
+                        e.name?.toUpperCase() ?? "",
+                        style: const TextStyle(color: Colors.black),
+                      )),
                 );
               }).toList() ??
               [],
@@ -140,13 +159,19 @@ class SectionTask extends ConsumerWidget {
             }
           },
           child: Chip(
-            label: Text(e.status?.name?.toUpperCase() ?? ""),
+            color: MaterialStatePropertyAll(
+                ColorUtils.stringToColor("${e.status?.color}")),
+            label: Text(
+              e.status?.name?.toUpperCase() ?? "",
+              style: const TextStyle(color: Colors.black),
+            ),
           ),
         )),
 
         ///[* Assignee *]
         DataCell(
           PopupMenuButton<EmployeeCompanyProject>(
+            enabled: roleUser != Role.guest,
             tooltip: "Choose employee",
             onSelected: (value) {
               ref
@@ -206,12 +231,13 @@ class SectionTask extends ConsumerWidget {
                         );
                       }),
                     ),
-                    if (e.assignee != null)
+                    if (e.assignee != null && roleUser != Role.guest)
                       Positioned(
                         top: 0,
                         right: 0,
                         child: InkWell(
                           onTap: () {
+                            if (roleUser == Role.guest) return;
                             // remove assignee
                             ref
                                 .read(taskNotifier.notifier)

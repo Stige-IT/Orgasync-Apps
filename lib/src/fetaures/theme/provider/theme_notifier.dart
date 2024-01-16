@@ -5,7 +5,7 @@ import 'package:orgasync/src/utils/helper/local_storage/secure_storage.dart';
 class ThemeNotifier extends StateNotifier<ThemeMode> {
   final SecureStorage _storage;
 
-  ThemeNotifier(this._storage) : super(ThemeMode.system);
+  ThemeNotifier(this._storage) : super(ThemeMode.light);
 
   Future<void> getTheme() async {
     final theme = await _storage.read("theme");

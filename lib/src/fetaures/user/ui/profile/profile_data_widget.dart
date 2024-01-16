@@ -57,14 +57,14 @@ class ProfileDataWidget extends ConsumerWidget {
             style: context.theme.textTheme.bodyLarge!,
           ),
         ),
-        ListTile(
-          visualDensity: const VisualDensity(vertical: -4),
-          leading: const Icon(Icons.location_on_outlined),
-          title: Text(
-            (data?.address ?? Address()).formattedAddress,
-            style: context.theme.textTheme.bodyLarge!,
-          ),
-        ),
+        // ListTile(
+        //   visualDensity: const VisualDensity(vertical: -4),
+        //   leading: const Icon(Icons.location_on_outlined),
+        //   title: Text(
+        //     (data?.address ?? Address()).formattedAddress,
+        //     style: context.theme.textTheme.bodyLarge!,
+        //   ),
+        // ),
         const Divider(),
         const SizedBox(height: 20),
       ],

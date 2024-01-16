@@ -11,15 +11,15 @@ import 'package:orgasync/src/utils/helper/local_storage/secure_storage_client.da
 
 import '../local_storage/secure_storage.dart';
 
-final httpRequestProvider = Provider<HttpRequest>((ref) {
-  return HttpRequest(ref.watch(httpProvider), ref.watch(storageProvider));
+final httpRequestProvider = Provider<HttpRequestClient>((ref) {
+  return HttpRequestClient(ref.watch(httpProvider), ref.watch(storageProvider));
 });
 
-class HttpRequest {
+class HttpRequestClient {
   final Client _client;
   final SecureStorage storage;
 
-  HttpRequest(this._client, this.storage);
+  HttpRequestClient(this._client, this.storage);
 
   Future<Either<String, dynamic>> get(String url) async {
     final token = await storage.read("token");
@@ -71,18 +71,24 @@ class HttpRequest {
 
   // multipart post / put
   Future<Either<String, bool>> multipart(String method, String url,
-      {Map<String, String>? data, File? file, String? fieldFile}) async {
+      {Map<String, String>? data,
+      List<File?>? files,
+      List<String>? fieldFiles}) async {
     final token = await storage.read("token");
     final request = MultipartRequest(method, Uri.parse(url));
     request.headers.addAll({"Authorization": "Bearer $token"});
     request.fields.addAll(data!);
-    if (file != null) {
-      final multipartFile = MultipartFile.fromBytes(
-        fieldFile!,
-        file.readAsBytesSync(),
-        filename: file.path.split("/").last,
-      );
-      request.files.add(multipartFile);
+    if (files != null) {
+      for (int i = 0; i < files.length; i++) {
+        request.files.add(
+          MultipartFile(
+            fieldFiles![i],
+            files[i]!.readAsBytes().asStream(),
+            files[i]!.lengthSync(),
+            filename: files[i]!.path.split("/").last,
+          ),
+        );
+      }
     }
     final response = await request.send();
     if (kDebugMode) {
@@ -98,10 +104,17 @@ class HttpRequest {
   }
 
   // delete
-  Future<Either<String, bool>> delete(String url) async {
+  Future<Either<String, bool>> delete(String url,
+      {Map<String, dynamic>? body}) async {
     final token = await storage.read("token");
-    final response = await _client
-        .delete(Uri.parse(url), headers: {"Authorization": "Bearer $token"});
+    final response = await _client.delete(
+      Uri.parse(url),
+      body: jsonEncode(body),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+    );
     if (response.statusCode == 200) {
       return right(true);
     } else if (response.statusCode == 401) {

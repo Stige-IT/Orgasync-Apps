@@ -11,6 +11,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Future<void> _getData() async {
     await ref.read(roleInCompanyNotifier.notifier).check(widget.companyId);
+    ref.watch(logBookNotifier.notifier).refresh(widget.companyId);
   }
 
   @override
@@ -52,55 +53,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    Card(
-                      shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: indexScreen == 0
-                            ? BorderSide(
-                                color: context.theme.colorScheme.primary,
-                                width: 2,
-                              )
-                            : BorderSide.none,
-                      ),
-                      child: ListTile(
-                        onTap: () => _changeIndex(0),
-                        leading: const Icon(Icons.home),
-                        title: Text("home".tr()),
-                      ),
+                    TileMenuWidget(
+                      isActive: indexScreen == 0,
+                      onTap: () {
+                        _changeIndex(0);
+                        ref
+                            .read(detailCompanyNotifier.notifier)
+                            .get(widget.companyId);
+                      },
+                      name: "Home",
+                      icon: Icons.home,
                     ),
-                    const SizedBox(height: 10),
-                    Card(
-                      shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: indexScreen == 1
-                            ? BorderSide(
-                                color: context.theme.colorScheme.primary,
-                                width: 2,
-                              )
-                            : BorderSide.none,
-                      ),
-                      child: ListTile(
-                        onTap: () => _changeIndex(1),
-                        leading: const Icon(Icons.assignment),
-                        title: Text("task".tr()),
-                      ),
+                    TileMenuWidget(
+                      isActive: indexScreen == 1,
+                      onTap: () => _changeIndex(1),
+                      name: "Task",
+                      icon: Icons.assignment,
                     ),
-                    const SizedBox(height: 10),
-                    Card(
-                      shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: indexScreen == 2
-                            ? BorderSide(
-                                color: context.theme.colorScheme.primary,
-                                width: 2,
-                              )
-                            : BorderSide.none,
-                      ),
-                      child: ListTile(
-                        onTap: () => _changeIndex(2),
-                        leading: const Icon(Icons.more_horiz),
-                        title: Text("more".tr()),
-                      ),
+                    TileMenuWidget(
+                      isActive: indexScreen == 2,
+                      onTap: () {
+                        _changeIndex(2);
+                        ref
+                            .read(logBookNotifier.notifier)
+                            .get(widget.companyId);
+                      },
+                      name: "Logbook",
+                      icon: Icons.book,
+                    ),
+                    TileMenuWidget(
+                      isActive: indexScreen == 3,
+                      onTap: () => _changeIndex(3),
+                      name: "More",
+                      icon: Icons.more_horiz,
                     ),
                     const SizedBox(height: 10),
                   ],
@@ -113,7 +98,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 index: indexScreen,
                 children: [
                   DashboardHomeWidget(widget.companyId),
-                  const DashboardTaskWidget(),
+                  DashboardTaskWidget(widget.companyId),
+                  LogBookScreen(widget.companyId),
                   const DashboardMoreWidget(),
                 ],
               ),
@@ -138,6 +124,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.assignment),
                   label: "task".tr(),
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.book),
+                  label: "logbook".tr(),
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.more_horiz),

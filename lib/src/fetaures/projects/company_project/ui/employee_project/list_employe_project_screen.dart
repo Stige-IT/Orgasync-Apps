@@ -37,6 +37,7 @@ class _ListEmployeeProjectScreenState
 
   @override
   Widget build(BuildContext context) {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
     final membersProject = ref.watch(memberCompanyProjectNotifier);
     return Scaffold(
       appBar: AppBar(
@@ -47,10 +48,13 @@ class _ListEmployeeProjectScreenState
           child: Text("employee_project".tr()),
         ),
         actions: [
-          IconButton(
-            onPressed: () => nextPage(context, "/company/project/employee/add"),
-            icon: const Icon(Icons.person_add_alt),
-          ),
+          if (roleUser == Role.owner)
+            IconButton(
+              onPressed: () =>
+                  nextPage(context, "/company/project/employee/add"),
+              icon: const Icon(Icons.person_add_alt),
+            ),
+          const SizedBox(width: 20),
         ],
       ),
       body: Align(
@@ -83,23 +87,39 @@ class _ListEmployeeProjectScreenState
                       padding: const EdgeInsets.only(right: 15.0),
                       child: const Icon(Icons.delete, color: Colors.white),
                     ),
-                    direction: DismissDirection.endToStart,
+                    direction: roleUser == Role.owner
+                        ? DismissDirection.endToStart
+                        : DismissDirection.none,
                     confirmDismiss: (_) => _handleDismiss(employee),
                     child: Card(
                       child: ListTile(
-                        onTap: () {},
-                        leading: Builder(builder: (_) {
-                          if (employee.employee?.user?.image != null) {
-                            return CircleAvatarNetwork(
-                                employee.employee!.user!.image!);
-                          } else {
-                            return ProfileWithName(
-                                employee.employee?.user?.name ?? "  ");
-                          }
-                        }),
-                        title: Text(employee.employee?.user?.name ?? ""),
-                        subtitle: Text(employee.employee?.user?.email ?? ""),
-                      ),
+                          onTap: () {},
+                          leading: Builder(builder: (_) {
+                            if (employee.employee?.user?.image != null) {
+                              return CircleAvatarNetwork(
+                                  employee.employee!.user!.image!);
+                            } else {
+                              return ProfileWithName(
+                                  employee.employee?.user?.name ?? "  ");
+                            }
+                          }),
+                          title: Text(employee.employee?.user?.name ?? ""),
+                          subtitle: Text(employee.employee?.user?.email ?? ""),
+                          trailing: roleUser == Role.owner
+                              ? PopupMenuButton(
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      value: "delete",
+                                      child: Text("delete".tr()),
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    if (value == "delete") {
+                                      _handleDismiss(employee);
+                                    }
+                                  },
+                                )
+                              : null),
                     ),
                   );
                 },

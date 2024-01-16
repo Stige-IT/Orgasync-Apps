@@ -2,6 +2,7 @@ part of "../../../project.dart";
 
 class DetailCompanyProjectScreen extends ConsumerStatefulWidget {
   final String companyProjectId;
+
   const DetailCompanyProjectScreen(this.companyProjectId, {super.key});
 
   @override
@@ -19,6 +20,7 @@ class _DetailCompanyProjectScreenState
         .read(memberCompanyProjectNotifier.notifier)
         .refresh(widget.companyProjectId);
     ref.watch(priorityNotifier.notifier).getPriorities();
+    ref.read(projectsNotifier.notifier).get(widget.companyProjectId);
   }
 
   @override
@@ -29,7 +31,9 @@ class _DetailCompanyProjectScreenState
 
   @override
   Widget build(BuildContext context) {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
     final detailCompany = ref.watch(detailCompanyProjectNotifier);
+    final projects = ref.watch(projectsNotifier).data;
     Size size = MediaQuery.of(context).size;
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
@@ -40,7 +44,8 @@ class _DetailCompanyProjectScreenState
           elevation: 0,
           centerTitle: true,
           actions: [
-            IconButton(
+            if (roleUser == Role.owner)
+              IconButton(
                 onPressed: () {
                   nextPage(
                     context,
@@ -48,7 +53,9 @@ class _DetailCompanyProjectScreenState
                     argument: detailCompany.data?.companyProject,
                   );
                 },
-                icon: const Icon(Icons.edit)),
+                icon: const Icon(Icons.edit),
+              ),
+            const SizedBox(width: 20),
           ],
         ),
         body: Align(
@@ -86,25 +93,20 @@ class _DetailCompanyProjectScreenState
                     ),
                   ),
                   ListTile(
+                    onTap: () => nextPage(context, "/company/project/employee"),
                     leading: const Icon(Icons.people),
                     title: Text(
                         "${detailCompany.data?.totalEmployee} ${'employee'.tr()}"),
-                    trailing: IconButton(
-                      onPressed: () =>
-                          nextPage(context, "/company/project/employee"),
-                      icon: const Icon(Icons.arrow_forward),
-                    ),
+                    trailing: const Icon(Icons.arrow_forward),
                   ),
                   Column(
                     children: [
                       ListTile(
+                        onTap: () => nextPage(context, "/project"),
                         leading: const Icon(Icons.assignment),
                         title: Text(
                             "${detailCompany.data?.totalProject} ${'project'.tr()}"),
-                        trailing: IconButton(
-                          onPressed: () => nextPage(context, "/project"),
-                          icon: const Icon(Icons.arrow_forward),
-                        ),
+                        trailing: const Icon(Icons.arrow_forward),
                       ),
                     ],
                   ),
@@ -113,7 +115,7 @@ class _DetailCompanyProjectScreenState
                     title: Text("list_project".tr()),
                   ),
                   const Divider(),
-                  if (detailCompany.data?.project?.isEmpty ?? true)
+                  if (projects?.isEmpty ?? true)
                     const Padding(
                       padding: EdgeInsets.only(top: 40.0),
                       child: EmptyWidget(),
@@ -123,11 +125,11 @@ class _DetailCompanyProjectScreenState
                       height: size.height * 0.6,
                       child: ListView.separated(
                         itemBuilder: (_, i) {
-                          final project = detailCompany.data?.project?[i];
+                          final project = (projects ?? [])[i];
                           return CardProject(project);
                         },
                         separatorBuilder: (_, i) => const Divider(),
-                        itemCount: detailCompany.data?.project?.length ?? 0,
+                        itemCount: (projects ?? []).length,
                       ),
                     )
                 ],

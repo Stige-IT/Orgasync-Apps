@@ -9,8 +9,8 @@ class DashboardHomeWidget extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
-  void _getData() {
-    ref.read(detailCompanyNotifier.notifier).get(widget.companyId);
+  void _getData() async {
+    await ref.read(detailCompanyNotifier.notifier).get(widget.companyId);
     ref.read(totalCompanyProjectNotifier.notifier).get(widget.companyId);
     ref.read(employeeCompanyNotifier.notifier).getEmployee(widget.companyId);
   }
@@ -56,8 +56,8 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
                       SizedBox(
                         height: context.isMobile ? 200 : 270,
                         width: double.infinity,
-                        child: Image.asset(
-                          "assets/images/three_human.png",
+                        child: Image.network(
+                          "${ConstantUrl.BASEIMGURL}/${company.data?.cover}",
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -132,7 +132,7 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
                     child: ListTile(
                       onTap: () => nextPage(context, "/company/project",
                           argument: widget.companyId),
-                      title: const Text("Total Project"),
+                      title: Text("company_roject".tr()),
                       subtitle: Text(
                         "$totalProject",
                         style: context.theme.textTheme.headlineLarge,
@@ -144,13 +144,12 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
               const SizedBox(height: 20),
               Column(
                 children: [
-                  const ListTile(
-                    leading: Icon(Icons.location_city),
-                    visualDensity: VisualDensity(vertical: -4),
-                    title: Text("Structure organization"),
-                    trailing: Icon(Icons.arrow_forward_ios, size: 15),
-                  ),
-                  const Divider(),
+                  // const ListTile(
+                  //   leading: Icon(Icons.location_city),
+                  //   visualDensity: VisualDensity(vertical: -4),
+                  //   title: Text("Structure organization"),
+                  //   trailing: Icon(Icons.arrow_forward_ios, size: 15),
+                  // ),
                   ListTile(
                     onTap: () => nextPage(context, "/company/employee",
                         argument: widget.companyId),
@@ -165,7 +164,7 @@ class _HomeScreenState extends ConsumerState<DashboardHomeWidget> {
                         argument: widget.companyId),
                     leading: const Icon(Icons.assignment),
                     visualDensity: const VisualDensity(vertical: -4),
-                    title: const Text("Project"),
+                    title: Text("company_project".tr()),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 15),
                   ),
                 ],

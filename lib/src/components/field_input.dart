@@ -18,6 +18,7 @@ class FieldInput extends StatelessWidget {
   final void Function()? onTap;
   final String? Function(String?)? validator;
   final int? maxLines;
+  final int? maxLength;
   final bool borderActive;
 
   const FieldInput({
@@ -40,6 +41,7 @@ class FieldInput extends StatelessWidget {
     this.maxLines,
     this.textAlign = TextAlign.start,
     this.borderActive = true,
+    this.maxLength,
   });
 
   @override
@@ -61,6 +63,7 @@ class FieldInput extends StatelessWidget {
         Container(
           margin: const EdgeInsets.symmetric(vertical: 5.0),
           child: TextFormField(
+            maxLength: maxLength,
             textAlign: textAlign!,
             minLines: keyboardType == TextInputType.multiline ? null : 1,
             maxLines:

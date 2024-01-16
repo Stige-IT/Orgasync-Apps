@@ -10,6 +10,11 @@ class DetailProjectScreen extends ConsumerStatefulWidget {
 }
 
 class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
+  late ScrollController _scrollTodoController;
+  late ScrollController _scrollDoingController;
+  late ScrollController _scrollDoneController;
+
+
   void _getData() {
     ref.read(detailProjectNotifier.notifier).get(widget.projectId);
     ref.watch(taskNotifier.notifier).getTasks(widget.projectId);
@@ -20,10 +25,23 @@ class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
   void initState() {
     super.initState();
     Future.microtask(() => _getData());
+    _scrollTodoController = ScrollController();
+    _scrollDoingController = ScrollController();
+    _scrollDoneController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollTodoController.dispose();
+    _scrollDoingController.dispose();
+    _scrollDoneController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
+    final companyProject = ref.watch(detailCompanyProjectNotifier).data;
     final stateProject = ref.watch(detailProjectNotifier);
     final todo = ref.watch(taskNotifier).data?.todo;
     final doing = ref.watch(taskNotifier).data?.doing;
@@ -34,15 +52,17 @@ class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
-          ConstantApp.appName.toUpperCase(),
+          companyProject?.companyProject?.name ?? "",
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
+          if(roleUser == Role.owner)
           IconButton(
             onPressed: () =>
                 nextPage(context, "/project/form", argument: project),
             icon: const Icon(Icons.edit),
           ),
+          const SizedBox(width: 20),
         ],
       ),
       body: ListView(
@@ -53,18 +73,21 @@ class _DetailProjectScreenState extends ConsumerState<DetailProjectScreen> {
           const HeaderWidget(),
           SectionTask(
             "TODO",
+            _scrollTodoController,
             icon: Icons.assignment,
             data: todo ?? [],
             color: Colors.grey.withOpacity(.1),
           ),
           SectionTask(
             "DOING",
+            _scrollDoingController,
             icon: Icons.assignment_add,
             data: doing ?? [],
             color: Colors.yellow.withOpacity(.1),
           ),
           SectionTask(
             "DONE",
+            _scrollDoneController,
             icon: Icons.assignment_turned_in,
             data: done ?? [],
             color: Colors.green.withOpacity(.1),

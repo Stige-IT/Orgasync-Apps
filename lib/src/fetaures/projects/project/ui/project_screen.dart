@@ -24,6 +24,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final roleUser = ref.watch(roleInCompanyNotifier).data;
     final projects = ref.watch(projectsNotifier);
     return Scaffold(
       appBar: AppBar(
@@ -32,10 +33,13 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
         centerTitle: true,
         title: Text("project".tr()),
         actions: [
-          IconButton(
-            onPressed: () => nextPage(context, "/project/form"),
-            icon: const Icon(Icons.add),
-          ),
+          if (roleUser == Role.owner)
+            IconButton(
+              tooltip: "add_project".tr(),
+              onPressed: () => nextPage(context, "/project/form"),
+              icon: const Icon(Icons.add),
+            ),
+          const SizedBox(width: 20),
         ],
       ),
       body: Align(
@@ -47,21 +51,25 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
               await Future.delayed(
                   const Duration(seconds: 1), () => _getData());
             },
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(15.0),
-                    itemCount: projects.data?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final project = projects.data?[index];
-                      return CardProject(project);
-                    },
-                    separatorBuilder: (context, index) => const Divider(),
-                  ),
-                ),
-              ],
-            ),
+            child: Builder(builder: (context) {
+              if (projects.isLoading) {
+                return const Center(child: LoadingWidget());
+              } else if (projects.error != null) {
+                return ErrorButtonWidget(projects.error!, () => _getData());
+              } else if (projects.data == null || projects.data!.isEmpty) {
+                return const Center(child: EmptyWidget());
+              } else {
+                return ListView.separated(
+                  padding: const EdgeInsets.all(15.0),
+                  itemCount: projects.data?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final project = projects.data?[index];
+                    return CardProject(project);
+                  },
+                  separatorBuilder: (context, index) => const Divider(),
+                );
+              }
+            }),
           ),
         ),
       ),

@@ -41,19 +41,24 @@ class TaskItem {
   String? endDate;
   String? createdAt;
   String? updatedAt;
+  EmployeeCompanyProject? createdBy;
+  EmployeeCompanyProject? updatedBy;
 
-  TaskItem(
-      {this.id,
-      this.idProject,
-      this.title,
-      this.description,
-      this.status,
-      this.assignee,
-      this.priority,
-      this.startDate,
-      this.endDate,
-      this.createdAt,
-      this.updatedAt});
+  TaskItem({
+    this.id,
+    this.idProject,
+    this.title,
+    this.description,
+    this.status,
+    this.assignee,
+    this.priority,
+    this.startDate,
+    this.endDate,
+    this.createdAt,
+    this.updatedAt,
+    this.createdBy,
+    this.updatedBy,
+  });
 
   TaskItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -69,6 +74,12 @@ class TaskItem {
     endDate = json['end_date'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    createdBy = json['created_by_employee'] != null
+        ? EmployeeCompanyProject.fromJson(json['created_by_employee'])
+        : null;
+    updatedBy = json['updated_by_employee'] != null
+        ? EmployeeCompanyProject.fromJson(json['updated_by_employee'])
+        : null;
   }
 
   // to json

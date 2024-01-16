@@ -44,7 +44,7 @@ final companyProjectProvider = Provider<CompanyProjectImpl>((ref) {
 class CompanyProjectImpl implements CompanyProjectApi {
   final Client _client;
   final SecureStorage storage;
-  final HttpRequest httpRequest;
+  final HttpRequestClient httpRequest;
 
   CompanyProjectImpl(this._client, this.storage, this.httpRequest);
 
@@ -114,8 +114,8 @@ class CompanyProjectImpl implements CompanyProjectApi {
       "PUT",
       url,
       data: {"name": name, "description": description},
-      file: image,
-      fieldFile: "image",
+      files: [image!],
+      fieldFiles: ["image"],
     );
     return result.fold(
       (failure) => left(failure),

@@ -20,13 +20,11 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
           children: [
             ListTile(
                 visualDensity: const VisualDensity(vertical: 4),
-                leading: Builder(builder: (_) {
-                  if (company?.logo != null) {
-                    return CircleAvatarNetwork(company!.logo, size: 120);
-                  } else {
-                    return ProfileWithName(company?.name ?? "  ", size: 120);
-                  }
-                }),
+                leading: AvatarProfile(
+                  image: company?.logo,
+                  name: company?.name,
+                  size: 70,
+                ),
                 title: Text(
                   company?.name ?? "",
                   style: context.theme.textTheme.headlineSmall,
@@ -38,7 +36,7 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
                     IconButton(
                       onPressed: () {
                         Clipboard.setData(
-                            const ClipboardData(text: "code copied"));
+                            ClipboardData(text: company?.code ?? ""));
                         showSnackbar(context, "copied".tr());
                       },
                       icon: const Icon(Icons.copy),
@@ -56,19 +54,12 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
                       leading: const Icon(Icons.location_city),
                       title: Text("edit_company".tr()),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {},
-                    ),
-                  ),
-                  Card(
-                    elevation: 3,
-                    child: ListTile(
-                      leading: const Icon(Icons.book),
-                      title: Text("logbook".tr()),
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.toggle_off_outlined, size: 40),
-                      ),
-                      onTap: () {},
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => const DialogEditCompanyWidget(),
+                        );
+                      },
                     ),
                   ),
                 ],

@@ -238,6 +238,25 @@ class TaskNotifier extends StateNotifier<BaseState<TaskDataModel>> {
   }
 }
 
+// task me
+class TaskMeNotifier extends StateNotifier<States<List<TaskMe>>> {
+  final TaskApi taskApi;
+  TaskMeNotifier(this.taskApi) : super(States.noState());
+
+  void get(String idCompany) async {
+    state = States.loading();
+    try {
+      final response = await taskApi.getTasksMe(idCompany);
+      response.fold(
+        (error) => state = States.error(error),
+        (data) => state = States.finished(data),
+      );
+    } catch (e) {
+      state = States.error(exceptionTomessage(e));
+    }
+  }
+}
+
 // get detail task by id
 class DetailTaskNotifier extends StateNotifier<BaseState<TaskItem>> {
   final TaskApi taskApi;

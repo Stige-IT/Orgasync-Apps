@@ -50,6 +50,43 @@ class CompanyNotifier extends StateNotifier<BaseState<List<MyCompany>>> {
   }
 }
 
+// update company
+class UpdateCompanyNotifier extends StateNotifier<States> {
+  final CompanyApiImpl _companyApiImpl;
+  final Ref ref;
+
+  UpdateCompanyNotifier(this._companyApiImpl, this.ref)
+      : super(States.noState());
+
+  Future<bool> updateCompany(
+    String companyId, {
+    required String name,
+    File? image,
+    File? cover,
+  }) async {
+    state = States.loading();
+    try {
+      final result = await _companyApiImpl.updateCompany(
+        companyId,
+        name: name,
+        image: image,
+        cover: cover,
+      );
+      return result.fold((error) {
+        state = States.error(error);
+        return false;
+      }, (success) {
+        ref.read(detailCompanyNotifier.notifier).get(companyId);
+        state = States.noState();
+        return true;
+      });
+    } catch (exception) {
+      state = States.error(exceptionTomessage(exception));
+      return false;
+    }
+  }
+}
+
 // get detail company
 class DetailCompanyNotifier extends StateNotifier<States<CompanyDetail>> {
   final CompanyApi _companyApi;
@@ -182,6 +219,7 @@ class RoleInCompanyNotifier extends StateNotifier<States<Role>> {
         (error) => state = States.error(error),
         (data) => state = States.finished(_parseRole(data)),
       );
+      log(state.data.toString());
     } catch (exception) {
       state = States.error(exceptionTomessage(exception));
     }
@@ -194,6 +232,8 @@ class RoleInCompanyNotifier extends StateNotifier<States<Role>> {
         return Role.owner;
       case "admin":
         return Role.admin;
+      case "guest":
+        return Role.guest;
       default:
         return Role.member;
     }

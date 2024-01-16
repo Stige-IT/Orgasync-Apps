@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:orgasync/src/fetaures/auth/auth.dart';
 import 'package:orgasync/src/fetaures/company/company.dart';
 import 'package:orgasync/src/fetaures/home/home.dart';
+import 'package:orgasync/src/fetaures/logbooks/logbook_activity/logbook_activity.dart';
 import 'package:orgasync/src/fetaures/projects/project.dart';
 import '../fetaures/employee/employee.dart';
+import '../fetaures/logbooks/logbook/logbook.dart';
+import '../fetaures/logbooks/logbook_employee/logbook_employee.dart';
 import '../fetaures/splash/ui/splash_screen.dart';
 import '../fetaures/user/user.dart';
 
@@ -72,9 +75,26 @@ class AppRoute {
       }
     },
 
-    "/task/detail" :(context){
+    "/task/detail": (context) {
       final taskId = ModalRoute.of(context)?.settings.arguments as String;
       return DetailTaskScreen(taskId);
+    },
+
+    /// LOGBOOK PAGE
+    // "/logbook": (_) => const LogBookScreen(),
+    "/logbook/detail": (context) {
+      final logBookId = ModalRoute.of(context)!.settings.arguments as String;
+      return DetailLogBookScreen(logBookId);
+    },
+    "/logbook/employee/form": (_) => const AddLogBookEmployeeScreen(),
+    "/activity": (context) {
+      final argument = ModalRoute.of(context)?.settings.arguments as Map;
+
+      if (argument['id_logbook_employee'] == null) {
+        return LogBookActivityScreen(idLogBook: argument['id_logbook']);
+      }
+      return LogBookActivityScreen(
+          idLogBookEmployee: argument['id_logbook_employee'] as String);
     },
 
     /// USER PAGES

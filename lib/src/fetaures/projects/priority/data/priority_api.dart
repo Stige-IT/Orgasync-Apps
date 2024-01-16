@@ -10,7 +10,7 @@ final priorityProvider = Provider<PriorityApiImpl>((ref) {
 });
 
 class PriorityApiImpl implements PriorityApi {
-  final HttpRequest httpRequest;
+  final HttpRequestClient httpRequest;
 
   PriorityApiImpl(this.httpRequest);
 

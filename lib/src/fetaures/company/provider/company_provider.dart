@@ -1,5 +1,8 @@
 part of "../company.dart";
 
+final logoCompanyProvider = StateProvider.autoDispose<File?>((ref) => null);
+final coverCompanyProvider = StateProvider.autoDispose<File?>((ref) => null);
+
 // index of stack screen
 final indexScreenProvider = StateProvider<int>((ref) => 0);
 
@@ -36,6 +39,12 @@ final leaveCompanyNotifier =
 final createCompanyNotifier =
     StateNotifierProvider.autoDispose<CreateCompanyNotifier, States>((ref) {
   return CreateCompanyNotifier(ref.watch(companyProvider), ref);
+});
+
+// update company
+final updateCompanyNotifier =
+    StateNotifierProvider<UpdateCompanyNotifier, States>((ref) {
+  return UpdateCompanyNotifier(ref.watch(companyProvider), ref);
 });
 
 // check role in company

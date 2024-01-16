@@ -32,7 +32,7 @@ class _CompanyProjectScreenState extends ConsumerState<CompanyProjectScreen> {
         title: InkWell(
           onTap: () => _getData(),
           child: Text(
-            "project".tr(),
+            "company_project".tr(),
             style: context.theme.textTheme.headlineSmall!.copyWith(
               fontWeight: FontWeight.w600,
             ),

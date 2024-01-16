@@ -16,7 +16,7 @@ final shoreBirdCodePush = ShorebirdCodePush();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!kReleaseMode) {
+  if (kDebugMode) {
     // ignore: avoid_print
     log("Running in debug mode", name: "Debug Mode");
   }

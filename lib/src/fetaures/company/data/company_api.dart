@@ -7,6 +7,11 @@ abstract class CompanyApi {
   Future<Either<String, bool>> joinCompany(String code);
   Future<Either<String, bool>> leaveCompany(String companyId);
   Future<Either<String, bool>> createCompany(CompanyRequest companyRequest);
+  Future<Either<String, bool>> updateCompany(
+    String companyId, {
+    required String name,
+    File? image,
+  });
   Future<Either<String, bool>> deleteCompany(String companyId);
   Future<Either<String, String>> checkRoleInCompany(String companyId);
   Future<Either<String, bool>> addEmployee(String companyId,
@@ -21,7 +26,7 @@ final companyProvider = Provider<CompanyApiImpl>((ref) {
 class CompanyApiImpl implements CompanyApi {
   final Client client;
   final SecureStorage storage;
-  final HttpRequest httpRequest;
+  final HttpRequestClient httpRequest;
 
   CompanyApiImpl(this.client, this.storage, this.httpRequest);
 
@@ -117,6 +122,38 @@ class CompanyApiImpl implements CompanyApi {
       default:
         return Left("failed".tr());
     }
+  }
+
+  @override
+  Future<Either<String, bool>> updateCompany(
+    String companyId, {
+    required String name,
+    File? image,
+    File? cover,
+  }) async {
+    final url = "${ConstantUrl.BASE_URL}/company/$companyId";
+    List<File> files = [];
+    List<String> names = [];
+    if (cover != null) {
+      files.add(cover);
+      names.add("cover");
+    }
+    if (image != null) {
+      files.add(image);
+      names.add("image");
+    }
+
+    final response = await httpRequest.multipart(
+      "PUT",
+      url,
+      data: {"name": name},
+      files: files,
+      fieldFiles: names,
+    );
+    return response.fold(
+      (failure) => left(failure),
+      (success) => right(success),
+    );
   }
 
   @override
