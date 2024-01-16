@@ -29,6 +29,7 @@ import 'package:orgasync/src/utils/helper/local_storage/secure_storage_client.da
 import 'package:orgasync/src/utils/helper/theme_of_context.dart';
 import 'package:string_to_color/string_to_color.dart';
 
+import '../../components/avatar_profile.dart';
 import '../../components/circular_loading.dart';
 import '../../components/dropdown_container.dart';
 import '../../components/field_input.dart';

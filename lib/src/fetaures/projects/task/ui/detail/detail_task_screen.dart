@@ -208,7 +208,10 @@ class _DetailTaskScreenState extends ConsumerState<DetailTaskScreen> {
                                                 "${item.color}"),
                                           ),
                                           label: Text(
-                                              item.name?.toUpperCase() ?? "")),
+                                            item.name?.toUpperCase() ?? "",
+                                            style: const TextStyle(
+                                                color: Colors.black),
+                                          )),
                                     ),
                                 ],
                                 child: Chip(
@@ -221,12 +224,15 @@ class _DetailTaskScreenState extends ConsumerState<DetailTaskScreen> {
                                   label: Builder(builder: (_) {
                                     if (statusSelected != null) {
                                       return Text(
-                                        statusSelected.name?.toUpperCase() ??
-                                            "",
-                                      );
+                                          statusSelected.name?.toUpperCase() ??
+                                              "",
+                                          style: const TextStyle(
+                                              color: Colors.black));
                                     }
                                     return Text(
                                       task?.status?.name?.toUpperCase() ?? "",
+                                      style:
+                                          const TextStyle(color: Colors.black),
                                     );
                                   }),
                                 ),

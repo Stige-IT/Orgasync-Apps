@@ -71,23 +71,23 @@ class _RegisterEmployeeWidgetState
               child:
                   isLoading ? const LoadingWidget() : Text("register".tr()),
             ),
-            Center(
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Text("or_register_with".tr()),
-                  const SizedBox(height: 10),
-                  Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child:
-                          Image.asset("assets/images/google.png", height: 30),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Center(
+            //   child: Column(
+            //     children: [
+            //       const SizedBox(height: 20),
+            //       Text("or_register_with".tr()),
+            //       const SizedBox(height: 10),
+            //       Card(
+            //         elevation: 2,
+            //         child: Padding(
+            //           padding: const EdgeInsets.all(10.0),
+            //           child:
+            //               Image.asset("assets/images/google.png", height: 30),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

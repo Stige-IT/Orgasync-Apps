@@ -20,13 +20,11 @@ class _DashboardMoreWidgetState extends ConsumerState<DashboardMoreWidget> {
           children: [
             ListTile(
                 visualDensity: const VisualDensity(vertical: 4),
-                leading: Builder(builder: (_) {
-                  if (company?.logo != null) {
-                    return CircleAvatarNetwork(company!.logo, size: 120);
-                  } else {
-                    return ProfileWithName(company?.name ?? "  ", size: 120);
-                  }
-                }),
+                leading: AvatarProfile(
+                  image: company?.logo,
+                  name: company?.name,
+                  size: 70,
+                ),
                 title: Text(
                   company?.name ?? "",
                   style: context.theme.textTheme.headlineSmall,

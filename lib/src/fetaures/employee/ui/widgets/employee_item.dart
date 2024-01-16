@@ -25,9 +25,11 @@ class EmployeeItemWidget extends ConsumerWidget {
             offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
-        border: user?.id == data.user?.id ? Border.all(
-          color: context.theme.colorScheme.onBackground,
-        ) : null,
+        border: user?.id == data.user?.id
+            ? Border.all(
+                color: context.theme.colorScheme.onBackground,
+              )
+            : null,
       ),
       child: ListTile(
         title: Text(
@@ -96,7 +98,7 @@ class EmployeeItemWidget extends ConsumerWidget {
                   if (value == "delete") {
                     ref
                         .read(deleteEmployeeNotifier.notifier)
-                        .delete(companyId, data.id!);
+                        .delete(data.id!, companyId);
                   }
                 },
               ),

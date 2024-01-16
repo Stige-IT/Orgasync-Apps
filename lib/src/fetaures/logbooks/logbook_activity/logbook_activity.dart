@@ -13,6 +13,7 @@ import 'package:orgasync/src/fetaures/company/company.dart';
 import 'package:orgasync/src/fetaures/logbooks/logbook/logbook.dart';
 import 'package:orgasync/src/models/state.dart';
 import 'package:orgasync/src/utils/extensions/formatted_date.dart';
+import 'package:orgasync/src/utils/helper/layout/minheight_context.dart';
 import 'package:orgasync/src/utils/helper/theme_of_context.dart';
 import 'package:photo_view/photo_view.dart';
 

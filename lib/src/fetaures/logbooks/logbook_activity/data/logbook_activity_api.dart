@@ -105,12 +105,18 @@ class LogBookActivityApiImpl implements LogBookActivityApi {
       "description": description,
       "rating": rating.toString(),
     };
+    List<String>? names;
+    List<File?>? images;
+    if (image != null) {
+      names = ["image"];
+      images = [image];
+    }
     final response = await _httpRequest.multipart(
       "POST",
       url,
       data: body,
-      fieldFiles: ["image"],
-      files: [image!],
+      fieldFiles: names,
+      files: images,
     );
     return response.fold(
       (error) => Left(error),

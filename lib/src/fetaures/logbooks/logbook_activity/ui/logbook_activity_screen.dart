@@ -109,12 +109,9 @@ class _LogBookActivityScreenState extends ConsumerState<LogBookActivityScreen> {
                                       InkWell(
                                         onTap: () => _showImage(e),
                                         child: Container(
-                                          margin: const EdgeInsets.symmetric(
-                                            horizontal: 35,
-                                            vertical: 15,
-                                          ),
-                                          height: 100,
-                                          width: 200,
+                                          margin: const EdgeInsets.all(15),
+                                          height: context.isMobile ? 50 : 100,
+                                          width: context.isMobile ? 100 : 200,
                                           child: Builder(builder: (_) {
                                             if (e.image == null) {
                                               return const Icon(Icons.image);

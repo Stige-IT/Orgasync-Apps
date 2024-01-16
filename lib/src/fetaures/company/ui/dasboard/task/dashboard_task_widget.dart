@@ -28,6 +28,12 @@ class _DashboardTaskWidgetState extends ConsumerState<DashboardTaskWidget> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: InkWell(onTap: () => _getData(), child: Text("Task".tr())),
+          actions: [
+            IconButton(
+              onPressed: () => _getData(),
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
         ),
         body: Builder(builder: (_) {
           if (state.isLoading) {
